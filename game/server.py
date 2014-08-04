@@ -65,10 +65,13 @@ if __name__ == "__main__":  # TODO
     try:
         import os
         port = os.environ['PORT']
+        print("getting port from os vars")
     except KeyError:
         port = tornado.options.options.port
-    
+        print("getting port from options")
+    print(port)
+
     server.listen(port, tornado.options.options.address)
 
-    logger.info("listening at: http://%s:%s", tornado.options.options.address, tornado.options.options.port)
+    logger.info("listening at: http://%s:%s", tornado.options.options.address, port)
     tornado.ioloop.IOLoop.instance().start()
