@@ -1,0 +1,30 @@
+<svg style="position:absolute;">
+    <g id="map_container" ng-attr-transform="translate({{ map.x }}, {{ map.y }}) scale({{ map.scale }})">
+        <!-- Systems -->
+        <g
+                ng-repeat="system in map.systems"
+                class="system"
+                id="system_{{ system.id }}"
+                data-url="{{ system.url }}"
+                ng-attr-transform="translate({{ system.x }}, {{ system.y }})">
+            <a xlink:href="#" ng-click="contextPanelSwitch('system', system)">
+                <circle ng-attr-r="{{ system.r }}" ng-attr-fill="{{ system.color }}" ng-attr-stroke="{{ system.stroke }}"></circle>
+            </a>
+
+        </g>
+
+        <!-- Ships -->
+        <g
+                ng-repeat="ship in map.ships"
+                class="ship"
+                id="ship_{{ ship.id }}"
+                data-url="{{ ship.url }}"
+                ng-attr-transform="translate({{ ship.x }}, {{ ship.y }})">
+            <a xlink:href="#" ng-click="contextPanelSwitch('ship', ship)">
+                <text alignment-baseline="before-edge" text-anchor="middle">{{ ship.type }} ({{ ship.x | number:0 }}, {{ ship.y | number:0 }})</text>
+            </a>
+
+        </g>
+
+    </g>
+</svg>

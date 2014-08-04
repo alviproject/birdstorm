@@ -1,0 +1,27 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        System/Planet View
+        <a href="#" class="panel-close pull-right" title="Close">
+            <span class="fa fa-times fa-fw "></span>
+        </a>
+    </div>
+    <div class="panel-body">
+        <div ng-switch="detailsPanel.choice">
+
+            <!-- Planet -->
+            <div ng-switch-when="planet">
+                <ul class="list-unstyled">
+                    <li><b>Type:</b> {{ detailsPanel.data.type }}</li>
+                    <li><b>ID:</b> {{ detailsPanel.data.id }}</li>
+                </ul>
+                <br />
+                <ul class="list-unstyled">
+                    <li ng-repeat="message in detailsPanel.scan_messages track by $index">
+                        {{ message }}
+                    </li>
+                </ul>
+                <a href ng-click="scan(detailsPanel.data.id)">Scan</a>
+            </div>
+        </div>
+    </div>
+</div>

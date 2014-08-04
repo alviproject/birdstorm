@@ -1,0 +1,28 @@
+<div class="panel panel-default">
+    <div class="broadcast-connection">chat.general_room</div>
+    <div class="panel-heading">
+        Chat
+        <a href="#" class="panel-minimize pull-right" title="Close">
+            <span class="fa fa-minus fa-fw "></span>
+        </a>
+    </div>
+    <div class="panel-body" id="chat-panel">
+        <div ng-repeat="message in chat.messages">
+            {{ message.author }}: {{ message.text }}
+        </div>
+    </div>
+    <div class="panel-footer">
+        <form class="form-inline" role="form" method="post" action="">
+            <div class="form-group">
+                <input
+                        type="text"
+                        class="form-control"
+                        name="message"
+                        placeholder="Enter message"
+                        id="chat-text"
+                        ng-model="chat.text" />
+            </div>
+            <button type="submit" class="btn btn-default" ng-click="chat.send()">Send</button>
+        </form>
+    </div>
+</div>

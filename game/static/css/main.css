@@ -1,0 +1,17 @@
+#chat-panel {
+    height: 300px;
+    overflow-y: scroll;
+    overflow-x: auto;
+}
+
+input#chat-text {
+    width: 160px;
+}
+
+.broadcast-connection {
+    display: none;
+}
+
+ul.list-sublist {
+    margin-left: 15px;
+}

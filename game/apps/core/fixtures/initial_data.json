@@ -1,0 +1,53 @@
+[
+    {"model": "core.system", "pk": 1, "fields": {"x": "0", "y": "0", "type": "RedGiant"}},
+
+    {"model": "core.system", "pk": 2, "fields": {"x": "0.1", "y": "0.2", "type": "Draft"}},
+    {"model": "core.system", "pk": 3, "fields": {"x": "0.2", "y": "0.2", "type": "BrownDraft"}},
+
+    {"model": "core.system", "pk": 4, "fields": {"x": "0.3", "y": "-0.1", "type": "RedDraft"}},
+    {"model": "core.system", "pk": 5, "fields": {"x": "0.3", "y": "-0.2", "type": "RedDraft"}},
+
+    {"model": "core.system", "pk": 6, "fields": {"x": "-0.6", "y": "-0.1", "type": "BlueDraft"}},
+    {"model": "core.system", "pk": 7, "fields": {"x": "-0.5", "y": "-0.2", "type": "BlueSuperGiant"}},
+    {"model": "core.system", "pk": 8, "fields": {"x": "-0.7", "y": "-0.4", "type": "WhiteDraft"}},
+
+    {"model": "core.planet", "pk": 1, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {
+        "resources": [
+            [
+                {"type": "Coal", "quantity": 8, "chance_factor": 0.3},
+                {"type": "IronOre", "quantity": 8, "chance_factor": 0.3}
+            ],
+            [
+                {"type": "Coal", "quantity": 16, "chance_factor": 0.5},
+                {"type": "IronOre", "quantity": 16, "chance_factor": 0.5}
+            ]
+    ]}}},
+    {"model": "core.planet", "pk": 2, "fields": {"system": 1, "type": "GasGiant", "data": {}}},
+    {"model": "core.planet", "pk": 3, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {
+        "resources": [
+            [
+                {"type": "Coal", "quantity": 5, "chance_factor": 0.5},
+                {"type": "IronOre", "quantity": 5, "chance_factor": 0.5}
+            ]
+    ]}}},
+    {"model": "core.planet", "pk": 4, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {
+        "resources": [
+            [
+                {"type": "Coal", "quantity": 10, "chance_factor": 0.2},
+                {"type": "IronOre", "quantity": 10, "chance_factor": 0.2}
+            ]
+    ]}}},
+
+    {"model": "core.ship", "pk": 1, "fields": {"owner": 1, "system": 1, "type": "Raven", "data": {
+        "mining": {"drilled_planets": [], "scan_results": []}
+    }}},
+    {"model": "core.ship", "pk": 2, "fields": {"owner": 2, "system": 2, "type": "Raven", "data": {
+        "mining": {"drilled_planets": [], "scan_results": []}
+    }}},
+    {"model": "core.ship", "pk": 3, "fields": {"owner": 3, "system": 3, "type": "Raven", "data": {
+        "mining": {"drilled_planets": [], "scan_results": []}
+    }}},
+    {"model": "core.ship", "pk": 4, "fields": {"owner": 4, "system": 4, "type": "Raven", "data": {
+        "mining": {"drilled_planets": [], "scan_results": []}
+    }}}
+]

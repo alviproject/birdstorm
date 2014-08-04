@@ -1,0 +1,1 @@
+import game.tasks.register

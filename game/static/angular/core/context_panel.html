@@ -1,0 +1,58 @@
+<div class="panel panel-default" id="context_menu">
+    <div class="panel-heading">
+        Context menu
+        <a href="#" class="panel-close pull-right" title="Close">
+            <span class="fa fa-times fa-fw"></span>
+        </a>
+    </div>
+    <div class="panel-body">
+        <div ng-switch="contextPanel.choice">
+
+            <!-- SYSTEM -->
+            <div ng-switch-when="system">
+                <ul class="list-unstyled">
+                    <li><b>Type:</b> {{ contextPanel.data.type }}</li>
+                    <li><b>Coordinates:</b> ({{ contextPanel.data.x }}; {{ contextPanel.data.y }})</li>
+                    <li><b>ID:</b> {{ contextPanel.data.id }}</li>
+                    <li>
+                        <b>Distance:</b>
+                        {{ distance }}
+                        <a href="#" class="ajax-link pull-right" title="Go" ng-click="go_to_system(contextPanel.data.id)">
+                            <span class="fa fa-plane fa-fw"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <b>Planets:</b>
+                        <ul class="list-unstyled list-sublist">
+                            <li ng-repeat="planet in contextPanel.data.planets">
+                                <a href="#" ng-click="detailsPanel.switch('planet', planet)">{{ planet.id }}</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- SHIP -->
+            <div ng-switch-when="ship">
+                <ul class="list-unstyled">
+                    <li>
+                        <b>Ship:</b> Warrior
+                    </li>
+                    <li>
+                        <b>Owner:</b> <a href>{{ ship.owner }}</a>
+                    </li>
+                    <li><b>Type:</b> Raven</li>
+                    <li><b>Class:</b> 1</li>
+                    <li>
+                        <b>Components:</b>
+                        <ul class="list-unstyled list-sublist">
+                            <li>Firepower: 20</li>
+                            <li>Speed: 20</li>
+                            <li>Capacity: 20</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

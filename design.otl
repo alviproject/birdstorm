@@ -1,0 +1,11 @@
+planet, system, sector,  galaxy
+todo:
+    django AbstractUser
+    angular:
+        $scope
+        ng-switch
+        https://github.com/angular/angular-seed
+        tagsinput
+        restangular
+        ui router
+        ui bootstrap
