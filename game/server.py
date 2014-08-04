@@ -64,7 +64,7 @@ if __name__ == "__main__":  # TODO
     #TODO temp workaround for heroku
     try:
         import os
-        port = os.environ['HOME']
+        port = os.environ['PORT']
     except KeyError:
         port = tornado.options.options.port
     
