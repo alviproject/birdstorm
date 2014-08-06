@@ -1,7 +1,7 @@
-import game.config
-game.config.configure()
-
 import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "game.settings")
+from game.utils import config
+
 import logging
 import json
 import django.core.handlers.wsgi
@@ -44,7 +44,8 @@ class BroadcastConnection(SockJSConnection):
         #TODO remove all channel connections
 
 
-if __name__ == "__main__":  # TODO
+def main():
+    print(settings.PROJECT_DIR)
     wsgi_app = tornado.wsgi.WSGIContainer(django.core.handlers.wsgi.WSGIHandler())
 
     broadcast_router = SockJSRouter(BroadcastConnection, '/broadcast')
@@ -60,18 +61,11 @@ if __name__ == "__main__":  # TODO
     )
 
     server = tornado.httpserver.HTTPServer(app)
+    server.listen(config.port, config.address)
 
-    #TODO temp workaround for heroku
-    try:
-        import os
-        port = os.environ['PORT']
-        print("getting port from os vars")
-    except KeyError:
-        port = tornado.options.options.port
-        print("getting port from options")
-    print(port)
-
-    server.listen(port, tornado.options.options.address)
-
-    logger.info("listening at: http://%s:%s", tornado.options.options.address, port)
+    logger.info("listening at: http://%s:%s", config.address, config.port)
     tornado.ioloop.IOLoop.instance().start()
+
+
+if __name__ == "__main__":
+    main()

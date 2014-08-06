@@ -1,1 +1,1 @@
-web: PYTHONPATH=. python game/server.py
+web: export PYTHONPATH=. && python game/server.py  
