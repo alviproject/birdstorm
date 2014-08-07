@@ -71,20 +71,30 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
         request_id = request.META['HTTP_X_REQUESTID']
         planet = models.Planet.objects.get(pk=planet_id)
         ship = self.get_queryset(request).get(pk=pk)
-        if ship.system != planet.system:
-            raise RuntimeError
         scan_progress_signal = blinker.signal(game.apps.core.signals.planet_scan_progress % request_id)
 
+        result = ship.scan_result(planet_id)
+        level = len(result['levels'])
         scan_progress_signal.send(self, messages=[
-            "Scanning, please stand by...",
+            "Scanning level %d, please stand by..." % level,
         ])
-        yield 3
+
+        yield pow(settings.FACTOR, level)
+
+        if ship.system != planet.system:
+            scan_progress_signal.send(self, messages=[
+                "Scan failed:",
+                "Current ship is not located next to the scanned planed."
+            ])
+            return
+
         if not isinstance(planet, TerrestrialPlanet):
             scan_progress_signal.send(self, messages=[
                 "Scan failed:",
                 "This planet type is not supported by equipped scanner."
             ])
             return
+
         if ship.is_drilled(planet_id):
             scan_progress_signal.send(self, messages=[
                 "Scan failed:",
@@ -92,18 +102,13 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
             ])
             return
 
-        result = ship.scan_result(planet_id)
-        level = len(result['levels'])
         if level >= 2:
             scan_progress_signal.send(self, messages=[
                 "Scan failed:",
                 "Equipped scanner cannot scan any deeper."
             ])
             return
-        scan_progress_signal.send(self, messages=[
-            "Level %d" % level,
-        ])
-        yield pow(settings.FACTOR, level)
+
         try:
             level_resources = planet.data['resources'][level]
         except IndexError:
