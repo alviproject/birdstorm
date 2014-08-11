@@ -71,9 +71,10 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
         request_id = request.META['HTTP_X_REQUESTID']
         planet = models.Planet.objects.get(pk=planet_id)
         ship = self.get_queryset(request).get(pk=pk)
+        user = ship.owner
         scan_progress_signal = blinker.signal(game.apps.core.signals.planet_scan_progress % request_id)
 
-        result = ship.scan_result(planet_id)
+        result = user.profile.scan_result(planet_id)
         level = len(result['levels'])
         scan_progress_signal.send(self, messages=[
             "Scanning level %d, please stand by..." % level,
@@ -95,7 +96,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
             ])
             return
 
-        if ship.is_drilled(planet_id):
+        if user.profile.is_drilled(planet_id):
             scan_progress_signal.send(self, messages=[
                 "Scan failed:",
                 "Planet was already drilled, you have to wait some time before net extraction."
@@ -126,7 +127,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
         scan_progress_signal.send(self, messages=[
             "Scan result:", ]+[("Resource: %s, quantity: %s" % (r['type'], r['quantity'])) for r in current_level_result])
         result['levels'].append(current_level_result)
-        ship.save()
+        user.save()
 
 
 def test_view(request):

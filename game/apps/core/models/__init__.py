@@ -9,4 +9,4 @@ from game.apps.core.models.ships import ShipSerializer
 from game.apps.core.models.ships import OwnShipSerializer
 from game.apps.core.models.ships import OwnShipDetailsSerializer
 from game.apps.core.models.buildings import Building
-
+import game.apps.core.models.profile

@@ -41,27 +41,6 @@ class Ship(PolymorphicBase):
         signal_name = game.apps.core.signals.ship_move
         blinker.signal(signal_name % 'main').send(self)
 
-    def is_drilled(self, planet_id):
-        try:
-            return self.data['mining_data']['drilled_planets'].count(planet_id) > 0
-        except KeyError:
-            return False
-
-    def scan_result(self, planet_id):
-        mining_data = self.data.setdefault('mining_data', dict(scan_results=[]))
-        results = mining_data['scan_results']
-        for r in results:
-            if r['planet_id'] == planet_id:
-                return r
-        if len(results) >= 5:
-            results.pop(0)
-        result = dict(
-            planet_id=planet_id,
-            levels=[],
-        )
-        results.append(result)
-        return result
-
     class Meta:
         app_label = 'core'
 
