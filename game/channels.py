@@ -33,7 +33,7 @@ class Channel(metaclass=ChannelMeta):
             #TODO use kind of a binder
             def make_connector(*args, **kwargs):
                 return self.receive(receiver, *args, **kwargs)
-            blinker.signal(signal_name % name).connect(make_connector, weak=False)
+            blinker.signal(signal_name % name).connect(make_connector, weak=False)  # TODO check when channel is removed
 
     def instance_subscribe(self, connection):
         self.connections.add(connection)

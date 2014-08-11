@@ -34,6 +34,7 @@ class BroadcastConnection(SockJSConnection):
             self.handle_connect(data)
 
     def handle_connect(self, params):
+        logger.debug("Opening new broadcast connection, params: ", params)
         channel_class, channel_name = params['channel'].split('.')
         channel = game.channels.Channel.channels[channel_class]
         user = None  # TODO
@@ -45,7 +46,6 @@ class BroadcastConnection(SockJSConnection):
 
 
 def main():
-    print(settings.PROJECT_DIR)
     wsgi_app = tornado.wsgi.WSGIContainer(django.core.handlers.wsgi.WSGIHandler())
 
     broadcast_router = SockJSRouter(BroadcastConnection, '/broadcast')

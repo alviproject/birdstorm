@@ -1,45 +1,65 @@
-var connection = new SockJS('/broadcast');
+var interval = undefined;
 
-connection.channels = {};
-connection.is_connected = false;
+function make_connection(delay, channels) {
+    if(interval!==undefined) {
+        window.clearInterval(interval);
+    }
 
-connection.send_connect = function (channel) {
-    var message = {
-        command: 'connect',
-        channel: channel
+    connection = new SockJS('/broadcast');
+
+    connection.channels = channels;
+    console.log(connection.channels);
+
+    connection.is_connected = false;
+
+    connection.send_connect = function (channel) {
+        console.log("connecting to ", channel);
+        var message = {
+            command: 'connect',
+            channel: channel
+        };
+        message = JSON.stringify(message);
+        connection.send(message);
     };
-    message = JSON.stringify(message);
-    connection.send(message);
-};
 
-connection.onopen = function () {
-    console.log("opening broadcast connection");
+    connection.onopen = function () {
+        console.log("opening broadcast connection");
+        this.is_connected = true;
 
-    this.is_connected = true;
+        console.log("connecting to requested broadcast channels");
+        for (var channel in this.channels) {
+            this.send_connect(channel);
+        }
+    };
 
-    console.log("connecting to requested broadcast channels");
-    for (var channel in this.channels) {
-        this.send_connect(channel);
-    }
-};
+    connection.onmessage = function (e) {
+        console.log('reveiving message', e.data);
+        console.log(this.channels);
+        var channel = e.data['channel'];
+        //var channel_class = channel.split('.')[0];
+        this.channels[channel](e.data);
+    };
 
-connection.onmessage = function (e) {
-    console.log('reveiving message', e.data);
-    console.log(this.channels);
-    var channel = e.data['channel'];
-    //var channel_class = channel.split('.')[0];
-    this.channels[channel](e.data);
-};
+    connection.onclose = function () {
+        console.log("broadcast connection closed, trying to reconnect in ", delay);
+        this.is_connected = false;
+        var connection_channels = this.channels;
+        interval = window.setInterval(function () {
+            var new_delay = 2*(delay+1);
+            if(new_delay > 1000){
+                new_delay = 1000
+            }
+            make_connection(new_delay, connection_channels)
+        }, delay);
+    };
 
-connection.onclose = function () {
-    console.log("closing broadcast connection");
-};
+    connection.add_channel = function (channel, callback) {
+        this.channels[channel] = callback;
+        if (this.is_connected) {
+            this.send_connect(channel);
+        }
+    };
+    return connection;
+}
 
-connection.add_channel = function(channel, callback) {
-    this.channels[channel] = callback;
-    if(this.is_connected) {
-        this.send_connect(channel);
-    }
-};
-
-//end of SockJS connection
+var connection = make_connection(0, {});
