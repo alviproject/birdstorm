@@ -1,3 +1,4 @@
+from contextlib import contextmanager
 import blinker
 from django.contrib.auth.models import User
 import game.apps.core.signals
@@ -15,6 +16,7 @@ class Ship(PolymorphicBase):
     owner = models.ForeignKey(User)
     system = models.ForeignKey('System')  # TODO change it to planet
     data = JSONField()
+    locked = models.BooleanField(default=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -28,6 +30,18 @@ class Ship(PolymorphicBase):
             Armor(),
         ]
 
+    @contextmanager
+    def lock(self):
+        if self.locked:
+            raise RuntimeError("object %s, %d already locked" % (self.__class__.__name__, self.id))
+        self.locked = True
+        self.save()
+        try:
+            yield
+        finally:
+            self.locked = False
+            self.save()
+
     def effective_range(self):
         return min(w.range() for w in self.weapons)
 
@@ -40,6 +54,11 @@ class Ship(PolymorphicBase):
         self.save()
         signal_name = game.apps.core.signals.ship_move
         blinker.signal(signal_name % 'main').send(self)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        ship_signal = blinker.signal(game.apps.core.signals.own_ships_data % self.owner.id)
+        ship_signal.send(None, ship=self)
 
     class Meta:
         app_label = 'core'
@@ -63,7 +82,7 @@ class OwnShipSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Ship
-        fields = ['id', 'url', 'type']
+        fields = ['id', 'url', 'type', 'locked']
 
 
 class OwnShipDetailsSerializer(OwnShipSerializer):

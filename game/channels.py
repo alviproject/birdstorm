@@ -50,6 +50,7 @@ class Channel(metaclass=ChannelMeta):
 
     @classmethod
     def subscribe(cls, user, connection, name):
+        logger.debug("connecting %s, %s, %s, %s", cls, user, connection, name)
         if not cls.check_permissions(user, name):
             return  # TODO report an error
         instance = cls.instances.get(name, None) or cls(name)

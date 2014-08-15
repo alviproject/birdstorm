@@ -74,60 +74,64 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
         user = ship.owner
         scan_progress_signal = blinker.signal(game.apps.core.signals.planet_scan_progress % request_id)
 
-        result = user.profile.scan_result(planet_id)
-        level = len(result['levels'])
-        scan_progress_signal.send(self, messages=[
-            "Scanning level %d, please stand by..." % level,
-        ])
-
-        yield pow(settings.FACTOR, level)
-
-        if ship.system != planet.system:
+        with ship.lock():
+            result = user.profile.scan_result(planet_id)
+            level = len(result['levels'])
+            #TODO check why we have to pass self as a first argument
             scan_progress_signal.send(self, messages=[
-                "Scan failed:",
-                "Current ship is not located next to the scanned planed."
+                "Scanning level %d, please stand by..." % level,
             ])
-            return
 
-        if not isinstance(planet, TerrestrialPlanet):
-            scan_progress_signal.send(self, messages=[
-                "Scan failed:",
-                "This planet type is not supported by equipped scanner."
-            ])
-            return
+            yield pow(settings.FACTOR, level)
 
-        if user.profile.is_drilled(planet_id):
-            scan_progress_signal.send(self, messages=[
-                "Scan failed:",
-                "Planet was already drilled, you have to wait some time before net extraction."
-            ])
-            return
+            if ship.system != planet.system:
+                scan_progress_signal.send(self, messages=[
+                    "Scan failed:",
+                    "Current ship is not located next to the scanned planed."
+                ])
+                return
 
-        if level >= 2:
-            scan_progress_signal.send(self, messages=[
-                "Scan failed:",
-                "Equipped scanner cannot scan any deeper."
-            ])
-            return
+            if not isinstance(planet, TerrestrialPlanet):
+                scan_progress_signal.send(self, messages=[
+                    "Scan failed:",
+                    "This planet type is not supported by equipped scanner."
+                ])
+                return
 
-        try:
-            level_resources = planet.data['resources'][level]
-        except IndexError:
+            if user.profile.is_drilled(planet_id):
+                scan_progress_signal.send(self, messages=[
+                    "Scan failed:",
+                    "Planet was already drilled, you have to wait some time before net extraction."
+                ])
+                return
+
+            if level >= 2:
+                scan_progress_signal.send(self, messages=[
+                    "Scan failed:",
+                    "Equipped scanner cannot scan any deeper."
+                ])
+                return
+
+            try:
+                level_resources = planet.data['resources'][level]
+            except IndexError:
+                scan_progress_signal.send(self, messages=[
+                    "Scan failed:",
+                    "Some solid structures below surface of this planet block deeper scans."
+                ])
+                return
+            current_level_result = []
+            for r in level_resources:
+                current_level_result.append(dict(
+                    type=r['type'],
+                    quantity=r['quantity'],
+                ))
             scan_progress_signal.send(self, messages=[
-                "Scan failed:",
-                "Some solid structures below surface of this planet block deeper scans."
-            ])
-            return
-        current_level_result = []
-        for r in level_resources:
-            current_level_result.append(dict(
-                type=r['type'],
-                quantity=r['quantity'],
-            ))
-        scan_progress_signal.send(self, messages=[
-            "Scan result:", ]+[("Resource: %s, quantity: %s" % (r['type'], r['quantity'])) for r in current_level_result])
-        result['levels'].append(current_level_result)
-        user.save()
+                "Scan result:", ]+[("Resource: %s, quantity: %s" % (r['type'], r['quantity'])) for r in current_level_result])
+
+            #TODO move this line to model
+            result['levels'].append(current_level_result)
+            user.save()
 
 
 def test_view(request):

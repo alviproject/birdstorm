@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.models import User
 from rest_framework import routers
 import game.apps.account.views
 import game.apps.core.views
@@ -25,4 +26,5 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^api/', include(router.urls)),
+    url(r'^api/account', game.apps.account.views.Account.as_view(model=User)),  # TODO not shown at /api
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

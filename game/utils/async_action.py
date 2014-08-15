@@ -6,6 +6,7 @@ from rest_framework.response import Response
 
 def async_action(wrapped_action):
     def step(it):
+        #TODO check if time is as expected when task is actually launched, issue a warning if it isn't
         try:
             time_delta = next(it)
         except StopIteration:
