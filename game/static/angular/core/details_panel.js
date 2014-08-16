@@ -31,6 +31,7 @@
                 //
                 // connect to details channel
                 //
+                //TODO this should be planetdetails.planet.user_id
                 connection.add_channel('planetdetails.' + request_id(), function (data) {
                     jQuery.each(data.messages, function(i, message){
                         scope.detailsPanel.scan_messages.push(message);

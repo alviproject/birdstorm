@@ -1,6 +1,7 @@
 (function() {
     var app = angular.module('game');
 
+    //TODO this should be probably a service
     app.controller('AccountController', ['$http', function ($http) {
         var account = this;
         account.data = {};
