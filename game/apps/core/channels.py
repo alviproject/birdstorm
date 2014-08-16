@@ -1,12 +1,13 @@
 import game.apps.core.signals
 from game.channels import receiver
 from game.channels import Channel
+from game.apps.core.models.ships import OwnShipDetailsSerializer
 
 
 class Sector(Channel):
     @receiver(game.apps.core.signals.ship_move)
-    def ship_move(self, channel_instance):
-        return dict(ship=channel_instance.id, target_system=channel_instance.system.id)
+    def ship_move(self, ship, time):
+        return dict(ship=ship.id, target_system=ship.system.id, time=time)
 
 
 class PlanetDetails(Channel):
@@ -15,7 +16,7 @@ class PlanetDetails(Channel):
         return dict(messages=messages)
 
 
-class Profile(Channel):
-    @receiver(game.apps.core.signals.own_ships_data)
+class OwnShip(Channel):
+    @receiver(game.apps.core.signals.own_ship_data)
     def own_ships_data(self, channel_instance, ship):
-        return dict(ship=ship)
+        return dict(ship=OwnShipDetailsSerializer(ship).data)

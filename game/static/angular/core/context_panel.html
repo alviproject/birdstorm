@@ -17,7 +17,7 @@
                     <li>
                         <b>Distance:</b>
                         {{ distance }}
-                        <a href="#" class="ajax-link pull-right" title="Go" ng-click="go_to_system(contextPanel.data.id)">
+                        <a href="#" class="ajax-link pull-right" title="Go" ng-click="go_to_system(contextPanel.data.id)" ng-hide="controlPanel.currentShipDetails.locked">
                             <span class="fa fa-plane fa-fw"></span>
                         </a>
                     </li>

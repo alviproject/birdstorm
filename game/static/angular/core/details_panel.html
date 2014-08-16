@@ -20,7 +20,7 @@
                         {{ message }}
                     </li>
                 </ul>
-                <a href ng-click="scan(detailsPanel.data.id)">Scan</a>
+                <a href ng-click="scan(detailsPanel.data.id)" ng-hide="controlPanel.currentShipDetails.locked">Scan</a>
             </div>
         </div>
     </div>

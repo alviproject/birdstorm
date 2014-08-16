@@ -49,15 +49,9 @@ class Ship(PolymorphicBase):
     def speed():
         return 2
 
-    def move(self, system):
-        self.system = system
-        self.save()
-        signal_name = game.apps.core.signals.ship_move
-        blinker.signal(signal_name % 'main').send(self)
-
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        ship_signal = blinker.signal(game.apps.core.signals.own_ships_data % self.owner.id)
+        ship_signal = blinker.signal(game.apps.core.signals.own_ship_data % self.id)
         ship_signal.send(None, ship=self)
 
     class Meta:
@@ -75,6 +69,7 @@ class ShipSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Ship
+        fields = ['id', 'url', 'type', 'system_id', 'owner', 'system']
 
 
 class OwnShipSerializer(serializers.HyperlinkedModelSerializer):
@@ -82,9 +77,10 @@ class OwnShipSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Ship
-        fields = ['id', 'url', 'type', 'locked']
+        fields = ['id', 'url', 'type']
 
 
 class OwnShipDetailsSerializer(OwnShipSerializer):
     class Meta:
         model = Ship
+        fields = ['id', 'url', 'type', 'owner', 'system', 'locked']

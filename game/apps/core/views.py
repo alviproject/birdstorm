@@ -54,16 +54,22 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
 
     def retrieve(self, request, pk=None, *args, **kwargs):
         ship = get_object_or_404(self.get_queryset(request), pk=pk)
-        serializer = models.ShipSerializer(ship, context=dict(request=request))
+        serializer = models.OwnShipDetailsSerializer(ship, context=dict(request=request))
         return Response(serializer.data)
 
-    @action()
+    @async_action
     def move(self, request, pk=None):
         system_id = request.DATA['system_id']
         system = models.System.objects.get(pk=system_id)
         ship = self.get_queryset(request).get(pk=pk)
-        ship.move(system)
-        return Response()  # TODO could return ETA
+        time = 5  # seconds
+        with ship.lock():
+            ship.system = system
+            ship.save()
+            signal_name = game.apps.core.signals.ship_move
+            blinker.signal(signal_name % 'main').send(ship, time=time)
+            yield time
+        return Response()
 
     @async_action
     def scan(self, request, pk=None):
