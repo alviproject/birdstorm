@@ -33,9 +33,7 @@
                 //
                 //TODO this should be planetdetails.planet.user_id
                 this.subscription = connection.create_subscription('planetdetails', function (data) {
-                    jQuery.each(data.messages, function(i, message){
-                        scope.detailsPanel.scan_messages.push(message);
-                    });
+                    scope.detailsPanel.scan_messages.push(data.message);
                     scope.$apply();
                 });
                 this.subscription.subscribe(request_id());

@@ -84,47 +84,48 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
             result = user.profile.scan_result(planet_id)
             level = len(result['levels'])
             #TODO check why we have to pass self as a first argument
-            scan_progress_signal.send(self, messages=[
-                "Scanning level %d, please stand by..." % level,
-            ])
+            scan_progress_signal.send(self, message=dict(
+                type="info",
+                text="Scanning level %d, please stand by..." % level,
+            ))
 
             yield pow(settings.FACTOR, level)
 
             if ship.system != planet.system:
-                scan_progress_signal.send(self, messages=[
-                    "Scan failed:",
-                    "Current ship is not located next to the scanned planed."
-                ])
+                scan_progress_signal.send(self, message=dict(
+                    type="error",
+                    text="Current ship is not located next to the scanned planet.",
+                ))
                 return
 
             if not isinstance(planet, TerrestrialPlanet):
-                scan_progress_signal.send(self, messages=[
-                    "Scan failed:",
-                    "This planet type is not supported by equipped scanner."
-                ])
+                scan_progress_signal.send(self, message=dict(
+                    type="error",
+                    text="This planet type is not supported by equipped scanner.",
+                ))
                 return
 
             if user.profile.is_drilled(planet_id):
-                scan_progress_signal.send(self, messages=[
-                    "Scan failed:",
-                    "Planet was already drilled, you have to wait some time before net extraction."
-                ])
+                scan_progress_signal.send(self, message=dict(
+                    type="error",
+                    text="Planet was already drilled, you have to wait some time before net extraction.",
+                ))
                 return
 
             if level >= 2:
-                scan_progress_signal.send(self, messages=[
-                    "Scan failed:",
-                    "Equipped scanner cannot scan any deeper."
-                ])
+                scan_progress_signal.send(self, message=dict(
+                    type="error",
+                    text="Equipped scanner cannot scan any deeper.",
+                ))
                 return
 
             try:
                 level_resources = planet.data['resources'][level]
             except IndexError:
-                scan_progress_signal.send(self, messages=[
-                    "Scan failed:",
-                    "Some solid structures below surface of this planet block deeper scans."
-                ])
+                scan_progress_signal.send(self, message=dict(
+                    type="error",
+                    text="Some solid structures below surface of this planet block deeper scans.",
+                ))
                 return
             current_level_result = []
             for r in level_resources:
@@ -132,8 +133,8 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
                     type=r['type'],
                     quantity=r['quantity'],
                 ))
-            scan_progress_signal.send(self, messages=[
-                "Scan result:", ]+[("Resource: %s, quantity: %s" % (r['type'], r['quantity'])) for r in current_level_result])
+            for resource in current_level_result:
+                scan_progress_signal.send(self, resource=resource)
 
             #TODO move this line to model
             result['levels'].append(current_level_result)

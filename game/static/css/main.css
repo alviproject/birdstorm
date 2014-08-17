@@ -15,3 +15,15 @@ input#chat-text {
 ul.list-sublist {
     margin-left: 15px;
 }
+
+.info {
+    color: black;
+}
+
+.error {
+    color: red;
+}
+
+.success {
+    color: #006400;
+}
