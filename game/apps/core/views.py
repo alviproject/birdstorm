@@ -74,6 +74,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
     @async_action
     def scan(self, request, pk=None):
         planet_id = request.DATA['planet_id']
+        level = int(request.DATA['level'])
         request_id = request.META['HTTP_X_REQUESTID']
         planet = models.Planet.objects.get(pk=planet_id)
         ship = self.get_queryset(request).get(pk=pk)
@@ -81,8 +82,9 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
         scan_progress_signal = blinker.signal(game.apps.core.signals.planet_scan_progress % request_id)
 
         with ship.lock():
-            result = user.profile.scan_result(planet_id)
-            level = len(result['levels'])
+            results = user.profile.scan_results(planet_id)
+            if level < 0 or level >= len(results):
+                level = len(results)
             #TODO check why we have to pass self as a first argument
             scan_progress_signal.send(self, message=dict(
                 type="info",
@@ -133,12 +135,18 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
                     type=r['type'],
                     quantity=r['quantity'],
                 ))
-            for resource in current_level_result:
-                scan_progress_signal.send(self, resource=resource)
+            scan_progress_signal.send(
+                self,
+                results=current_level_result,
+                level=level,
+                message=dict(
+                    type="success",
+                    text="Scan successful",
+                ),
+            )
 
-            #TODO move this line to model
-            result['levels'].append(current_level_result)
-            user.save()
+            user.profile.set_scan_result(planet_id, level, current_level_result)
+            user.profile.save()
 
 
 def test_view(request):

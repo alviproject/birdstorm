@@ -15,8 +15,8 @@ class Sector(Channel):
 
 class PlanetDetails(Channel):
     @receiver(game.apps.core.signals.planet_scan_progress)
-    def planet_scan_progress(self, channel_instance, message):
-        return dict(message=message)
+    def planet_scan_progress(self, channel_instance, **kwargs):
+        return dict(**kwargs)
 
 
 class OwnShip(Channel):

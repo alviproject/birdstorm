@@ -33,15 +33,21 @@
                 //
                 //TODO this should be planetdetails.planet.user_id
                 this.subscription = connection.create_subscription('planetdetails', function (data) {
-                    scope.detailsPanel.scan_messages.push(data.message);
+                    if(data.message !== undefined) {
+                        scope.detailsPanel.scan_messages.push(data.message);
+                    }
+                    if(data.results !== undefined) {
+                        scope.detailsPanel.data.scan_results[data.level] = data.results;
+                    }
                     scope.$apply();
                 });
                 this.subscription.subscribe(request_id());
 
-                scope.scan = function (planet_id) {
+                scope.scan = function (planet_id, level) {
                     var ship_id = this.controlPanel.currentShip.id;
                     $http.post('/api/core/own_ships/'+ship_id+'/scan/', {
-                        planet_id: planet_id
+                        planet_id: planet_id,
+                        level: level
                     });
                 }
             }
