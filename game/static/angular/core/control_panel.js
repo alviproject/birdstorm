@@ -21,7 +21,6 @@
                     });
 
                     connection.add_channel('ownship.' + scope.controlPanel.currentShip.id, function (data) {
-                        console.log("ok", data);
                         scope.controlPanel.currentShipDetails = data.ship;
                         scope.$apply();
                     });

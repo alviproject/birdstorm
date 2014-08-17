@@ -8,7 +8,6 @@ function make_connection(delay, channels) {
     connection = new SockJS('/broadcast');
 
     connection.channels = channels;
-    console.log(connection.channels);
 
     connection.is_connected = false;
 
@@ -34,7 +33,6 @@ function make_connection(delay, channels) {
 
     connection.onmessage = function (e) {
         console.log('reveiving message', e.data);
-        console.log(this.channels);
         var channel = e.data['channel'];
         //var channel_class = channel.split('.')[0];
         this.channels[channel](e.data);
