@@ -32,12 +32,13 @@
                 // connect to details channel
                 //
                 //TODO this should be planetdetails.planet.user_id
-                connection.add_channel('planetdetails.' + request_id(), function (data) {
+                this.subscription = connection.create_subscription('planetdetails', function (data) {
                     jQuery.each(data.messages, function(i, message){
                         scope.detailsPanel.scan_messages.push(message);
                     });
                     scope.$apply();
                 });
+                this.subscription.subscribe(request_id());
 
                 scope.scan = function (planet_id) {
                     var ship_id = this.controlPanel.currentShip.id;

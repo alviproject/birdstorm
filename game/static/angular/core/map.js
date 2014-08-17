@@ -121,7 +121,7 @@
                 //
                 //connect to sector updates and add handler to animate ship movements
                 //
-                connection.add_channel('sector.main', function(data) {
+                this.subscription = connection.create_subscription('sector', function(data) {
                     var ship = map.ships[data.ship];
                     var time = data.time;
                     var target_system = map.systems[data.target_system];
@@ -138,6 +138,7 @@
                             };
                         });
                 });
+                this.subscription.subscribe('main');
             }
         }
     });
