@@ -45,6 +45,18 @@ class Ship(PolymorphicBase):
     def effective_range(self):
         return min(w.range() for w in self.weapons)
 
+    #TODO move to a mixed in class
+    @property
+    def resources(self):
+        return self.data.get('resources', [])
+
+    #TODO move to a mixed in class
+    def add_resource(self, type, quantity):
+        #FIXME does not work correctly (just a test)
+        #TODO keep resources as a dict (not a list)
+        resources = self.data.setdefault('resources', [])
+        resources.append(dict(type=type, quantity=quantity))
+
     @staticmethod
     def speed():
         return 2
@@ -81,6 +93,8 @@ class OwnShipSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class OwnShipDetailsSerializer(OwnShipSerializer):
+    resources = serializers.Field(source='resources')
+
     class Meta:
         model = Ship
-        fields = ['id', 'url', 'type', 'owner', 'system', 'locked']
+        fields = ['id', 'url', 'type', 'owner', 'system', 'locked', 'resources']

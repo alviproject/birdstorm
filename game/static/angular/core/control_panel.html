@@ -32,6 +32,14 @@
                     <li>Capacity: 20</li>
                 </ul>
             </li>
+            <li>
+                <b>Cargo:</b>
+                <ul class="list-unstyled list-sublist">
+                    <li ng-repeat="resource in controlPanel.currentShipDetails.resources">
+                        {{resource.type}}: {{resource.quantity}}
+                    </li>
+                </ul>
+            </li>
         </ul>
         <div class="pull-right">
             Map ({{ (map.scale * 100)|number:0 }}%)

@@ -15,7 +15,7 @@
                     <li><b>ID:</b> {{ detailsPanel.data.id }}</li>
                 </ul>
                 <div ng-repeat="level_resources in detailsPanel.data.scan_results track by $index">
-                    <hr />
+                    <hr/>
                     Level {{$index}}
                     <span class="pull-right">
                         <a
@@ -26,18 +26,28 @@
                         </a>
                     </span>
                     <ul>
-                        <li ng-repeat="resource in level_resources">{{resource.type}}: {{resource.quantity}}</li>
+                        <li ng-repeat="resource in level_resources">
+                            {{resource.type}}: {{resource.quantity}}
+                            <span ng-hide="controlPanel.currentShipDetails.locked">
+                                -
+                                <a
+                                        href
+                                        ng-click="extract(detailsPanel.data.id, $index, resource.type)">
+                                    Extract
+                                </a>
+                            </span>
+                        </li>
                     </ul>
                 </div>
-                <hr />
-                    <span class="pull-right">
-                        <a
-                                href
-                                ng-click="scan(detailsPanel.data.id, -1)"
-                                ng-hide="controlPanel.currentShipDetails.locked">
-                            Scan
-                        </a>
-                    </span>
+                <hr/>
+                <span class="pull-right">
+                    <a
+                            href
+                            ng-click="scan(detailsPanel.data.id, -1)"
+                            ng-hide="controlPanel.currentShipDetails.locked">
+                        Scan
+                    </a>
+                </span>
                 <ul class="list-unstyled">
                     <li ng-repeat="message in detailsPanel.scan_messages track by $index"
                         ng-class="{info:'info', error:'error', success:'success'}[message.type]">

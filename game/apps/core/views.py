@@ -79,7 +79,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
         planet = models.Planet.objects.get(pk=planet_id)
         ship = self.get_queryset(request).get(pk=pk)
         user = ship.owner
-        scan_progress_signal = blinker.signal(game.apps.core.signals.planet_scan_progress % request_id)
+        scan_progress_signal = blinker.signal(game.apps.core.signals.planet_actions_progress % request_id)
 
         with ship.lock():
             results = user.profile.scan_results(planet_id)
@@ -89,36 +89,36 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
             scan_progress_signal.send(self, message=dict(
                 type="info",
                 text="Scanning level %d, please stand by..." % level,
-            ))
-
-            yield pow(settings.FACTOR, level)
+                ))
 
             if ship.system != planet.system:
                 scan_progress_signal.send(self, message=dict(
                     type="error",
                     text="Current ship is not located next to the scanned planet.",
-                ))
+                    ))
                 return
+
+            yield pow(settings.FACTOR, level)
 
             if not isinstance(planet, TerrestrialPlanet):
                 scan_progress_signal.send(self, message=dict(
                     type="error",
                     text="This planet type is not supported by equipped scanner.",
-                ))
+                    ))
                 return
 
             if user.profile.is_drilled(planet_id):
                 scan_progress_signal.send(self, message=dict(
                     type="error",
-                    text="Planet was already drilled, you have to wait some time before net extraction.",
-                ))
+                    text="Planet was already drilled, you have to wait some time before next extraction.",
+                    ))
                 return
 
             if level >= 2:
                 scan_progress_signal.send(self, message=dict(
                     type="error",
                     text="Equipped scanner cannot scan any deeper.",
-                ))
+                    ))
                 return
 
             try:
@@ -127,14 +127,14 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
                 scan_progress_signal.send(self, message=dict(
                     type="error",
                     text="Some solid structures below surface of this planet block deeper scans.",
-                ))
+                    ))
                 return
             current_level_result = []
             for r in level_resources:
                 current_level_result.append(dict(
                     type=r['type'],
                     quantity=r['quantity'],
-                ))
+                    ))
             scan_progress_signal.send(
                 self,
                 results=current_level_result,
@@ -142,10 +142,72 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
                 message=dict(
                     type="success",
                     text="Scan successful",
-                ),
-            )
+                    ),
+                )
 
             user.profile.set_scan_result(planet_id, level, current_level_result)
+            user.profile.save()
+
+    @async_action
+    def extract(self, request, pk=None):
+        planet_id = request.DATA['planet_id']
+        level = int(request.DATA['level'])
+        resource_type = request.DATA['resource_type']
+        request_id = request.META['HTTP_X_REQUESTID']
+        planet = models.Planet.objects.get(pk=planet_id)
+        ship = self.get_queryset(request).get(pk=pk)
+        user = ship.owner
+        scan_progress_signal = blinker.signal(game.apps.core.signals.planet_actions_progress % request_id)
+
+        with ship.lock():
+            results = user.profile.scan_results(planet_id)
+            if level < 0 or level >= len(results):
+                raise RuntimeError("Wrong level")
+
+            scan_progress_signal.send(self, message=dict(
+                type="info",
+                text="Extracting %s, please stand by..." % resource_type,
+            ))
+
+            if ship.system != planet.system:
+                scan_progress_signal.send(self, message=dict(
+                    type="error",
+                    text="Current ship is not located next to the scanned planet.",
+                ))
+                return
+
+            yield pow(settings.FACTOR, level*2)
+
+            if user.profile.is_drilled(planet_id):
+                scan_progress_signal.send(self, message=dict(
+                    type="error",
+                    text="Planet was already drilled, you have to wait some time before next extraction.",
+                ))
+                return
+
+            if level >= 2:
+                scan_progress_signal.send(self, message=dict(
+                    type="error",
+                    text="Equipped drill cannot scan any deeper.",
+                ))
+                return
+
+            for result in results[level]:
+                if result['type'] == resource_type:
+                    #FIXME for some reasons adds a wrong resource
+                    ship.add_resource(result['type'], result['quantity'])
+                    ship.save()
+                    blinker.signal(game.apps.core.signals.own_ship_data % ship.id).send(None, ship=ship)
+                    scan_progress_signal.send(
+                        self,
+                        message=dict(
+                            type="success",
+                            text="Extraction successful",
+                        ),
+                    )
+
+            #FIXME does not exists
+            user.profile.add_drilled_planet(planet_id)
             user.profile.save()
 
 

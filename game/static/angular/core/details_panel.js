@@ -49,6 +49,15 @@
                         planet_id: planet_id,
                         level: level
                     });
+                };
+
+                scope.extract = function (planet_id, level, resource_type) {
+                    var ship_id = this.controlPanel.currentShip.id;
+                    $http.post('/api/core/own_ships/'+ship_id+'/extract/', {
+                        planet_id: planet_id,
+                        level: level,
+                        resource_type: resource_type
+                    });
                 }
             }
         }
