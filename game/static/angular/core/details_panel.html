@@ -26,13 +26,13 @@
                         </a>
                     </span>
                     <ul>
-                        <li ng-repeat="resource in level_resources">
-                            {{resource.type}}: {{resource.quantity}}
+                        <li ng-repeat="(type, quantity) in level_resources">
+                            {{type}}: {{quantity}}
                             <span ng-hide="controlPanel.currentShipDetails.locked">
                                 -
                                 <a
                                         href
-                                        ng-click="extract(detailsPanel.data.id, $index, resource.type)">
+                                        ng-click="extract(detailsPanel.data.id, $parent.$index, type)">
                                     Extract
                                 </a>
                             </span>

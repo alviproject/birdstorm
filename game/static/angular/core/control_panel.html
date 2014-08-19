@@ -35,8 +35,8 @@
             <li>
                 <b>Cargo:</b>
                 <ul class="list-unstyled list-sublist">
-                    <li ng-repeat="resource in controlPanel.currentShipDetails.resources">
-                        {{resource.type}}: {{resource.quantity}}
+                    <li ng-repeat="(type, quantity) in controlPanel.currentShipDetails.resources">
+                        {{type}}: {{quantity}}
                     </li>
                 </ul>
             </li>

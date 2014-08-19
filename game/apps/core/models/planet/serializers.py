@@ -18,7 +18,7 @@ class PlanetDetailsSerializer(serializers.HyperlinkedModelSerializer):
         user = self.context['request'].user
         if not user.is_authenticated():
             return []
-        return user.profile.scan_results(obj.id)
+        return user.profile.get_scan_results(obj.id)
 
     class Meta:
         model = Planet
