@@ -64,7 +64,7 @@ class Ship(PolymorphicBase, ResourceContainer):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         ship_signal = blinker.signal(game.apps.core.signals.own_ship_data % self.id)
-        ship_signal.send(None, ship=self)
+        ship_signal.send(None, ship=OwnShipDetailsSerializer(self).data)
 
     class Meta:
         app_label = 'core'
