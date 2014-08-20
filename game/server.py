@@ -12,6 +12,7 @@ import tornado.wsgi
 import tornado.httpserver
 import django.utils.importlib
 import django.contrib.auth
+from django.contrib.auth.models import AnonymousUser
 
 from sockjs.tornado import SockJSConnection
 from sockjs.tornado import SockJSRouter
@@ -40,7 +41,12 @@ class BroadcastConnection(SockJSConnection):
 
         #get Django session
         engine = django.utils.importlib.import_module(django.conf.settings.SESSION_ENGINE)
-        session_key = info.get_cookie(django.conf.settings.SESSION_COOKIE_NAME).value
+        cookie_name = django.conf.settings.SESSION_COOKIE_NAME
+        try:
+            session_key = info.get_cookie(cookie_name).value
+        except AttributeError:
+            self.user = AnonymousUser()
+            return
         session = engine.SessionStore(session_key)
         session = session.load()
         request = DjangoRequest(session)

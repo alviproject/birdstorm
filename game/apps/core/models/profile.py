@@ -1,6 +1,42 @@
 from collections import OrderedDict
 from django.contrib.auth.models import User
 from jsonfield.fields import JSONField
+from jsonschema import validate
+
+
+#TODO move to other file (this is a generic schema)
+schema_resources = {
+    "type": "object",
+    "properties": {
+        "coal": {"type": "number", "minimum": 0,},
+        "iron": {"type": "number", "minimum": 0,},
+     },
+    "additionalProperties": False,
+}
+
+data_schema = {
+    "$schema": "http://json-schema.org/draft-04/schema#",
+
+    "type": "object",
+    "properties": {
+        "drilled_planets": {
+            "type": "array",
+            "items": {"type": "number", "minimum": 0},
+            "maxItems": 5
+        },
+        "scan_results": {
+            "type": "object",
+            "patternProperties": {
+                "[0-9]*": {
+                    "type": "array",
+                    "items": schema_resources,
+                },
+            },
+            "additionalProperties": False,
+        },
+    },
+    "additionalProperties": False
+}
 
 
 class Profile:
@@ -41,6 +77,7 @@ class Profile:
         planets.append(planet_id)
 
     def save(self):
+        validate(self.data, data_schema)
         self.user.save()
 
 
