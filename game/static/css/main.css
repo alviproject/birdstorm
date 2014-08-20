@@ -16,14 +16,4 @@ ul.list-sublist {
     margin-left: 15px;
 }
 
-.info {
-    color: black;
-}
-
-.error {
-    color: red;
-}
-
-.success {
-    color: #006400;
-}
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }

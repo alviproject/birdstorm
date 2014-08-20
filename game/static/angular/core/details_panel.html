@@ -1,21 +1,38 @@
-                <div class="panel panel-default" id="context_menu">
-                    <div class="panel-body">
 <div ng-switch="detailsPanel.choice">
     <!-- Planet -->
-    <div ng-switch-when="planet">
-    <div>
-        <tabset>
-            <tab heading="Planet">
-                Planet description
-                <ul class="list-unstyled">
-                    <li><b>Type:</b> {{ detailsPanel.data.type }}</li>
-                    <li><b>ID:</b> {{ detailsPanel.data.id }}</li>
-                </ul>
-            </tab>
-            <tab heading="Resources">
-                <div ng-repeat="level_resources in detailsPanel.data.scan_results track by $index">
-                    <hr/>
-                    Level {{$index}}
+    <!--<div ng-switch-when="planet">-->
+    <div class="panel panel-default" id="context_menu">
+        <div>
+            <tabset>
+                <tab heading="Planet">
+                    <div class="panel-body">
+                        <ul class="list-unstyled">
+                            <li><b>Type:</b> {{ detailsPanel.data.type }}</li>
+                            <li><b>ID:</b> {{ detailsPanel.data.id }}</li>
+                        </ul>
+                        Planet description
+                        Planet description
+                        Planet description
+                        Planet description
+                        Planet description
+                        Planet description
+                        Planet description
+                        Planet description
+                        Planet description
+                        Planet description
+                        Planet description
+                        Planet description
+                        <hr />
+                        Rich in various resources.<br />
+                        May contain some rare earth elements.<br />
+                        No solid structures are built on this planet.<br />
+                        Buildings: Building1, Building2, ...
+                    </div>
+                </tab>
+                <tab heading="Resources">
+                    <div class="panel-body">
+                        <div ng-repeat="level_resources in detailsPanel.data.scan_results track by $index">
+                            Level {{$index}}
                     <span class="pull-right">
                         <a
                                 href
@@ -24,9 +41,9 @@
                             Scan
                         </a>
                     </span>
-                    <ul>
-                        <li ng-repeat="(type, quantity) in level_resources">
-                            {{type}}: {{quantity}}
+                            <ul>
+                                <li ng-repeat="(type, quantity) in level_resources">
+                                    {{type}}: {{quantity}}
                             <span ng-hide="controlPanel.currentShipDetails.locked">
                                 -
                                 <a
@@ -35,10 +52,10 @@
                                     Extract
                                 </a>
                             </span>
-                        </li>
-                    </ul>
-                </div>
-                <hr/>
+                                </li>
+                            </ul>
+                            <hr/>
+                        </div>
                 <span class="pull-right">
                     <a
                             href
@@ -47,18 +64,73 @@
                         Scan
                     </a>
                 </span>
-                <ul class="list-unstyled">
-                    <li ng-repeat="message in detailsPanel.scan_messages track by $index"
-                        ng-class="{info:'info', error:'error', success:'success'}[message.type]">
-                        {{ message.text }}
-                    </li>
-                </ul>
-            </tab>
-            <tab heading="Buildings">
-                Planet description
-            </tab>
-        </tabset>
+                        <ul class="list-unstyled">
+                            <li ng-repeat="message in detailsPanel.scan_messages track by $index"
+                                ng-class="{info:'text-muted', error:'text-danger', success:'text-success'}[message.type]">
+                                {{ message.text }}
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                </tab>
+                <tab heading="Port">
+                    <div class="panel-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Resource</th>
+                                    <th>Planet</th>
+                                    <th>Ship</th>
+                                    <th>Qty</th>
+                                    <th>Buy</th>
+                                    <th>Sell</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Coal</td>
+                                <td>200</td>
+                                <td>200</td>
+                                <td><input class="input-sm" style="width: 50px" value="1"/></td>
+                                <td><button class="btn btn-default btn-sm">Buy (120c)</button></td>
+                                <td><button class="btn btn-default btn-sm">Sell (60c)</button></td>
+                            </tr>
+                            <tr>
+                                <td>Coal</td>
+                                <td>200</td>
+                                <td>200</td>
+                                <td><input class="input-sm" style="width: 50px" value="1"/></td>
+                                <td><button class="btn btn-default btn-sm">Buy (120c)</button></td>
+                                <td><button class="btn btn-default btn-sm">Sell (60c)</button></td>
+                            </tr>
+                            <tr>
+                                <td>Coal</td>
+                                <td>200</td>
+                                <td>200</td>
+                                <td><input class="input-sm" style="width: 50px" value="1"/></td>
+                                <td><button class="btn btn-default btn-sm">Buy (120c)</button></td>
+                                <td><button class="btn btn-default btn-sm">Sell (60c)</button></td>
+                            </tr>
+                            <tr>
+                                <td>Coal</td>
+                                <td>200</td>
+                                <td>200</td>
+                                <td><input class="input-sm" style="width: 50px" value="1"/></td>
+                                <td><button class="btn btn-default btn-sm">Buy (120c)</button></td>
+                                <td><button class="btn btn-default btn-sm">Sell (60c)</button></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </tab>
+                <tab heading="Factory">
+                    <div class="panel-body">
+                        Factory
+                    </div>
+                </tab>
+
+            </tabset>
+        </div>
     </div>
 </div>
-            </div>
-        </div>
+</div>
