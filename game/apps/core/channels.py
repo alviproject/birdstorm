@@ -1,21 +1,30 @@
+import logging
 import game.apps.core.signals
 from game.channels import receiver
 from game.channels import Channel
+from game.apps.core.models.ships import Ship
+
+logger = logging.getLogger(__name__)
 
 
 class Sector(Channel):
     @receiver(game.apps.core.signals.ship_move)
-    def ship_move(self, channel_instance):
-        return dict(ship=channel_instance.id, target_system=channel_instance.system.id)
+    def ship_move(self, ship, time):
+        return dict(ship=ship.id, target_system=ship.system.id, time=time)
 
 
 class PlanetDetails(Channel):
-    @receiver(game.apps.core.signals.planet_scan_progress)
-    def planet_scan_progress(self, channel_instance, messages):
-        return dict(messages=messages)
+    @receiver(game.apps.core.signals.planet_actions_progress)
+    def planet_scan_progress(self, channel_instance, **kwargs):
+        return dict(**kwargs)
 
 
-class Profile(Channel):
-    @receiver(game.apps.core.signals.own_ships_data)
+class OwnShip(Channel):
+    @receiver(game.apps.core.signals.own_ship_data)
     def own_ships_data(self, channel_instance, ship):
         return dict(ship=ship)
+
+    @classmethod
+    def has_permissions(cls, user, name):
+        ship = Ship.objects.get(pk=name)
+        return ship.owner == user

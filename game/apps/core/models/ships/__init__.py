@@ -12,7 +12,19 @@ from jsonfield.fields import JSONField
 from rest_framework import serializers
 
 
-class Ship(PolymorphicBase):
+#TODO move to a separate module
+class ResourceContainer:
+    """mixed in class"""
+    @property
+    def resources(self):
+        return self.data.get('resources', {})
+
+    def add_resource(self, type, quantity):
+        resources = self.data.setdefault('resources', {})
+        resources[type] = resources.get(type, 0) + quantity
+
+
+class Ship(PolymorphicBase, ResourceContainer):
     owner = models.ForeignKey(User)
     system = models.ForeignKey('System')  # TODO change it to planet
     data = JSONField()
@@ -49,16 +61,10 @@ class Ship(PolymorphicBase):
     def speed():
         return 2
 
-    def move(self, system):
-        self.system = system
-        self.save()
-        signal_name = game.apps.core.signals.ship_move
-        blinker.signal(signal_name % 'main').send(self)
-
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        ship_signal = blinker.signal(game.apps.core.signals.own_ships_data % self.owner.id)
-        ship_signal.send(None, ship=self)
+        ship_signal = blinker.signal(game.apps.core.signals.own_ship_data % self.id)
+        ship_signal.send(None, ship=OwnShipDetailsSerializer(self).data)
 
     class Meta:
         app_label = 'core'
@@ -75,6 +81,7 @@ class ShipSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Ship
+        fields = ['id', 'url', 'type', 'system_id', 'owner', 'system']
 
 
 class OwnShipSerializer(serializers.HyperlinkedModelSerializer):
@@ -82,9 +89,12 @@ class OwnShipSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Ship
-        fields = ['id', 'url', 'type', 'locked']
+        fields = ['id', 'url', 'type']
 
 
 class OwnShipDetailsSerializer(OwnShipSerializer):
+    resources = serializers.Field(source='resources')
+
     class Meta:
         model = Ship
+        fields = ['id', 'url', 'type', 'owner', 'system', 'locked', 'resources']

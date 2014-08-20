@@ -10,6 +10,8 @@ import tornado.ioloop
 import tornado.web
 import tornado.wsgi
 import tornado.httpserver
+import django.utils.importlib
+import django.contrib.auth
 
 from sockjs.tornado import SockJSConnection
 from sockjs.tornado import SockJSRouter
@@ -22,23 +24,48 @@ logger = logging.getLogger(__name__)
 
 
 class BroadcastConnection(SockJSConnection):
+    #TODO csrf
     clients = set()
+
+    def __init__(self, session):
+        super().__init__(session)
+        self.user = None
 
     def on_open(self, info):
         self.clients.add(self)
 
+        class DjangoRequest(object):
+            def __init__(self, session):
+                self.session = session
+
+        #get Django session
+        engine = django.utils.importlib.import_module(django.conf.settings.SESSION_ENGINE)
+        session_key = info.get_cookie(django.conf.settings.SESSION_COOKIE_NAME).value
+        session = engine.SessionStore(session_key)
+        session = session.load()
+        request = DjangoRequest(session)
+
+        self.user = django.contrib.auth.get_user(request)
+
     def on_message(self, msg):
         data = json.loads(msg)
         command = data['command']
-        if command == "connect":
-            self.handle_connect(data)
+        if command == "subscribe":
+            self.handle_subscribe(data)
+        elif command == "unsubscribe":
+            self.handle_unsubscribe(data)
 
-    def handle_connect(self, params):
-        logger.debug("Opening new broadcast connection, params: ", params)
+    def handle_subscribe(self, params):
+        logger.debug("Subscribing, params: ", params)
         channel_class, channel_name = params['channel'].split('.')
         channel = game.channels.Channel.channels[channel_class]
-        user = None  # TODO
-        channel.subscribe(user, self, channel_name)
+        channel.subscribe(self.user, self, channel_name)
+
+    def handle_unsubscribe(self, params):
+        logger.debug("unsubscribing, params: ", params)
+        channel_class, channel_name = params['channel'].split('.')
+        channel = game.channels.Channel.channels[channel_class]
+        channel.unsubscribe(self.user, self, channel_name)
 
     def on_close(self):
         self.clients.remove(self)

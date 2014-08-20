@@ -8,14 +8,23 @@ function make_connection(delay, channels) {
     connection = new SockJS('/broadcast');
 
     connection.channels = channels;
-    console.log(connection.channels);
 
     connection.is_connected = false;
 
-    connection.send_connect = function (channel) {
-        console.log("connecting to ", channel);
+    connection.subscribe = function (channel) {
+        console.log("subscribing to ", channel);
         var message = {
-            command: 'connect',
+            command: 'subscribe',
+            channel: channel
+        };
+        message = JSON.stringify(message);
+        connection.send(message);
+    };
+
+    connection.unsubscribe = function (channel) {
+        console.log("unsubscribing ", channel);
+        var message = {
+            command: 'unsubscribe',
             channel: channel
         };
         message = JSON.stringify(message);
@@ -28,13 +37,12 @@ function make_connection(delay, channels) {
 
         console.log("connecting to requested broadcast channels");
         for (var channel in this.channels) {
-            this.send_connect(channel);
+            this.subscribe(channel);
         }
     };
 
     connection.onmessage = function (e) {
         console.log('reveiving message', e.data);
-        console.log(this.channels);
         var channel = e.data['channel'];
         //var channel_class = channel.split('.')[0];
         this.channels[channel](e.data);
@@ -53,12 +61,28 @@ function make_connection(delay, channels) {
         }, delay);
     };
 
-    connection.add_channel = function (channel, callback) {
-        this.channels[channel] = callback;
-        if (this.is_connected) {
-            this.send_connect(channel);
-        }
+    connection.create_subscription = function(channel_class, callback) {
+        var subscription = {};
+
+        subscription.subscribe = function(channel_instance) {
+            //unsubscribe from previous channel instance
+            console.log(this.channel, this);
+            if(this.channel !== undefined) {
+                connection.unsubscribe(this.channel);
+                delete connection.channels[this.channel];
+            }
+
+            //subscribe to a new instance
+            this.channel = channel_class + '.' + channel_instance;
+            connection.channels[this.channel] = callback;
+            if (connection.is_connected) {
+                connection.subscribe(this.channel);
+            }
+            console.log(this.channel, this);
+        };
+        return subscription;
     };
+
     return connection;
 }
 

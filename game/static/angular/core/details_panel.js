@@ -32,17 +32,31 @@
                 // connect to details channel
                 //
                 //TODO this should be planetdetails.planet.user_id
-                connection.add_channel('planetdetails.' + request_id(), function (data) {
-                    jQuery.each(data.messages, function(i, message){
-                        scope.detailsPanel.scan_messages.push(message);
-                    });
+                this.subscription = connection.create_subscription('planetdetails', function (data) {
+                    if(data.message !== undefined) {
+                        scope.detailsPanel.scan_messages.push(data.message);
+                    }
+                    if(data.results !== undefined) {
+                        scope.detailsPanel.data.scan_results[data.level] = data.results;
+                    }
                     scope.$apply();
                 });
+                this.subscription.subscribe(request_id());
 
-                scope.scan = function (planet_id) {
+                scope.scan = function (planet_id, level) {
                     var ship_id = this.controlPanel.currentShip.id;
                     $http.post('/api/core/own_ships/'+ship_id+'/scan/', {
-                        planet_id: planet_id
+                        planet_id: planet_id,
+                        level: level
+                    });
+                };
+
+                scope.extract = function (planet_id, level, resource_type) {
+                    var ship_id = this.controlPanel.currentShip.id;
+                    $http.post('/api/core/own_ships/'+ship_id+'/extract/', {
+                        planet_id: planet_id,
+                        level: level,
+                        resource_type: resource_type
                     });
                 }
             }

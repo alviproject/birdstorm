@@ -24,12 +24,13 @@
                 //
                 //connect to chat
                 //
-                connection.add_channel('chat.general_room', function (data) {
+                this.subscription = connection.create_subscription('chat', function (data) {
                     chat.messages.push(data);
                     scope.$apply();
                     var chatPanel = $("#chat-panel");
                     chatPanel.scrollTop(chatPanel[0].scrollHeight);
                 });
+                this.subscription.subscribe('general_room');
 
                 //
                 //send a new chat message

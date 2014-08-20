@@ -121,12 +121,13 @@
                 //
                 //connect to sector updates and add handler to animate ship movements
                 //
-                connection.add_channel('sector.main', function(data) {
+                this.subscription = connection.create_subscription('sector', function(data) {
                     var ship = map.ships[data.ship];
+                    var time = data.time;
                     var target_system = map.systems[data.target_system];
                     var element = d3.select("#ship_"+data.ship);
                     element.transition()
-                        .duration(3000)
+                        .duration(time*1000)
                         .tween("position", function() {
                             var x = d3.interpolateRound(ship.x, target_system.x);
                             var y = d3.interpolateRound(ship.y, target_system.y + target_system.r);
@@ -137,6 +138,7 @@
                             };
                         });
                 });
+                this.subscription.subscribe('main');
             }
         }
     });

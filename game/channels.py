@@ -38,6 +38,9 @@ class Channel(metaclass=ChannelMeta):
     def instance_subscribe(self, connection):
         self.connections.add(connection)
 
+    def instance_unsubscribe(self, connection):
+        self.connections.remove(connection)
+
     @classmethod
     def channel_name(cls):
         return cls.__name__.lower()
@@ -50,14 +53,23 @@ class Channel(metaclass=ChannelMeta):
 
     @classmethod
     def subscribe(cls, user, connection, name):
-        logger.debug("connecting %s, %s, %s, %s", cls, user, connection, name)
-        if not cls.check_permissions(user, name):
-            return  # TODO report an error
+        logger.debug("subscribing %s, %s, %s, %s", cls, user, connection, name)
+        if not cls.has_permissions(user, name):
+            logger.error("Cannot subscribe %s, %s, %s, %s" % (cls, user, connection, name))
         instance = cls.instances.get(name, None) or cls(name)
         instance.instance_subscribe(connection)
 
     @classmethod
-    def check_permissions(cls, user, name):
+    def unsubscribe(cls, user, connection, name):
+        logger.debug("unsubscribing %s, %s, %s, %s", cls, user, connection, name)
+        instance = cls.instances[name]
+        instance.instance_unsubscribe(connection)
+        if not instance.connections:
+            logger.debug("deleting instance %s, %s", cls, name)
+            del cls.instances[name]
+
+    @classmethod
+    def has_permissions(cls, user, name):
         return True
 
     @classmethod

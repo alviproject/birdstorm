@@ -13,30 +13,23 @@
 
     {"model": "core.planet", "pk": 1, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {
         "resources": [
-            [
-                {"type": "Coal", "quantity": 8, "chance_factor": 0.3},
-                {"type": "IronOre", "quantity": 8, "chance_factor": 0.3}
-            ],
-            [
-                {"type": "Coal", "quantity": 16, "chance_factor": 0.5},
-                {"type": "IronOre", "quantity": 16, "chance_factor": 0.5}
-            ]
-    ]}}},
+            {"coal": 8, "iron_ore": 8},
+            {"coal": 16, "iron_ore": 16}
+        ]
+    }}},
     {"model": "core.planet", "pk": 2, "fields": {"system": 1, "type": "GasGiant", "data": {}}},
     {"model": "core.planet", "pk": 3, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {
         "resources": [
-            [
-                {"type": "Coal", "quantity": 5, "chance_factor": 0.5},
-                {"type": "IronOre", "quantity": 5, "chance_factor": 0.5}
-            ]
-    ]}}},
+            {"coal": 8, "iron_ore": 8},
+            {"coal": 16, "iron_ore": 16}
+        ]
+    }}},
     {"model": "core.planet", "pk": 4, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {
         "resources": [
-            [
-                {"type": "Coal", "quantity": 10, "chance_factor": 0.2},
-                {"type": "IronOre", "quantity": 10, "chance_factor": 0.2}
-            ]
-    ]}}},
+            {"coal": 8, "iron_ore": 8},
+            {"coal": 16, "iron_ore": 16}
+        ]
+    }}},
 
     {"model": "core.ship", "pk": 1, "fields": {"owner": 1, "system": 1, "type": "Raven", "data": {
         "mining": {"drilled_planets": [], "scan_results": []}

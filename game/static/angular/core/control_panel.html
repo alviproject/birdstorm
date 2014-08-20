@@ -7,7 +7,7 @@
     </div>
     <div class="panel-body">
         Ship:
-        <select ng-model="controlPanel.currentShip" ng-options="ship.type for ship in controlPanel.ships"></select>
+        <select ng-model="controlPanel.currentShip" ng-options="ship.type for ship in controlPanel.ships" ng-change="changeShip()"></select>
         <br />
         <br />
         <ul class="list-unstyled">
@@ -17,10 +17,10 @@
                     <span class="fa fa-pencil fa-fw"></span>
                 </a>
             </li>
-            <li><b>Locked:</b> {{ controlPanel.currentShip.locked }}</li>
-            <li><b>Type:</b> {{ controlPanel.currentShip.type }}</li>
+            <li><b>Locked:</b> {{ controlPanel.currentShipDetails.locked }}</li>
+            <li><b>Type:</b> {{ controlPanel.currentShipDetails.type }}</li>
             <li><b>Class:</b> 1</li>
-            <li><b>ID:</b> {{ controlPanel.currentShip.id }}</li>
+            <li><b>ID:</b> {{ controlPanel.currentShipDetails.id }}</li>
             <li>
                 <b>Components:</b>
                 <a href="#" class="pull-right">
@@ -30,6 +30,14 @@
                     <li>Firepower: 20</li>
                     <li>Speed: 20</li>
                     <li>Capacity: 20</li>
+                </ul>
+            </li>
+            <li>
+                <b>Cargo:</b>
+                <ul class="list-unstyled list-sublist">
+                    <li ng-repeat="(type, quantity) in controlPanel.currentShipDetails.resources">
+                        {{type}}: {{quantity}}
+                    </li>
                 </ul>
             </li>
         </ul>
