@@ -75,6 +75,7 @@ class BroadcastConnection(SockJSConnection):
 
     def on_close(self):
         self.clients.remove(self)
+        #channel.remove_connections(self, channel_name)
         #TODO remove all channel connections
 
 

@@ -13,6 +13,7 @@ class PlanetSerializer(serializers.HyperlinkedModelSerializer):
 class PlanetDetailsSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.IntegerField(source='id', read_only=True)
     scan_results = serializers.SerializerMethodField('get_scan_results')
+    is_drilled = serializers.SerializerMethodField('get_is_drilled')
 
     def get_scan_results(self, obj):
         user = self.context['request'].user
@@ -20,6 +21,12 @@ class PlanetDetailsSerializer(serializers.HyperlinkedModelSerializer):
             return []
         return user.profile.get_scan_results(obj.id)
 
+    def get_is_drilled(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated():
+            return False
+        return user.profile.is_drilled(obj.id)
+
     class Meta:
         model = Planet
-        fields = ['id', 'url', 'type', 'system', 'scan_results']
+        fields = ['id', 'url', 'type', 'system', 'scan_results', 'is_drilled']

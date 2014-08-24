@@ -30,9 +30,27 @@
                     </div>
                 </tab>
                 <tab heading="Resources">
-                    <div class="panel-body">
-                        <div ng-repeat="level_resources in detailsPanel.data.scan_results track by $index">
+                    <div class="panel-body" ng-switch="detailsPanel.data.is_drilled">
+                        <div ng-switch-when="true">
+                            Planet is already drilled. You have to wait some time, before you can extract resources
+                            again.
+                        </div>
+                        <div ng-switch-default>
+                                            <span class="pull-right">
+                    <a
+                            href
+                            ng-click="scan(detailsPanel.data.id, -1)"
+                            ng-hide="controlPanel.currentShipDetails.locked">
+                        Scan
+                    </a>
+                </span>
+                            <div ng-hide="detailsPanel.data.scan_results.length">
+                                You have to scan the planet to see available resources.
+                            </div>
+
+                            <div ng-repeat="level_resources in detailsPanel.data.scan_results track by $index">
                             Level {{$index}}
+                            <!--
                     <span class="pull-right">
                         <a
                                 href
@@ -41,6 +59,7 @@
                             Scan
                         </a>
                     </span>
+                    -->
                             <ul>
                                 <li ng-repeat="(type, quantity) in level_resources">
                                     {{type}}: {{quantity}}
@@ -56,21 +75,14 @@
                             </ul>
                             <hr/>
                         </div>
-                <span class="pull-right">
-                    <a
-                            href
-                            ng-click="scan(detailsPanel.data.id, -1)"
-                            ng-hide="controlPanel.currentShipDetails.locked">
-                        Scan
-                    </a>
-                </span>
+
+                        </div>
                         <ul class="list-unstyled">
                             <li ng-repeat="message in detailsPanel.scan_messages track by $index"
                                 ng-class="{info:'text-muted', error:'text-danger', success:'text-success'}[message.type]">
                                 {{ message.text }}
                             </li>
                         </ul>
-                        <div class="clearfix"></div>
                     </div>
                 </tab>
                 <tab heading="Port">

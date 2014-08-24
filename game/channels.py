@@ -29,17 +29,20 @@ class Channel(metaclass=ChannelMeta):
         self.connections = set()
         self.name = name
         self.__class__.instances[name] = self
+
+        # just for keeping reference to make_connector, passing weak=False to signal connect
+        #would also work, but that wouldn't remove the deferences after Channel itself is deleted
+        self._connectors = []
+
         for signal_name, receiver in self.__class__.receivers:
             #TODO use kind of a binder
             def make_connector(*args, **kwargs):
                 return self.receive(receiver, *args, **kwargs)
-            blinker.signal(signal_name % name).connect(make_connector, weak=False)  # TODO check when channel is removed
+            blinker.signal(signal_name % name).connect(make_connector)
+            self._connectors.append(make_connector)
 
     def instance_subscribe(self, connection):
         self.connections.add(connection)
-
-    def instance_unsubscribe(self, connection):
-        self.connections.remove(connection)
 
     @classmethod
     def channel_name(cls):
@@ -63,7 +66,6 @@ class Channel(metaclass=ChannelMeta):
     def unsubscribe(cls, user, connection, name):
         logger.debug("unsubscribing %s, %s, %s, %s", cls, user, connection, name)
         instance = cls.instances[name]
-        instance.instance_unsubscribe(connection)
         if not instance.connections:
             logger.debug("deleting instance %s, %s", cls, name)
             del cls.instances[name]

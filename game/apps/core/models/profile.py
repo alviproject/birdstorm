@@ -8,9 +8,9 @@ from jsonschema import validate
 schema_resources = {
     "type": "object",
     "properties": {
-        "coal": {"type": "number", "minimum": 0,},
-        "iron": {"type": "number", "minimum": 0,},
-     },
+        "coal": {"type": "number", "minimum": 0, },
+        "iron_ore": {"type": "number", "minimum": 0, },
+    },
     "additionalProperties": False,
 }
 
@@ -75,6 +75,7 @@ class Profile:
         if len(planets) > 5:
             planets.pop(0)
         planets.append(planet_id)
+        del self.data['scan_results']
 
     def save(self):
         validate(self.data, data_schema)

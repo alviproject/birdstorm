@@ -4,14 +4,13 @@ from django.contrib.auth.models import User
 from django.http.response import HttpResponse
 from game.apps.core import models
 from game.apps.core.models.planet.models import TerrestrialPlanet
+from game.apps.core.models.planet.serializers import PlanetDetailsSerializer
 from rest_framework import viewsets
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
-from rest_framework.decorators import action
 from game.utils.async_action import async_action
 import game.apps.core.signals
 from django.conf import settings
-from blinker import signal
 
 
 class Ships(viewsets.ReadOnlyModelViewSet):
@@ -78,8 +77,9 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
         request_id = request.META['HTTP_X_REQUESTID']
         planet = models.Planet.objects.get(pk=planet_id)
         ship = self.get_queryset(request).get(pk=pk)
-        user = ship.owner
-        scan_progress_signal = blinker.signal(game.apps.core.signals.planet_actions_progress % request_id)
+        user = request.user
+        signal_id = "%d_%s" % (planet_id, request_id)
+        scan_progress_signal = blinker.signal(game.apps.core.signals.planet_actions_progress % signal_id)
 
         with ship.lock():
             results = user.profile.get_scan_results(planet_id)
@@ -132,18 +132,14 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
             current_level_result = {}
             for type, quantity in level_resources.items():
                 current_level_result[type] = quantity
-            scan_progress_signal.send(
-                self,
-                results=current_level_result,
-                level=level,
-                message=dict(
-                    type="success",
-                    text="Scan successful",
-                ),
-            )
+            scan_progress_signal.send(self, level=level, message=dict(type="success", text="Scan successful", ), )
 
             user.profile.set_scan_result(planet_id, level, current_level_result)
             user.profile.save()
+
+            signal_id = "%d_%s" % (planet_id, request_id)
+            planet_details_signal = blinker.signal(game.apps.core.signals.planet_details % signal_id)
+            planet_details_signal.send(self, planet=PlanetDetailsSerializer(planet, context=dict(request=request)).data)
 
     @async_action
     def extract(self, request, pk=None):
@@ -153,8 +149,9 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
         request_id = request.META['HTTP_X_REQUESTID']
         planet = models.Planet.objects.get(pk=planet_id)
         ship = self.get_queryset(request).get(pk=pk)
-        user = ship.owner
-        scan_progress_signal = blinker.signal(game.apps.core.signals.planet_actions_progress % request_id)
+        user = request.user
+        signal_id = "%d_%s" % (planet_id, request_id)
+        scan_progress_signal = blinker.signal(game.apps.core.signals.planet_actions_progress % signal_id)
 
         with ship.lock():
             results = user.profile.get_scan_results(planet_id)
@@ -192,7 +189,6 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
             resources = results[level]
             ship.add_resource(resource_type, resources[resource_type])
             ship.save()
-            blinker.signal(game.apps.core.signals.own_ship_data % ship.id).send(None, ship=ship)
             scan_progress_signal.send(
                 self,
                 message=dict(
@@ -200,9 +196,12 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
                     text="Extraction successful",
                 ),
             )
-
             user.profile.add_drilled_planet(planet_id)
             user.profile.save()
+
+            signal_id = "%d_%s" % (planet_id, request_id)
+            planet_details_signal = blinker.signal(game.apps.core.signals.planet_details % signal_id)
+            planet_details_signal.send(self, planet=PlanetDetailsSerializer(planet, context=dict(request=request)).data)
 
 
 def test_view(request):

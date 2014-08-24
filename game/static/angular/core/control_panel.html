@@ -7,7 +7,16 @@
     </div>
     <div class="panel-body">
         Ship:
-        <select ng-model="controlPanel.currentShip" ng-options="ship.type for ship in controlPanel.ships" ng-change="changeShip()"></select>
+        <span class="dropdown" is-open="controlPanel.ship_menu_expanded">
+            <a href class="dropdown-toggle">
+                {{controlPanel.currentShip.type}}<span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li ng-repeat="ship in controlPanel.ships">
+                    <a href ng-click="changeShip(ship)">{{ship.type}}</a>
+                </li>
+            </ul>
+        </span>
         <br />
         <br />
         <ul class="list-unstyled">
