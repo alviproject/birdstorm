@@ -31,6 +31,12 @@
         ]
     }}},
 
+    {"model": "core.building", "pk": 1, "fields": {"planet": 1, "type": "Port", "data": {
+        "prices": {"coal": 10, "iron_ore": 15}
+    }}},
+    {"model": "core.building", "pk": 2, "fields": {"planet": 1, "type": "Factory", "data": {
+    }}},
+
     {"model": "core.ship", "pk": 1, "fields": {"owner": 1, "system": 1, "type": "Raven", "data": {
         "mining": {"drilled_planets": [], "scan_results": []}
     }}},

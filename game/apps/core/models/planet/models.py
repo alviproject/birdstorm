@@ -13,8 +13,10 @@ class Planet(PolymorphicBase):
 
 
 class TerrestrialPlanet(Planet):
-    class Meta: proxy = True
+    class Meta:
+        proxy = True
 
 
 class GasGiant(Planet):
-    class Meta: proxy = True
+    class Meta:
+        proxy = True

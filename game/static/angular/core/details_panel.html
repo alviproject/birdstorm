@@ -85,10 +85,12 @@
                         </ul>
                     </div>
                 </tab>
-                <tab heading="Port">
-                    <div class="panel-body">
-                        <table class="table table-hover">
-                            <thead>
+                <tab ng-repeat="building in detailsPanel.data.buildings" heading="{{building.type}}">
+                    <div ng-switch="building.type" class="panel-body">
+                        <!-- Port -->
+                        <div ng-switch-when="Port">
+                            <table class="table table-hover">
+                                <thead>
                                 <tr>
                                     <th>Resource</th>
                                     <th>Planet</th>
@@ -97,50 +99,21 @@
                                     <th>Buy</th>
                                     <th>Sell</th>
                                 </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>Coal</td>
-                                <td>200</td>
-                                <td>200</td>
-                                <td><input class="input-sm" style="width: 50px" value="1"/></td>
-                                <td><button class="btn btn-default btn-sm">Buy (120c)</button></td>
-                                <td><button class="btn btn-default btn-sm">Sell (60c)</button></td>
-                            </tr>
-                            <tr>
-                                <td>Coal</td>
-                                <td>200</td>
-                                <td>200</td>
-                                <td><input class="input-sm" style="width: 50px" value="1"/></td>
-                                <td><button class="btn btn-default btn-sm">Buy (120c)</button></td>
-                                <td><button class="btn btn-default btn-sm">Sell (60c)</button></td>
-                            </tr>
-                            <tr>
-                                <td>Coal</td>
-                                <td>200</td>
-                                <td>200</td>
-                                <td><input class="input-sm" style="width: 50px" value="1"/></td>
-                                <td><button class="btn btn-default btn-sm">Buy (120c)</button></td>
-                                <td><button class="btn btn-default btn-sm">Sell (60c)</button></td>
-                            </tr>
-                            <tr>
-                                <td>Coal</td>
-                                <td>200</td>
-                                <td>200</td>
-                                <td><input class="input-sm" style="width: 50px" value="1"/></td>
-                                <td><button class="btn btn-default btn-sm">Buy (120c)</button></td>
-                                <td><button class="btn btn-default btn-sm">Sell (60c)</button></td>
-                            </tr>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="price in building.prices track by $index" ng-init="price.quantity=1">
+                                    <td>{{price[0]}}</td>
+                                    <td>200</td>
+                                    <td>200</td>
+                                    <td><input class="input-sm" style="width: 50px" type="text" ng-model="price.quantity"/></td>
+                                    <td><button class="btn btn-default btn-sm">Buy ({{price[1][0] * price.quantity}}c)</button></td>
+                                    <td><button class="btn btn-default btn-sm">Sell ({{price[1][1] * price.quantity}}c)</button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </tab>
-                <tab heading="Factory">
-                    <div class="panel-body">
-                        Factory
-                    </div>
-                </tab>
-
             </tabset>
         </div>
     </div>

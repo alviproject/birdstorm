@@ -204,6 +204,11 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
             planet_details_signal.send(self, planet=PlanetDetailsSerializer(planet, context=dict(request=request)).data)
 
 
+class Buildings(viewsets.ReadOnlyModelViewSet):
+    model = models.Building
+    serializer_class = models.BuildingSerializer
+
+
 def test_view(request):
     user = User.objects.get(pk=1)
     user = authenticate(user=user)
