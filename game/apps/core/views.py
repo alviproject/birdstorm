@@ -2,6 +2,8 @@ import blinker
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.http.response import HttpResponse
+from django.shortcuts import render
+from django.template.context import RequestContext
 from game.apps.core import models
 from game.apps.core.models.planet.models import TerrestrialPlanet
 from game.apps.core.models.planet.serializers import PlanetDetailsSerializer
@@ -215,3 +217,8 @@ def test_view(request):
     login(request, user)
     return HttpResponse("ok")
 
+
+def index(request):
+    context = RequestContext(request, {
+    })
+    return render(request, 'index.html', context_instance=context)

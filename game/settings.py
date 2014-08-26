@@ -35,6 +35,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'django.contrib.sites',
+    #'sorl.thumbnail',
+    'pybb',
     'rest_framework',
     'rest_framework.authtoken',
     'kombu.transport.django',  # required for celery django broker
@@ -49,7 +52,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'pybb.middleware.PybbMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware', #TODO this shall be before or after PybbMiddleware?
 )
 
 
@@ -108,3 +112,16 @@ REST_FRAMEWORK = {
 BROKER_URL = 'django://'
 
 FACTOR = sqrt(2)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.tz",
+    "django.contrib.messages.context_processors.messages",
+    'pybb.context_processors.processor',
+)
+
+SITE_ID = 1

@@ -25,7 +25,7 @@ urlpatterns = patterns(
     url(r'^', include('game.apps.account.urls')),
     url(r'^', include('game.apps.core.urls')),
     url(r'^admin/', include(admin.site.urls)),
-
     url(r'^api/', include(router.urls)),
     url(r'^api/account', game.apps.account.views.Account.as_view(model=User)),  # TODO not shown at /api
+    url(r'^forum/', include('pybb.urls', namespace='pybb')),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

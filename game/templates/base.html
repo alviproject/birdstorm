@@ -1,0 +1,125 @@
+{% extends "basic_base.html" %}
+
+{% block extra_headers %}
+        <!-- TODO review what we actually need -->
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" href="/static/css/bootstrap.slate.min.css" type='text/css'>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css" type="text/css"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/i18n/jquery-ui-i18n.min.js"></script>
+    <script src="http://yandex.st/json2/2011-01-18/json2.min.js"></script>
+    <script>
+        $('html').ajaxSend(function(event, xhr, settings) {
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie != '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                // Only send the token to relative URLs i.e. locally.
+                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+            }
+        });
+    </script>
+    <script type="text/javascript" src="{{ STATIC_URL }}pybb/js/pybbjs.js"></script>
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+        }
+    </style>
+    {% block extra_style %}{% endblock %}
+
+    <title>{% block title %}{% endblock %}</title>
+
+    {% block extra_head %}{% endblock %}
+    {% block extra_script %}{% endblock %}
+{% endblock %}
+
+{% block body_content %}
+<div class="container">
+    <div class="jumbotron">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% if request.path != '/' %}
+        <div id="breadcrumb">
+            {% block breadcrumb %}
+            <a href="/">Main</a>
+            {% endblock breadcrumb %}
+        </div>
+        {% endif %}
+        {% if request.path == '/' %}
+        <div class='forum-headline alert alert-block'>
+            This is a default installation of PyBBModified with default theme from example.
+        </div>
+        {% endif %}
+        <div id="content">
+            {% block content %}
+            {% endblock content %}
+        </div>
+    </div>
+    {% if request.path == '/' %}
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Fully Documented</h2>
+
+            <p>Everything explained</p>
+
+            <p><a class="btn btn-default" href="http://readthedocs.org/docs/pybbm/en/latest/">Read docs now &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Heavily tested</h2>
+
+            <p> 95% code coverage!</p>
+
+            <p><a class="btn btn-default" href="https://github.com/hovel/pybbm/blob/master/pybb/tests.py">View tests &raquo;</a>
+            </p>
+        </div>
+        <div class="col-md-4">
+            <h2>Want a fast start?</h2>
+
+            <p>Start from ready to use example project</p>
+
+            <p><a class="btn btn-default" href="http://readthedocs.org/docs/pybbm/en/latest/example.html">Read more &raquo;</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="row spaced">
+        <div class="col-md-4">
+            <h2>Django application</h2>
+
+            <p>Easy to embed to any django project</p>
+
+            <p>
+                <a class="btn btn-success" href="http://readthedocs.org/docs/pybbm/en/latest/install.html">Learn how to install &raquo;</a>
+            </p>
+        </div>
+        <div class="col-md-4">
+            <h2>Help welcomed</h2>
+
+            <p>Extended PyBBM? Push your changes.</p>
+
+            <p><a class="btn btn-default" href="https://github.com/hovel/pybbm">Fork repo &raquo;</a></p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
