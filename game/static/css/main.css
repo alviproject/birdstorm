@@ -22,3 +22,11 @@ ul.list-sublist {
 }
 
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+/* PYBBM */
+.post-content {
+}
+
+.form-control {
+    height: auto;
+}
