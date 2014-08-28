@@ -88,4 +88,4 @@ def profile(self):
 
 
 User.profile = profile
-JSONField().contribute_to_class(User, 'data')
+JSONField(default='{}').contribute_to_class(User, 'data')
