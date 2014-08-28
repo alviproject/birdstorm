@@ -26,7 +26,7 @@ DEBUG = config.debug
 
 TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [(config.allowed_hosts or "").split(',')]
 
 
 # Application definition
