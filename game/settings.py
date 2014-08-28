@@ -132,3 +132,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 SITE_ID = 1
+
+
+PYBB_PERMISSION_HANDLER = 'game.apps.account.forum.ForumPermissionHandler'
