@@ -26,7 +26,7 @@ DEBUG = config.debug
 
 TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = [(config.allowed_hosts or "").split(',')]
+ALLOWED_HOSTS = ['*']  #FIXME
 
 
 # Application definition
