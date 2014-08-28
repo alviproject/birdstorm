@@ -12,15 +12,17 @@ from math import sqrt
 
 import os
 import game
+from game.utils import config
+
 
 PROJECT_DIR = os.path.dirname(game.__file__)
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 
-SECRET_KEY = '6o)gus=iiym#mm2#e3#qb!6u2c%v_itv3chp+rpm&6)^535siu'
+SECRET_KEY = config.secret_key  # TODO assert if empty and debug is set to False
 
-DEBUG = True
+DEBUG = config.debug
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = []
 
@@ -72,8 +74,12 @@ WSGI_APPLICATION = 'game.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(PROJECT_DIR, 'data', 'db.sqlite3'),
+        'ENGINE': config.db_engine or 'django.db.backends.sqlite3',
+        'NAME': config.db_name or os.path.join(PROJECT_DIR, 'data', 'db.sqlite3'),
+        'USER': config.db_user,
+        'PASSWORD': config.db_password,
+        'HOST': config.db_host,
+        'PORT': config.db_port,
     }
 }
 
@@ -122,6 +128,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.tz",
     "django.contrib.messages.context_processors.messages",
     'pybb.context_processors.processor',
+    "game.utils.context_processors.analytics"
 )
 
 SITE_ID = 1
