@@ -10,7 +10,10 @@ logging.basicConfig(
 
 class Config:
     def __getattr__(self, item):
-        return os.environ[item.upper()]
+        try:
+            return os.environ[item.upper()]
+        except KeyError:
+            logging.warning("Config variable not set %s" % item)
 
 
 config = Config()

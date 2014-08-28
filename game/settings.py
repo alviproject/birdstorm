@@ -18,7 +18,8 @@ from game.utils import config
 PROJECT_DIR = os.path.dirname(game.__file__)
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 
-SECRET_KEY = config.secret_key  # TODO assert if empty and debug is set to False
+# TODO assert if empty and debug is set to False
+SECRET_KEY = config.secret_key or '00000000000000000000000000000000000000000000000000'
 
 DEBUG = config.debug
 
