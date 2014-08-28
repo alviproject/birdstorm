@@ -40,13 +40,13 @@
     {"model": "core.ship", "pk": 1, "fields": {"owner": 1, "system": 1, "type": "Raven", "data": {
         "mining": {"drilled_planets": [], "scan_results": []}
     }}},
-    {"model": "core.ship", "pk": 2, "fields": {"owner": 2, "system": 2, "type": "Raven", "data": {
+    {"model": "core.ship", "pk": 2, "fields": {"owner": 1, "system": 2, "type": "Raven", "data": {
         "mining": {"drilled_planets": [], "scan_results": []}
     }}},
-    {"model": "core.ship", "pk": 3, "fields": {"owner": 3, "system": 3, "type": "Raven", "data": {
+    {"model": "core.ship", "pk": 3, "fields": {"owner": 1, "system": 3, "type": "Raven", "data": {
         "mining": {"drilled_planets": [], "scan_results": []}
     }}},
-    {"model": "core.ship", "pk": 4, "fields": {"owner": 4, "system": 4, "type": "Raven", "data": {
+    {"model": "core.ship", "pk": 4, "fields": {"owner": 1, "system": 4, "type": "Raven", "data": {
         "mining": {"drilled_planets": [], "scan_results": []}
     }}}
 ]
