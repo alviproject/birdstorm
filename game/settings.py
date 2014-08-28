@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'game.wsgi.application'
 
 if config.database_url:
     DATABASES = {
-        dj_database_url.config()
+        'default': dj_database_url.config(),
     }
 else:
     DATABASES = {
