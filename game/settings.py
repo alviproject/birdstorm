@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 """
 # TODO https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
 from math import sqrt
+import dj_database_url
 
 import os
 import game
@@ -73,16 +74,17 @@ WSGI_APPLICATION = 'game.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': config.db_engine or 'django.db.backends.sqlite3',
-        'NAME': config.db_name or os.path.join(PROJECT_DIR, 'data', 'db.sqlite3'),
-        'USER': config.db_user,
-        'PASSWORD': config.db_password,
-        'HOST': config.db_host,
-        'PORT': config.db_port,
+if config.database_url:
+    DATABASES = {
+        dj_database_url.config()
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(PROJECT_DIR, 'data', 'db.sqlite3'),
+        }
+    }
 
 LANGUAGE_CODE = 'en-us'
 

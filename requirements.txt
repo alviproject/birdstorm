@@ -18,3 +18,4 @@ jsonschema==2.3.0
 #sorl-thumbnail==11.12.1b
 pybbm==0.15.6
 Pillow==2.5.3
+dj-database-url==0.3.0
