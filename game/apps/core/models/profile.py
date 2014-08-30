@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from django.contrib.auth.models import User
+from django.db.models.fields import IntegerField
 from jsonfield.fields import JSONField
 from jsonschema import validate
 
@@ -45,7 +46,10 @@ class Profile:
 
     @property
     def data(self):
-        return self.user.data
+        # TODO remove "or {}", the reason for this is that if user is created from outside
+        # (fe. by manage.py createsuperuser) then default value ('{}') is not taken into account and data is a string
+        # instead of JSON, this could be fixed in JSONFiled
+        return self.user.data or {}
 
     def is_drilled(self, planet_id):
         return self.data.get('drilled_planets', []).count(planet_id) > 0
@@ -88,4 +92,5 @@ def profile(self):
 
 
 User.profile = profile
-JSONField(default='{}').contribute_to_class(User, 'data')
+JSONField().contribute_to_class(User, 'data')
+IntegerField(default=0).contribute_to_class(User, 'credits')

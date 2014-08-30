@@ -11,7 +11,8 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 
 #own account
+#TODO move this class to core.profile
 class AccountSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ('url', 'username', 'id')
+        fields = ('url', 'username', 'id', 'credits')

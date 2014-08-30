@@ -4,10 +4,12 @@ from django.contrib.auth.models import User
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.template.context import RequestContext
+from game.apps.account.models import AccountSerializer
 from game.apps.core import models
 from game.apps.core.models.planet.models import TerrestrialPlanet
 from game.apps.core.models.planet.serializers import PlanetDetailsSerializer
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from game.utils.async_action import async_action
@@ -209,6 +211,36 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
 class Buildings(viewsets.ReadOnlyModelViewSet):
     model = models.Building
     serializer_class = models.BuildingSerializer
+
+    #TODO this shall be Port method
+    @action()
+    def buy(self, request, pk=None):
+        user = request.user
+        ship_id = request.DATA['ship_id']
+        resource = request.DATA['resource']
+        quantity = int(request.DATA['quantity'])
+        request_id = request.META['HTTP_X_REQUESTID']
+        port = self.get_queryset().get(pk=pk)
+        cost = port.prices[resource]['sale_price'] * quantity
+        ship = request.user.ship_set.get(pk=pk)
+        ship.add_resource(resource, quantity)
+        ship.save()
+        signal_id = "%d_%s" % (port.planet_id, request_id)
+        actions_signal = blinker.signal(game.apps.core.signals.planet_actions_progress % signal_id)
+        actions_signal.send(
+            self,
+            message=dict(
+                type="success",
+                text="Bought %d of %s. Total cost: %d" % (quantity, resource, cost),
+            ),
+        )
+
+        user.credits -= cost
+        user.save()
+        account_signal = blinker.signal(game.apps.core.signals.account_data % user.id)
+        account_signal.send(None, data=AccountSerializer(user).data)
+
+        return Response()
 
 
 def test_view(request):

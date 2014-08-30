@@ -12,7 +12,8 @@
             templateUrl: '/static/angular/core/control_panel.html',
             scope: {
                 map: '=map',
-                controlPanel: '=controlPanel'
+                controlPanel: '=controlPanel',
+                accountData: '=accountData'
             },
             link: function(scope, element) {
                 var subscription = connection.create_subscription('ownship', function (data) {

@@ -34,3 +34,13 @@ class OwnShip(Channel):
     def has_permissions(cls, user, name):
         ship = Ship.objects.get(pk=name)
         return ship.owner == user
+
+
+class Account(Channel):
+    @receiver(game.apps.core.signals.account_data)
+    def account_data(self, channel_instance, data):
+        return dict(data=data)
+
+    @classmethod
+    def has_permissions(cls, user, name):
+        return user.id == int(name)

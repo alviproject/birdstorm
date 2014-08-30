@@ -2,10 +2,9 @@
     <!-- Planet -->
     <!--<div ng-switch-when="planet">-->
     <div class="panel panel-default" id="context_menu">
-        <div>
+        <div class="panel-body">
             <tabset>
                 <tab heading="Planet">
-                    <div class="panel-body">
                         <ul class="list-unstyled">
                             <li><b>Type:</b> {{ detailsPanel.data.type }}</li>
                             <li><b>ID:</b> {{ detailsPanel.data.id }}</li>
@@ -27,10 +26,9 @@
                         May contain some rare earth elements.<br />
                         No solid structures are built on this planet.<br />
                         Buildings: Building1, Building2, ...
-                    </div>
                 </tab>
                 <tab heading="Resources">
-                    <div class="panel-body" ng-switch="detailsPanel.data.is_drilled">
+                    <div ng-switch="detailsPanel.data.is_drilled">
                         <div ng-switch-when="true">
                             Planet is already drilled. You have to wait some time, before you can extract resources
                             again.
@@ -75,18 +73,11 @@
                             </ul>
                             <hr/>
                         </div>
-
                         </div>
-                        <ul class="list-unstyled">
-                            <li ng-repeat="message in detailsPanel.scan_messages track by $index"
-                                ng-class="{info:'text-muted', error:'text-danger', success:'text-success'}[message.type]">
-                                {{ message.text }}
-                            </li>
-                        </ul>
                     </div>
                 </tab>
                 <tab ng-repeat="building in detailsPanel.data.buildings" heading="{{building.type}}">
-                    <div ng-switch="building.type" class="panel-body">
+                    <div ng-switch="building.type">
                         <!-- Port -->
                         <div ng-switch-when="Port">
                             <table class="table table-hover">
@@ -101,20 +92,91 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-repeat="price in building.prices track by $index" ng-init="price.quantity=1">
-                                    <td>{{price[0]}}</td>
-                                    <td>200</td>
-                                    <td>200</td>
+                                <tr ng-repeat="(type, price) in building.prices track by $index" ng-init="price.quantity=1">
+                                    <td>{{type}}</td>
+                                    <td ng-click="price.quantity=price.available"><a href="#">{{price.available}}</a></td>
+                                    <td ng-init="qty=controlPanel.currentShipDetails.resources[type] || 0"  ng-click="price.quantity=qty">
+                                        <a href="#">{{qty}}</a>
+                                    </td>
                                     <td><input class="input-sm" style="width: 50px" type="text" ng-model="price.quantity"/></td>
-                                    <td><button class="btn btn-default btn-sm">Buy ({{price[1][0] * price.quantity}}c)</button></td>
-                                    <td><button class="btn btn-default btn-sm">Sell ({{price[1][1] * price.quantity}}c)</button></td>
+                                    <td>
+                                        <button class="btn btn-default btn-sm" ng-click="buy(building.id, type, price)">
+                                            Buy ({{price.sale_price * price.quantity}}c)
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-default btn-sm">
+                                            Sell ({{price.purchase_price * price.quantity}}c)
+                                        </button>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
+                        <div ng-switch-when="Shipyard">
+                            <h4>Available ships</h4>
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Ship</th>
+                                    <th>Resources</th>
+                                    <th>Order</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>Raven</td>
+                                    <td>test</td>
+                                    <td><button class="btn btn-default btn-sm">Order</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Owl</td>
+                                    <td>test</td>
+                                    <td><button class="btn btn-default btn-sm">Order</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Swallow</td>
+                                    <td>test</td>
+                                    <td><button class="btn btn-default btn-sm">Order</button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <h4>Queue</h4>
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Ship</th>
+                                    <th>Contractor</th>
+                                    <th>ETA</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>Raven</td>
+                                    <td>test</td>
+                                    <td>5:30</td>
+                                </tr>
+                                <tr>
+                                    <td>Owl</td>
+                                    <td>test</td>
+                                    <td>15:23</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div ng-switch-when="Factory">
+                            Factory
+                        </div>
                     </div>
                 </tab>
             </tabset>
+            <hr />
+            <ul class="list-unstyled">
+                <li ng-repeat="message in detailsPanel.scan_messages track by $index"
+                    ng-class="{info:'text-muted', error:'text-danger', success:'text-success'}[message.type]">
+                    {{ message.text }}
+                </li>
+            </ul>
         </div>
     </div>
 </div>

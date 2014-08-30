@@ -20,8 +20,14 @@ class Port(Building):
     @property
     def prices(self):
         base_prices = self.data.get('prices') or {}
-        print(base_prices)
-        return {(t, (int(p/Port.OFFER_FACTOR), int(p*Port.OFFER_FACTOR))) for (t, p) in base_prices.items()}
+        result = dict()
+        for type, price in base_prices.items():
+            result[type] = dict(
+                sale_price=int(price*Port.OFFER_FACTOR),
+                purchase_price=int(price/Port.OFFER_FACTOR),
+                available=10,
+            )
+        return result
 
     class Meta:
         proxy = True
@@ -30,14 +36,21 @@ class Port(Building):
 class Factory(Building):
     class Meta:
         proxy = True
-        
+
 
 class Mine(Building):
     class Meta:
         proxy = True
 
 
+class Shipyard(Building):
+    class Meta:
+        proxy = True
+
+
 class BuildingBaseSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.IntegerField(source='id', read_only=True)
+
     class Meta:
         model = Building
         exclude = ['data']

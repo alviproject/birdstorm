@@ -10,7 +10,6 @@
             detailsPanel.scan_messages.push(data.message);
         });
         detailsPanel.subscription_details = connection.create_subscription('planetdetails', function (data) {
-            console.log(data.planet);
             detailsPanel.data = data.planet;
         });
 
@@ -20,7 +19,6 @@
             detailsPanel.data = data;
             detailsPanel.scan_messages = [];
             detailsPanel.subscription_actions.subscribe(data.id+"_"+request_id());//TODO change request_id to planet_id
-            detailsPanel.subscription_details.subscribe(data.id+"_"+request_id());//TODO change request_id to planet_id
 
             var injector = angular.element(document).injector();
             var $http = injector.get('$http');
@@ -56,6 +54,17 @@
                         planet_id: planet_id,
                         level: level,
                         resource_type: resource_type
+                    });
+                };
+
+                scope.buy = function (building_id, resource, price) {
+                    var quantity = price.quantity;
+                    price.quantity = 0;
+                    var ship_id = this.controlPanel.currentShip.id;
+                    $http.post('/api/core/buildings/'+building_id+'/buy/', {
+                        ship_id: ship_id,
+                        resource: resource,
+                        quantity: quantity
                     });
                 }
             }
