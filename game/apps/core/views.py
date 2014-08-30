@@ -221,10 +221,21 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         quantity = int(request.DATA['quantity'])
         request_id = request.META['HTTP_X_REQUESTID']
         port = self.get_queryset().get(pk=pk)
-        cost = port.prices[resource]['sale_price'] * quantity
+        price = port.prices[resource]['sale_price']
         ship = request.user.ship_set.get(pk=pk)
+
+        quantity = min(quantity, port.resources.get(resource, 0))
+        quantity = min(quantity, user.credits//price)
+        cost = price * quantity
         ship.add_resource(resource, quantity)
+        port.remove_resource(resource, quantity)
         ship.save()
+        user.credits -= cost
+        user.save()
+        port.save()
+
+        account_signal = blinker.signal(game.apps.core.signals.account_data % user.id)
+        account_signal.send(None, data=AccountSerializer(user).data)
         signal_id = "%d_%s" % (port.planet_id, request_id)
         actions_signal = blinker.signal(game.apps.core.signals.planet_actions_progress % signal_id)
         actions_signal.send(
@@ -235,10 +246,49 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
             ),
         )
 
-        user.credits -= cost
+        signal_id = "%d_%s" % (port.planet_id, request_id)
+        planet_details_signal = blinker.signal(game.apps.core.signals.planet_details % signal_id)
+        planet_details_signal.send(self, planet=PlanetDetailsSerializer(port.planet, context=dict(request=request)).data)
+
+        return Response()
+
+    #TODO this shall be Port method
+    @action()
+    def sell(self, request, pk=None):
+        user = request.user
+        ship_id = request.DATA['ship_id']
+        resource = request.DATA['resource']
+        quantity = int(request.DATA['quantity'])
+        request_id = request.META['HTTP_X_REQUESTID']
+        port = self.get_queryset().get(pk=pk)
+        price = port.prices[resource]['purchase_price']
+        ship = request.user.ship_set.get(pk=pk)
+
+        quantity = min(quantity, ship.resources.get(resource, 0))
+        cost = price * quantity
+        ship.remove_resource(resource, quantity)
+        port.add_resource(resource, quantity)
+        ship.save()
+        user.credits += cost
         user.save()
+        port.save()
+
         account_signal = blinker.signal(game.apps.core.signals.account_data % user.id)
         account_signal.send(None, data=AccountSerializer(user).data)
+
+        signal_id = "%d_%s" % (port.planet_id, request_id)
+        actions_signal = blinker.signal(game.apps.core.signals.planet_actions_progress % signal_id)
+        actions_signal.send(
+            self,
+            message=dict(
+                type="success",
+                text="Sold %d of %s. Total profit: %d" % (quantity, resource, cost),
+            ),
+        )
+
+        signal_id = "%d_%s" % (port.planet_id, request_id)
+        planet_details_signal = blinker.signal(game.apps.core.signals.planet_details % signal_id)
+        planet_details_signal.send(self, planet=PlanetDetailsSerializer(port.planet, context=dict(request=request)).data)
 
         return Response()
 

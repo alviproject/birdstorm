@@ -1,6 +1,6 @@
 from collections import OrderedDict
 from django.contrib.auth.models import User
-from django.db.models.fields import IntegerField
+from django.db.models.fields import PositiveIntegerField
 from jsonfield.fields import JSONField
 from jsonschema import validate
 
@@ -93,4 +93,4 @@ def profile(self):
 
 User.profile = profile
 JSONField().contribute_to_class(User, 'data')
-IntegerField(default=0).contribute_to_class(User, 'credits')
+PositiveIntegerField(default=0).contribute_to_class(User, 'credits')

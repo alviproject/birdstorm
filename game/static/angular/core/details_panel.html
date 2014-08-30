@@ -1,4 +1,4 @@
-<div ng-switch="detailsPanel.choice">
+<div>  <!--ng-switch="detailsPanel.choice"-->
     <!-- Planet -->
     <!--<div ng-switch-when="planet">-->
     <div class="panel panel-default" id="context_menu">
@@ -95,8 +95,8 @@
                                 <tr ng-repeat="(type, price) in building.prices track by $index" ng-init="price.quantity=1">
                                     <td>{{type}}</td>
                                     <td ng-click="price.quantity=price.available"><a href="#">{{price.available}}</a></td>
-                                    <td ng-init="qty=controlPanel.currentShipDetails.resources[type] || 0"  ng-click="price.quantity=qty">
-                                        <a href="#">{{qty}}</a>
+                                    <td ng-click="price.quantity=controlPanel.currentShipDetails.resources[type] || 0">
+                                        <a href="#">{{controlPanel.currentShipDetails.resources[type] || 0}}</a>
                                     </td>
                                     <td><input class="input-sm" style="width: 50px" type="text" ng-model="price.quantity"/></td>
                                     <td>
@@ -105,7 +105,7 @@
                                         </button>
                                     </td>
                                     <td>
-                                        <button class="btn btn-default btn-sm">
+                                        <button class="btn btn-default btn-sm" ng-click="sell(building.id, type, price)">
                                             Sell ({{price.purchase_price * price.quantity}}c)
                                         </button>
                                     </td>

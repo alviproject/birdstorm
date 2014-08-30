@@ -6,22 +6,11 @@ from game.apps.core.models.armors import Armor
 from game.apps.core.models.shields import Shield
 from game.apps.core.models.weapons import ElectronBeam
 import game.apps.core.signals
+from game.utils.models import ResourceContainer
 from game.utils.polymorph import PolymorphicBase
 from django.db import models
 from jsonfield.fields import JSONField
 from rest_framework import serializers
-
-
-#TODO move to a separate module
-class ResourceContainer:
-    """mixed in class"""
-    @property
-    def resources(self):
-        return self.data.get('resources', {})
-
-    def add_resource(self, type, quantity):
-        resources = self.data.setdefault('resources', {})
-        resources[type] = resources.get(type, 0) + quantity
 
 
 class Ship(PolymorphicBase, ResourceContainer):

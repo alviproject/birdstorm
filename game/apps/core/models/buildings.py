@@ -1,5 +1,6 @@
 from django.db import models
 from game.apps.core.models.planet.models import Planet
+from game.utils.models import ResourceContainer
 from game.utils.polymorph import PolymorphicBase
 from jsonfield import JSONField
 from rest_framework import serializers
@@ -14,7 +15,7 @@ class Building(PolymorphicBase):
         app_label = 'core'
 
 
-class Port(Building):
+class Port(Building, ResourceContainer):
     OFFER_FACTOR = 1.5
 
     @property
@@ -25,7 +26,7 @@ class Port(Building):
             result[type] = dict(
                 sale_price=int(price*Port.OFFER_FACTOR),
                 purchase_price=int(price/Port.OFFER_FACTOR),
-                available=10,
+                available=self.resources.get(type, 0),
             )
         return result
 
