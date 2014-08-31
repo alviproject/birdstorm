@@ -38,6 +38,8 @@
     }}},
     {"model": "core.building", "pk": 3, "fields": {"planet": 1, "type": "Shipyard", "data": {
     }}},
+    {"model": "core.building", "pk": 4, "fields": {"planet": 1, "type": "Warehouse", "data": {
+    }}},
 
     {"model": "core.ship", "pk": 1, "fields": {"owner": 1, "system": 1, "type": "Raven", "data": {
         "mining": {"drilled_planets": [], "scan_results": []}

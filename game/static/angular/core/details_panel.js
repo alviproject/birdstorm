@@ -21,6 +21,10 @@
             for(var i = 0; i < 100; i++) {
                 detailsPanel.quantities.push(1);
             }
+            detailsPanel.warehouse_quantities = [];
+            for(var i = 0; i < 100; i++) {
+                detailsPanel.warehouse_quantities.push(1);
+            }
 
             detailsPanel.choice = choice;
             //set basic data, extended data will be requested
