@@ -17,4 +17,5 @@ class ResourceContainer:
             raise RuntimeError("Not enought resources")
         if current == quantity:
             del resources[type]
+            return
         resources[type] -= quantity

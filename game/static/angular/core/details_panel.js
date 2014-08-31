@@ -3,6 +3,8 @@
 
     app.controller('DetailsPanelController', ['request_id', function(request_id) {
         var detailsPanel = this;
+        detailsPanel.tabs = new Array(20); //quite ugly, but works, it assumes that there will be no more than 20 tabs
+
         //
         // connect to details channel
         //
@@ -14,6 +16,12 @@
         });
 
         this.switch = function (choice, data) {
+            //TODO once port will have it's own directive it shall be moved
+            detailsPanel.quantities = [];
+            for(var i = 0; i < 100; i++) {
+                detailsPanel.quantities.push(1);
+            }
+
             detailsPanel.choice = choice;
             //set basic data, extended data will be requested
             detailsPanel.data = data;
@@ -26,7 +34,6 @@
             $http.get("/api/core/"+choice+"s/"+data.id+"/")
                 .success(function (data, status, headers, config) {
                     //set extended data
-                    console.log(data);
                     detailsPanel.data = data;
                 });
         }
@@ -58,9 +65,9 @@
                     });
                 };
 
-                scope.buy = function (building_id, resource, price) {
-                    var quantity = price.quantity;
-                    price.quantity = 0;
+                scope.buy = function (building_id, resource, index) {
+                    var quantity = this.detailsPanel.quantities[index];
+                    this.detailsPanel.quantities[index] = 0;
                     var ship_id = this.controlPanel.currentShip.id;
                     $http.post('/api/core/buildings/'+building_id+'/buy/', {
                         ship_id: ship_id,
@@ -69,9 +76,9 @@
                     });
                 };
 
-                scope.sell = function (building_id, resource, price) {
-                    var quantity = price.quantity;
-                    price.quantity = 0;
+                scope.sell = function (building_id, resource, index) {
+                    var quantity = this.detailsPanel.quantities[index];
+                    this.detailsPanel.quantities[index] = 0;
                     var ship_id = this.controlPanel.currentShip.id;
                     $http.post('/api/core/buildings/'+building_id+'/sell/', {
                         ship_id: ship_id,

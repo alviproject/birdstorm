@@ -46,10 +46,12 @@ class Profile:
 
     @property
     def data(self):
-        # TODO remove "or {}", the reason for this is that if user is created from outside
+        # TODO thw whole if, the reason for this workaround is that if user is created from outside
         # (fe. by manage.py createsuperuser) then default value ('{}') is not taken into account and data is a string
         # instead of JSON, this could be fixed in JSONFiled
-        return self.user.data or {}
+        if self.user.data == '':
+            self.user.data = {}
+        return self.user.data
 
     def is_drilled(self, planet_id):
         return self.data.get('drilled_planets', []).count(planet_id) > 0
