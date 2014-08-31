@@ -184,14 +184,16 @@
                                     <th>Unload</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                <tr ng-repeat="(resource, details) in building.resources track by $index">
-                                    <td>Coal</td>
-                                    <td ng-click="detailsPanel.warehouse_quantities[$index]=details.available"><a href="#">{{details.available}}</a></td>
-                                    <td ng-click="detailsPanel.warehouse_quantities[$index]=controlPanel.currentShipDetails.resources[resource] || 0">
-                                        <a href="#">{{controlPanel.currentShipDetails.resources[resource] || 0}}</a>
+                                <tbody ng-init="resources=warehouseResources(building)"> <!-- TODO -->
+                                <tr ng-repeat="(resource, details) in resources track by $index">
+                                    <td>{{resource}}</td>
+                                    <td ng-click="detailsPanel.warehouse_quantities[$index]=details.warehouse">
+                                        <a href="#">{{details.warehouse}}</a>
                                     </td>
-                                    <td><input class="input-sm" style="width: 50px" type="text" ng-model="detailsPanel.warehouse.quantities[$index]"/></td>
+                                    <td ng-click="detailsPanel.warehouse_quantities[$index]=details.ship">
+                                        <a href="#">{{details.ship}}</a>
+                                    </td>
+                                    <td><input class="input-sm" style="width: 50px" type="text" ng-model="detailsPanel.warehouse_quantities[$index]"/></td>
                                     <td><button class="btn btn-default btn-sm" ng-click="load(building.id, resource)">Load</button></td>
                                     <td><button class="btn btn-default btn-sm" ng-click="unload(building.id, resource)">Unload</button></td>
                                 </tr>

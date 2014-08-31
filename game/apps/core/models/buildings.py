@@ -95,12 +95,24 @@ class ShipyardSerializer(BuildingBaseSerializer):
     available_ships = serializers.Field(source='available_ships')
 
 
+class WarehouseSerializer(BuildingBaseSerializer):
+    resources = serializers.SerializerMethodField('get_resources')
+
+    def get_resources(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated():
+            return dict()
+        return user.profile.warehouse_resources(obj.id)
+
+
 class BuildingSerializer(serializers.HyperlinkedModelSerializer):
     def to_native(self, obj):
         if obj.type == "Port":
-            return PortSerializer(obj).to_native(obj)
+            return PortSerializer(obj, context=self.context).to_native(obj)
         if obj.type == "Shipyard":
-            return ShipyardSerializer(obj).to_native(obj)
+            return ShipyardSerializer(obj, context=self.context).to_native(obj)
+        if obj.type == "Warehouse":
+            return WarehouseSerializer(obj, context=self.context).to_native(obj)
         return super().to_native(obj)
 
     class Meta(BuildingBaseSerializer.Meta):

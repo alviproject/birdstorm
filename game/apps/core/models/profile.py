@@ -56,6 +56,10 @@ class Profile:
     def is_drilled(self, planet_id):
         return self.data.get('drilled_planets', []).count(planet_id) > 0
 
+    def warehouse_resources(self, warehouse_id):
+        warehouses = self.data.setdefault('warehouses', dict())
+        return warehouses.setdefault(warehouse_id, dict())
+
     def get_scan_results(self, planet_id):
         results = self.data.get('scan_results', OrderedDict())
         return results.get(str(planet_id), [])

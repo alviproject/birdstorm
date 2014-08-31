@@ -18,11 +18,12 @@
         this.switch = function (choice, data) {
             //TODO once port will have it's own directive it shall be moved
             detailsPanel.quantities = [];
-            for(var i = 0; i < 100; i++) {
+            var i;
+            for(i = 0; i < 100; i++) {
                 detailsPanel.quantities.push(1);
             }
             detailsPanel.warehouse_quantities = [];
-            for(var i = 0; i < 100; i++) {
+            for(i = 0; i < 100; i++) {
                 detailsPanel.warehouse_quantities.push(1);
             }
 
@@ -97,6 +98,22 @@
                         ship_id: ship_id,
                         ordered_ship: ship
                     });
+                };
+
+                scope.warehouseResources = function(building) {
+                    var result = {};
+                    $.each(building.resources, function(key, value) {
+                        r[key] = {warehouse: value, ship: 0};
+                    });
+                    $.each(scope.controlPanel.currentShipDetails.resources, function(key, value) {
+                        if(result.hasOwnProperty(key)) {
+                            result[key].ship = value;
+                        }
+                        else {
+                            result[key] = {warehouse: 0, ship: value};
+                        }
+                    });
+                    return result;
                 };
             }
         }
