@@ -45,6 +45,31 @@ class Mine(Building):
 
 
 class Shipyard(Building):
+    def available_ships(self):
+        return dict(
+            Raven=dict(
+                resources=dict(
+                    coal=5,
+                    iron_ore=3,
+                ),
+                time=5,
+            ),
+            Owl=dict(
+                resources=dict(
+                    coal=15,
+                    iron_ore=10,
+                ),
+                time=10,
+            ),
+            Swallow=dict(
+                resources=dict(
+                    coal=20,
+                    iron_ore=20,
+                ),
+                time=15,
+            ),
+        )
+
     class Meta:
         proxy = True
 
@@ -61,10 +86,16 @@ class PortSerializer(BuildingBaseSerializer):
     prices = serializers.Field(source='prices')
 
 
+class ShipyardSerializer(BuildingBaseSerializer):
+    available_ships = serializers.Field(source='available_ships')
+
+
 class BuildingSerializer(serializers.HyperlinkedModelSerializer):
     def to_native(self, obj):
-        if obj.type == "Port":  # TODO may be done automatically
+        if obj.type == "Port":
             return PortSerializer(obj).to_native(obj)
+        if obj.type == "Shipyard":
+            return ShipyardSerializer(obj).to_native(obj)
         return super().to_native(obj)
 
     class Meta(BuildingBaseSerializer.Meta):

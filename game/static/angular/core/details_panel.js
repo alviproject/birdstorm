@@ -85,7 +85,15 @@
                         resource: resource,
                         quantity: quantity
                     });
-                }
+                };
+
+                scope.order = function (building_id, ship) {
+                    var ship_id = this.controlPanel.currentShip.id;
+                    $http.post('/api/core/buildings/'+building_id+'/order/', {
+                        ship_id: ship_id,
+                        ordered_ship: ship
+                    });
+                };
             }
         }
     });

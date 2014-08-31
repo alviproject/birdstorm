@@ -117,33 +117,35 @@
                             </table>
                         </div>
                         <div ng-switch-when="Shipyard">
-                            <h4>Available ships</h4>
+                            <!--<h4>Available ships</h4>-->
                             <table class="table table-hover">
                                 <thead>
                                 <tr>
                                     <th>Ship</th>
                                     <th>Resources</th>
+                                    <th>ETA</th>
                                     <th>Order</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                <tr>
-                                    <td>Raven</td>
-                                    <td>test</td>
-                                    <td><button class="btn btn-default btn-sm">Order</button></td>
-                                </tr>
-                                <tr>
-                                    <td>Owl</td>
-                                    <td>test</td>
-                                    <td><button class="btn btn-default btn-sm">Order</button></td>
-                                </tr>
-                                <tr>
-                                    <td>Swallow</td>
-                                    <td>test</td>
-                                    <td><button class="btn btn-default btn-sm">Order</button></td>
+                                <tbody ng-init="ship_resources=controlPanel.currentShipDetails.resources">
+                                <tr ng-repeat="(ship, details) in building.available_ships">
+                                    <td>{{ship}}</td>
+                                    <td>
+                                        <ul class="list-unstyled">
+                                            <li
+                                                    ng-repeat="(resource, quantity) in details.resources"
+                                                    ng-class="{true:'text-success', false:'text-danger'}[ship_resources[resource] > quantity]"
+                                                    >
+                                                {{resource}}: {{quantity}}
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td>{{details.time}}s</td>
+                                    <td><button class="btn btn-default btn-sm" ng-click="order(building.id, ship)">Order</button></td>
                                 </tr>
                                 </tbody>
                             </table>
+                            <!--
                             <h4>Queue</h4>
                             <table class="table table-hover">
                                 <thead>
@@ -166,6 +168,7 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            -->
                         </div>
                         <div ng-switch-when="Factory">
                             Factory

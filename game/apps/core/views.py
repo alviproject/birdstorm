@@ -8,6 +8,7 @@ from game.apps.account.models import AccountSerializer
 from game.apps.core import models
 from game.apps.core.models.planet.models import TerrestrialPlanet
 from game.apps.core.models.planet.serializers import PlanetDetailsSerializer
+from game.apps.core.models.ships import Ship
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
@@ -215,6 +216,7 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
     #TODO this shall be Port method
     @action()
     def buy(self, request, pk=None):
+        #TODO check if ship is at the right system
         user = request.user
         ship_id = request.DATA['ship_id']
         resource = request.DATA['resource']
@@ -255,6 +257,7 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
     #TODO this shall be Port method
     @action()
     def sell(self, request, pk=None):
+        #TODO check if ship is at the right system
         user = request.user
         ship_id = request.DATA['ship_id']
         resource = request.DATA['resource']
@@ -291,6 +294,36 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         planet_details_signal.send(self, planet=PlanetDetailsSerializer(port.planet, context=dict(request=request)).data)
 
         return Response()
+
+    #TODO this shall be Shipyard method
+    @async_action
+    def order(self, request, pk=None):
+        #TODO check if ship is at the right system
+        user = request.user
+        ship_id = request.DATA['ship_id']
+        ordered_ship = request.DATA['ordered_ship']
+        request_id = request.META['HTTP_X_REQUESTID']
+        shipyard = self.get_queryset().get(pk=pk)
+        ship = request.user.ship_set.get(pk=ship_id)
+
+        order_details = shipyard.available_ships()[ordered_ship]
+
+        signal_id = "%d_%s" % (shipyard.planet_id, request_id)
+        actions_signal = blinker.signal(game.apps.core.signals.planet_actions_progress % signal_id)
+
+        with ship.lock():
+            actions_signal.send(self, message=dict(type="info", text="Building ship, please wait",),)
+            try:
+                for resource, quantity in order_details['resources'].items():
+                    ship.remove_resource(resource, quantity)
+            except RuntimeError:
+                actions_signal.send(self, message=dict(type="error", text="Not enough resources to order this ship",),)
+                return
+            yield order_details['time']
+            ship.save()
+            new_ship = Ship(type=ordered_ship, owner=user, system=shipyard.planet.system)
+            new_ship.save()
+            actions_signal.send(self, message=dict(type="success", text="Ship was added to your fleet",),)
 
 
 def test_view(request):

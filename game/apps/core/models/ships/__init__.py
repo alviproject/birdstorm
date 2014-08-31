@@ -16,7 +16,7 @@ from rest_framework import serializers
 class Ship(PolymorphicBase, ResourceContainer):
     owner = models.ForeignKey(User)
     system = models.ForeignKey('System')  # TODO change it to planet
-    data = JSONField()  # TODO schema validation
+    data = JSONField(default={})  # TODO schema validation
     locked = models.BooleanField(default=False)
 
     def __init__(self, *args, **kwargs):
