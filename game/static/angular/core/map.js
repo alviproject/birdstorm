@@ -29,6 +29,12 @@
         this.zoomOut = function () {
             map.scale = map.scale / FACTOR;
         };
+
+        this.reset = function () {
+            map.scale = 1;
+            map.x = 0;
+            map.y = 0;
+        };
     }]);
 
     //following two function rescale elements from cartesian coordinates (scale -1.0 to +1.0) to current size of the window
@@ -76,6 +82,7 @@
                     prepare_ship(ships[i], map);
                 }
             });
+            $("#map-placeholder").css("height", $("svg").height());
         });
     }
 
