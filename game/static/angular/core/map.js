@@ -52,15 +52,16 @@
 
     function prepare_system(system, map) {
         jQuery.extend(system, system_types[system.type]);
-        system.x = rescale_x(system.x);
-        system.y = rescale_y(system.y)
+        system.display_x = rescale_x(system.x);
+        system.display_y = rescale_y(system.y)
         map.systems[system.id] = system;
     }
 
     function prepare_ship(ship, map) {
         var system = map.systems[ship.system_id];
-        ship.x = system.x;
-        ship.y = system.y + system.r;
+        ship.system = function() {
+            return system;
+        };
         map.ships[ship.id] = ship;
     }
 

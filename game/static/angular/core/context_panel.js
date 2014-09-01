@@ -25,7 +25,8 @@
             scope: {
                 contextPanel: '=contextPanel',
                 controlPanel: '=controlPanel',
-                detailsPanel: '=detailsPanel'
+                detailsPanel: '=detailsPanel',
+                map: '=map'
             },
             link: function(scope, element) {
                 scope.go_to_system = function (system_id) {
@@ -33,6 +34,15 @@
                     $http.post('/api/core/own_ships/'+ship_id+'/move/', {
                         system_id: system_id
                     });
+                };
+                scope.distance = function() {
+                    var ship_system = scope.map.ships[scope.controlPanel.currentShipDetails.id].system();
+                    var system = scope.contextPanel.data;
+                    var x1 = ship_system.x;
+                    var x2 = system.x;
+                    var y1 = ship_system.y;
+                    var y2 = system.y;
+                    return Math.sqrt(Math.pow(x1-x2, 2)+Math.pow(y1-y2, 2));
                 }
             }
         }

@@ -82,8 +82,9 @@ class OwnShipSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class OwnShipDetailsSerializer(OwnShipSerializer):
+    system_id = serializers.CharField(source='system_id', read_only=True)
     resources = serializers.Field(source='resources')
 
     class Meta:
         model = Ship
-        fields = ['id', 'url', 'type', 'owner', 'system', 'locked', 'resources']
+        fields = ['id', 'url', 'type', 'owner', 'system', 'locked', 'resources', 'system_id']

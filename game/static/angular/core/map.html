@@ -1,12 +1,28 @@
 <svg style="position:fixed;top:0;left:0;">
     <g id="map_container" ng-attr-transform="translate({{ map.x }}, {{ map.y }}) scale({{ map.scale }})">
+        <!--
+        <g ng-init="bg_h=1080;bg_w=1778" ng-attr-transform="translate({{bg_h/2}}, {{bg_w/2}})">
+            <g transform="scale(1, 1)">
+                <image ng-attr-height="{{bg_h}}" ng-attr-width="{{bg_w}}" xlink:href="" />
+            </g>
+            <g transform="scale(1, -1)">
+                <image ng-attr-height="{{bg_h}}" ng-attr-width="{{bg_w}}" xlink:href="" />
+            </g>
+            <g transform="scale(-1, 1)">
+                <image ng-attr-height="{{bg_h}}" ng-attr-width="{{bg_w}}" xlink:href="" />
+            </g>
+            <g transform="scale(-1, -1)">
+                <image ng-attr-height="{{bg_h}}" ng-attr-width="{{bg_w}}" xlink:href="" />
+            </g>
+        </g>
+        -->
         <!-- Systems -->
         <g
                 ng-repeat="system in map.systems"
                 class="system"
                 id="system_{{ system.id }}"
                 data-url="{{ system.url }}"
-                ng-attr-transform="translate({{ system.x }}, {{ system.y }})">
+                ng-attr-transform="translate({{ system.display_x }}, {{ system.display_y }})">
             <a xlink:href="#" ng-click="contextPanelSwitch('system', system)">
                 <circle ng-attr-r="{{ system.r }}" ng-attr-fill="{{ system.color }}" ng-attr-stroke="{{ system.stroke }}"></circle>
             </a>
@@ -19,11 +35,13 @@
                 class="ship"
                 id="ship_{{ ship.id }}"
                 data-url="{{ ship.url }}"
-                ng-attr-transform="translate({{ ship.x }}, {{ ship.y }})">
+                ng-attr-transform="translate({{ ship.system().display_x }}, {{ ship.system().display_y + ship.system().r }})">
             <a xlink:href="#" ng-click="contextPanelSwitch('ship', ship)">
-                <text alignment-baseline="before-edge" text-anchor="middle">{{ ship.type }} ({{ ship.x | number:0 }}, {{ ship.y | number:0 }})</text>
+                <text x="0" y="0" alignment-baseline="before-edge" text-anchor="middle">
+                    <tspan x="0" dy="1.2em">{{ ship.type }}</tspan>
+                    <tspan x="0" dy="1.2em">({{ ship.system().x | number:2 }}, {{ ship.system().y | number:2 }})</tspan>
+                </text>
             </a>
-
         </g>
 
     </g>

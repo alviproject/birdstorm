@@ -4,12 +4,12 @@
     {"model": "core.system", "pk": 2, "fields": {"x": "0.1", "y": "0.2", "type": "Draft"}},
     {"model": "core.system", "pk": 3, "fields": {"x": "0.2", "y": "0.2", "type": "BrownDraft"}},
 
-    {"model": "core.system", "pk": 4, "fields": {"x": "0.3", "y": "-0.1", "type": "RedDraft"}},
-    {"model": "core.system", "pk": 5, "fields": {"x": "0.3", "y": "-0.2", "type": "RedDraft"}},
+    {"model": "core.system", "pk": 4, "fields": {"x": "0.2", "y": "-0.1", "type": "RedDraft"}},
+    {"model": "core.system", "pk": 5, "fields": {"x": "0.3", "y": "0.1", "type": "RedDraft"}},
 
-    {"model": "core.system", "pk": 6, "fields": {"x": "-0.6", "y": "-0.1", "type": "BlueDraft"}},
-    {"model": "core.system", "pk": 7, "fields": {"x": "-0.5", "y": "-0.2", "type": "BlueSuperGiant"}},
-    {"model": "core.system", "pk": 8, "fields": {"x": "-0.7", "y": "-0.4", "type": "WhiteDraft"}},
+    {"model": "core.system", "pk": 6, "fields": {"x": "0.6", "y": "-0.1", "type": "BlueDraft"}},
+    {"model": "core.system", "pk": 7, "fields": {"x": "0.5", "y": "-0.2", "type": "BlueSuperGiant"}},
+    {"model": "core.system", "pk": 8, "fields": {"x": "0.7", "y": "-0.4", "type": "WhiteDraft"}},
 
     {"model": "core.planet", "pk": 1, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {
         "resources": [
