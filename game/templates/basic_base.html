@@ -43,8 +43,9 @@
                 <li><a href="/">Game</a></li>
                 <li><a href="/forum">Forum</a></li>
                 <li>
-                    <form class="navbar-form navbar-right" role="form" action="/test/">
-                        <button type="submit" class="btn btn-success">Login as test user</button>
+                    <form class="navbar-form navbar-right" role="form" action="/api/account/register" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">One Click Register</button>
                     </form>
                 </li>
             </ul>

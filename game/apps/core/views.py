@@ -224,7 +224,7 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         request_id = request.META['HTTP_X_REQUESTID']
         port = self.get_queryset().get(pk=pk)
         price = port.prices[resource]['sale_price']
-        ship = request.user.ship_set.get(pk=pk)
+        ship = request.user.ship_set.get(pk=ship_id)
 
         quantity = min(quantity, port.resources.get(resource, 0))
         quantity = min(quantity, user.credits//price)
@@ -265,7 +265,7 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         request_id = request.META['HTTP_X_REQUESTID']
         port = self.get_queryset().get(pk=pk)
         price = port.prices[resource]['purchase_price']
-        ship = request.user.ship_set.get(pk=pk)
+        ship = request.user.ship_set.get(pk=ship_id)
 
         quantity = min(quantity, ship.resources.get(resource, 0))
         cost = price * quantity

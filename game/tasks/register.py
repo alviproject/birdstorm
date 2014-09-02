@@ -13,11 +13,11 @@ logger = logging.getLogger(__name__)
 class Register(Task):
     @classmethod
     def register(cls):
-        post_save.connect(cls.create_ship, sender=User, dispatch_uid="123")
+        post_save.connect(cls.create_ship, sender=User, dispatch_uid="123")  # TODO change dispach_uid
 
     @classmethod
     def create_ship(cls, created, **kwargs):
         if not created:
             return
         user = kwargs['instance']
-        Raven.objects.create(owner=user, system_id=7)  # TODO don't hardcode data here
+        Raven.objects.create(owner=user, system_id=1)  # TODO don't hardcode data here

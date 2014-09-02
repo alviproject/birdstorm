@@ -12,6 +12,7 @@ admin.autodiscover()
 
 router = routers.DefaultRouter()
 router.register(r'users', game.apps.account.views.Users)
+router.register(r'accounts', game.apps.account.views.Users)
 router.register(r'core/ships', game.apps.core.views.Ships)
 router.register(r'core/buildings', game.apps.core.views.Buildings)
 router.register(r'core/systems', game.apps.core.views.Systems)
@@ -26,6 +27,7 @@ urlpatterns = patterns(
     url(r'^', include('game.apps.core.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include(router.urls)),
-    url(r'^api/account', game.apps.account.views.Account.as_view(model=User)),  # TODO not shown at /api
+    url(r'^api/account$', game.apps.account.views.Account.as_view(model=User)),  # TODO not shown at /api
+    url(r'^api/account/register', 'game.apps.account.views.register'),  # TODO
     url(r'^forum/', include('pybb.urls', namespace='pybb')),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
