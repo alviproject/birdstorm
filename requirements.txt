@@ -21,4 +21,4 @@ Pillow==2.5.3
 dj-database-url==0.3.0
 psycopg2==2.5.3
 raven==5.0.0
-honcho==git+git://github.com/nickstenning/honcho.git
+-e git://github.com/nickstenning/honcho.git#egg=honcho
