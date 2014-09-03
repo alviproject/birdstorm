@@ -1,21 +1,19 @@
 <svg style="position:fixed;top:0;left:0;">
     <g id="map_container" ng-attr-transform="translate({{ map.x }}, {{ map.y }}) scale({{ map.scale }})">
-        <!--
         <g ng-init="bg_h=1080;bg_w=1778" ng-attr-transform="translate({{bg_h/2}}, {{bg_w/2}})">
             <g transform="scale(1, 1)">
-                <image ng-attr-height="{{bg_h}}" ng-attr-width="{{bg_w}}" xlink:href="" />
+                <image ng-attr-height="{{bg_h}}" ng-attr-width="{{bg_w}}" xlink:href="/static/images/background.jpg" />
             </g>
             <g transform="scale(1, -1)">
-                <image ng-attr-height="{{bg_h}}" ng-attr-width="{{bg_w}}" xlink:href="" />
+                <image ng-attr-height="{{bg_h}}" ng-attr-width="{{bg_w}}" xlink:href="/static/images/background.jpg" />
             </g>
             <g transform="scale(-1, 1)">
-                <image ng-attr-height="{{bg_h}}" ng-attr-width="{{bg_w}}" xlink:href="" />
+                <image ng-attr-height="{{bg_h}}" ng-attr-width="{{bg_w}}" xlink:href="/static/images/background.jpg" />
             </g>
             <g transform="scale(-1, -1)">
-                <image ng-attr-height="{{bg_h}}" ng-attr-width="{{bg_w}}" xlink:href="" />
+                <image ng-attr-height="{{bg_h}}" ng-attr-width="{{bg_w}}" xlink:href="/static/images/background.jpg" />
             </g>
         </g>
-        -->
         <!-- Systems -->
         <g
                 ng-repeat="system in map.systems"
