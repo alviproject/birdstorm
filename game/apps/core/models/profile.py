@@ -98,5 +98,5 @@ def profile(self):
 
 
 User.profile = profile
-JSONField().contribute_to_class(User, 'data')
+JSONField(default={}).contribute_to_class(User, 'data')
 PositiveIntegerField(default=0).contribute_to_class(User, 'credits')
