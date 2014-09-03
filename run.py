@@ -10,6 +10,8 @@ else:
 
 with open(env_input) as env:
     for line in env.read().splitlines():
+        if not line.strip():  # skip empty lines
+            continue
         var = line.split('=')
         print(var)
         os.environ.setdefault(*var)

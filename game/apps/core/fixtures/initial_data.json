@@ -1,4 +1,8 @@
 [
+    {"model": "auth.user", "pk": 1, "fields":
+        {"is_superuser": true, "username": "peter", "credits": 0, "is_staff": true, "is_active": true, "data": "{}", "password": ""}
+    },
+
     {"model": "core.system", "pk": 1, "fields": {"x": "0", "y": "0", "type": "RedGiant"}},
 
     {"model": "core.system", "pk": 2, "fields": {"x": "0.1", "y": "0.2", "type": "Draft"}},
