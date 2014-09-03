@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.authtoken',
     'kombu.transport.django',  # required for celery django broker
+    'raven.contrib.django.raven_compat',
     'game.apps.account',
     'game.apps.chat',
     'game.apps.core',
@@ -138,3 +139,8 @@ SITE_ID = 1
 
 
 PYBB_PERMISSION_HANDLER = 'game.apps.account.forum.ForumPermissionHandler'
+
+RAVEN_CONFIG = {
+    'dsn': config.raven_dsn,
+}
+
