@@ -327,9 +327,9 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
 
 
 def test_view(request):
-    user = User.objects.get(pk=1)
-    user = authenticate(user=user)
-    login(request, user)
+    ship = Ship.objects.get(pk=1)
+    ship.system_id = 1
+    ship.save()
     return HttpResponse("ok")
 
 

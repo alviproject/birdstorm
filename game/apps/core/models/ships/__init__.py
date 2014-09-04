@@ -11,6 +11,7 @@ from game.utils.polymorph import PolymorphicBase
 from django.db import models
 from jsonfield.fields import JSONField
 from rest_framework import serializers
+from concurrency.fields import IntegerVersionField
 
 
 class Ship(PolymorphicBase, ResourceContainer):
@@ -18,6 +19,7 @@ class Ship(PolymorphicBase, ResourceContainer):
     system = models.ForeignKey('System')  # TODO change it to planet
     data = JSONField(default={})  # TODO schema validation
     locked = models.BooleanField(default=False)
+    version = IntegerVersionField()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
