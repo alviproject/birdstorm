@@ -1,2 +1,1 @@
-web: export PYTHONPATH=. && python game/server.py
-#web: honcho -f ProcfileHoncho start
+web: honcho -e non_existing_file -f ProcfileHoncho start
