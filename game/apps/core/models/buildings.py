@@ -49,22 +49,22 @@ class Shipyard(Building):
         return dict(
             Raven=dict(
                 resources=dict(
-                    coal=5,
-                    iron_ore=3,
+                    Coal=5,
+                    Iron=3,
                 ),
                 time=5,
             ),
             Owl=dict(
                 resources=dict(
-                    coal=15,
-                    iron_ore=10,
+                    Coal=15,
+                    Iron=10,
                 ),
                 time=10,
             ),
             Swallow=dict(
                 resources=dict(
-                    coal=20,
-                    iron_ore=20,
+                    Coal=20,
+                    Iron=20,
                 ),
                 time=15,
             ),

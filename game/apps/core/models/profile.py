@@ -9,8 +9,13 @@ from jsonschema import validate
 schema_resources = {
     "type": "object",
     "properties": {
-        "coal": {"type": "number", "minimum": 0, },
-        "iron_ore": {"type": "number", "minimum": 0, },
+        "Coal": {"type": "number", "minimum": 0, },
+        "Iron": {"type": "number", "minimum": 0, },
+        "Bauxite": {"type": "number", "minimum": 0, },
+        "Oil": {"type": "number", "minimum": 0, },
+        "Steel": {"type": "number", "minimum": 0, },
+        "Aluminium": {"type": "number", "minimum": 0, },
+        "Polymer": {"type": "number", "minimum": 0, },
     },
     "additionalProperties": False,
 }

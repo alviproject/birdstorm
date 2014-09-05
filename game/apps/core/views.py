@@ -128,7 +128,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
 
             try:
                 level_resources = planet.data['resources'][level]
-            except IndexError:
+            except (IndexError, KeyError):
                 scan_progress_signal.send(self, message=dict(
                     type="error",
                     text="Some solid structures below surface of this planet block deeper scans.",
