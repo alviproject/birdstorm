@@ -23,6 +23,8 @@ class PolymorphicBase(models.Model, metaclass=PolymorphicMeta):
             #objects was just created, set type and return
             self.type = self.__class__.__name__
             return self
+        if self.type == self.__class__.__name__:
+            return self
         #type is set, we can do actual change of the class
         #TODO it could be cached during creation of relevant subclasses
         for cls in self.__class__.__subclasses__():

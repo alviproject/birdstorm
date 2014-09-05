@@ -43,6 +43,12 @@
                 <li><a href="/">Game</a></li>
                 <li><a href="/forum">Forum</a></li>
                 <li>
+                    <form class="navbar-form navbar-right" role="form" action="/test/" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">Test</button>
+                    </form>
+                </li>
+                <li>
                     <form class="navbar-form navbar-right" role="form" action="/api/account/register" method="post">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-success">One Click Register</button>

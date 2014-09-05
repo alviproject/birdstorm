@@ -101,6 +101,7 @@
                                     <td ng-click="detailsPanel.quantities[$index]=controlPanel.currentShipDetails.resources[type] || 0">
                                         <a href="#">{{controlPanel.currentShipDetails.resources[type] || 0}}</a>
                                     </td>
+                                    <!--TODO consider adding a popover with suggested quantities to sale and buy)
                                     <td><input class="input-sm" style="width: 50px" type="text" ng-model="detailsPanel.quantities[$index]"/></td>
                                     <td>
                                         <button class="btn btn-default btn-sm" ng-click="buy(building.id, type, $index)">

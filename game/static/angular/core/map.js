@@ -62,6 +62,9 @@
         ship.system = function() {
             return system;
         };
+        ship.display_x = ship.system().display_x;
+        ship.display_y = ship.system().display_y;
+
         map.ships[ship.id] = ship;
     }
 
@@ -137,11 +140,12 @@
                     element.transition()
                         .duration(time*1000)
                         .tween("position", function() {
-                            var x = d3.interpolateRound(ship.x, target_system.x);
-                            var y = d3.interpolateRound(ship.y, target_system.y + target_system.r);
+                            console.log(ship.system);
+                            var x = d3.interpolateRound(ship.display_x, target_system.display_x);
+                            var y = d3.interpolateRound(ship.display_y, target_system.display_y + target_system.r);
                             return function(t) {
-                                ship.x = x(t);
-                                ship.y = y(t);
+                                ship.display_x = x(t);
+                                ship.display_y = y(t);
                                 scope.$apply();
                             };
                         });
