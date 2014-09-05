@@ -5,7 +5,7 @@ from jsonfield.fields import JSONField
 
 
 class Planet(PolymorphicBase):
-    system = models.ForeignKey(System, related_name='planets')
+    system = models.ForeignKey(System)
     data = JSONField()
 
     class Meta:

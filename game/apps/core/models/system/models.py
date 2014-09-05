@@ -9,6 +9,9 @@ class System(PolymorphicBase):
     class Meta:
         app_label = 'core'
 
+    def planets(self):
+        return self.planet_set.order_by('id')
+
 
 class WhiteDraft(System):
     class Meta: proxy = True

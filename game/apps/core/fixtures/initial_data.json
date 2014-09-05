@@ -3,6 +3,7 @@
         {"is_superuser": true, "username": "peter", "credits": 0, "is_staff": true, "is_active": true, "data": "{}", "password": ""}
     },
 
+
     {"model": "core.system", "pk": 1, "fields": {"x": "0", "y": "0", "type": "RedGiant"}},
 
     {"model": "core.system", "pk": 2, "fields": {"x": "0.1", "y": "0.2", "type": "Draft"}},
@@ -15,34 +16,74 @@
     {"model": "core.system", "pk": 7, "fields": {"x": "0.5", "y": "-0.2", "type": "BlueSuperGiant"}},
     {"model": "core.system", "pk": 8, "fields": {"x": "0.7", "y": "-0.4", "type": "WhiteDraft"}},
 
-    {"model": "core.planet", "pk": 1, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {
-        "resources": [
-            {"coal": 8, "iron_ore": 8},
-            {"coal": 16, "iron_ore": 16}
-        ]
-    }}},
+
+    {"model": "core.planet", "pk": 1, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {}}},
     {"model": "core.planet", "pk": 2, "fields": {"system": 1, "type": "GasGiant", "data": {}}},
     {"model": "core.planet", "pk": 3, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {
         "resources": [
-            {"coal": 8, "iron_ore": 8},
-            {"coal": 16, "iron_ore": 16}
+            {"Coal": 10, "Oil": 10},
+            {"Coal": 10, "Oil": 10}
         ]
     }}},
     {"model": "core.planet", "pk": 4, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {
         "resources": [
-            {"coal": 8, "iron_ore": 8},
-            {"coal": 16, "iron_ore": 16}
+            {"Coal": 10, "Iron": 10},
+            {"Coal": 10, "Iron": 10}
+        ]
+    }}},
+    {"model": "core.planet", "pk": 5, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {
+        "resources": [
+            {"Oil": 10, "Iron": 10},
+            {"Oil": 10, "Iron": 10}
         ]
     }}},
 
+    {"model": "core.planet", "pk": 6, "fields": {"system": 2, "type": "TerrestrialPlanet", "data": {}}},
+    {"model": "core.planet", "pk": 7, "fields": {"system": 2, "type": "TerrestrialPlanet", "data": {
+        "resources": [
+            {"Oil": 10, "Coal": 10},
+            {"Oil": 10, "Coal": 10}
+        ]
+    }}},
+    {"model": "core.planet", "pk": 8, "fields": {"system": 2, "type": "TerrestrialPlanet", "data": {
+        "resources": [
+            {"Coal": 10, "Iron": 10},
+            {"Coal": 10, "Iron": 10}
+        ]
+    }}},
+    {"model": "core.planet", "pk": 9, "fields": {"system": 2, "type": "TerrestrialPlanet", "data": {}}},
+
+    {"model": "core.planet", "pk": 10, "fields": {"system": 3, "type": "TerrestrialPlanet", "data": {}}},
+
     {"model": "core.building", "pk": 1, "fields": {"planet": 1, "type": "Port", "data": {
-        "prices": {"coal": 10, "iron_ore": 15}
+        "prices": {"Iron": 10, "Steel": 15, "Oil": 10, "Coal": 5}
     }}},
-    {"model": "core.building", "pk": 2, "fields": {"planet": 1, "type": "Factory", "data": {
+    {"model": "core.building", "pk": 2, "fields": {"planet": 1, "type": "SteelMill", "data": {
+        "prices": {"ShipStructures": 10}
     }}},
-    {"model": "core.building", "pk": 3, "fields": {"planet": 1, "type": "Shipyard", "data": {
+    {"model": "core.building", "pk": 3, "fields": {"planet": 2, "type": "Port", "data": {
+        "prices": {"Iron": 10, "Steel": 23, "Oil": 10}
     }}},
-    {"model": "core.building", "pk": 4, "fields": {"planet": 1, "type": "Warehouse", "data": {
+    {"model": "core.building", "pk": 4, "fields": {"planet": 2, "type": "Workshop", "data": {
+    }}},
+
+    {"model": "core.building", "pk": 6, "fields": {"planet": 6, "type": "Port", "data": {
+        "prices": {"Bauxite": 15, "Aluminium": 45}
+    }}},
+    {"model": "core.building", "pk": 7, "fields": {"planet": 6, "type": "SteelMill", "data": {
+    }}},
+    {"model": "core.building", "pk": 8, "fields": {"planet": 9, "type": "Port", "data": {
+        "prices": {"Oil": 10, "Polymer": 30}
+    }}},
+    {"model": "core.building", "pk": 9, "fields": {"planet": 9, "type": "Refinery", "data": {
+    }}},
+    {"model": "core.building", "pk": 10, "fields": {"planet": 9, "type": "Port", "data": {
+        "prices": {"ComponentStructures": 113, "ShipStructures": 137}
+    }}},
+    {"model": "core.building", "pk": 9, "fields": {"planet": 9, "type": "Factory", "data": {
+    }}},
+
+    {"model": "core.building", "pk": 5, "fields": {"planet": 1, "type": "Warehouse", "data": {
     }}},
 
     {"model": "core.ship", "pk": 1, "fields": {"owner": 1, "system": 1, "type": "Raven", "data": {

@@ -79,6 +79,21 @@ class Warehouse(Building):
         proxy = True
 
 
+class SteelMill(Building):
+    class Meta:
+        proxy = True
+
+
+class Workshop(Building):
+    class Meta:
+        proxy = True
+
+
+class Refinery(Building):
+    class Meta:
+        proxy = True
+
+
 class BuildingBaseSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.IntegerField(source='id', read_only=True)
 
