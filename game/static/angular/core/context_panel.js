@@ -1,9 +1,9 @@
 (function() {
     var app = angular.module('game');
 
-    app.controller('ContextPanelController', [function() {
+    app.controller('ContextPanelController', ['$scope', '$timeout', function($scope, $timeout) {
         var contextPanel = this;
-        this.switch = function (choice, data) {
+        this.switch = function (choice, data, detailsPanel) { //TODO remove detailsPanel parameter
             contextPanel.choice = choice;
             //set basic data, extended data will be requested
             contextPanel.data = data;
@@ -14,7 +14,7 @@
                 .success(function (data, status, headers, config) {
                     //set extended data
                     contextPanel.data = data;
-            });
+                });
         }
     }]);
 

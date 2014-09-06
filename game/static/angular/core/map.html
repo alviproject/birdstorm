@@ -21,7 +21,7 @@
                 id="system_{{ system.id }}"
                 data-url="{{ system.url }}"
                 ng-attr-transform="translate({{ system.display_x }}, {{ system.display_y }})">
-            <a xlink:href="#" ng-click="contextPanelSwitch('system', system)">
+            <a xlink:href="#" ng-click="dataSwitch('system', system)">
                 <circle ng-attr-r="{{ system.r }}" ng-attr-fill="{{ system.color }}" ng-attr-stroke="{{ system.stroke }}"></circle>
             </a>
 
