@@ -27,7 +27,7 @@
                         No solid structures are built on this planet.<br />
                         Buildings: Building1, Building2, ...
                 </tab>
-                <tab heading="Resources" active="detailsPanel.tabs[1]">
+                <tab heading="Resources" active="detailsPanel.tabs[1]" ng-hide="detailsPanel.data.buildings">
                     <div ng-switch="detailsPanel.data.is_drilled">
                         <div ng-switch-when="true">
                             Planet is already drilled. You have to wait some time, before you can extract resources
