@@ -79,7 +79,7 @@ class Warehouse(Building):
         proxy = True
 
 
-class SteelMill(Building):
+class Smelter(Building):
     class Meta:
         proxy = True
 

@@ -87,7 +87,7 @@ class Profile:
         planets = self.data.setdefault('drilled_planets', [])
         if planets.count(planet_id) > 0:
             return
-        if len(planets) > 5:
+        if len(planets) > 2:
             planets.pop(0)
         planets.append(planet_id)
         del self.data['scan_results']
