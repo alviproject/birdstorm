@@ -25,7 +25,7 @@
                         <b>Planets:</b>
                         <ul class="list-unstyled list-sublist">
                             <li ng-repeat="planet in contextPanel.data.planets track by $index">
-                                <a href="#" ng-click="detailsPanel.switch('planet', planet)">{{ $index }}: {{ planet.type }}</a>
+                                <a href="#" ng-click="detailsPanel.switch('planet', planet)">{{ $index+1 }}: {{ planet.type }}</a>
                             </li>
                         </ul>
                     </li>
