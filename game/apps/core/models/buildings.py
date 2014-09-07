@@ -1,9 +1,12 @@
+import blinker
 from django.db import models
 from game.apps.core.models.planet.models import Planet
+from game.apps.core.models.ships import Ship
 from game.utils.models import ResourceContainer
 from game.utils.polymorph import PolymorphicBase
 from jsonfield import JSONField
 from rest_framework import serializers
+import game.apps.core.signals
 
 
 class Building(PolymorphicBase):
@@ -13,6 +16,48 @@ class Building(PolymorphicBase):
 
     class Meta:
         app_label = 'core'
+
+
+class Provider(Building):
+    def processes(self):
+        return self.data['processes']
+
+    def order(self, order, quantity, ship, user, request_id):
+        order_details = self.processes()[order]
+
+        signal_id = "%d_%s" % (self.planet_id, request_id)
+        actions_signal = blinker.signal(game.apps.core.signals.planet_actions_progress % signal_id)
+
+        with ship.lock():
+            for i in range(quantity):
+                if quantity > 1:
+                    message = "Producing %s, phase %d/%d, please wait" % (order, i+1, quantity)
+                else:
+                    message = "Producing %s, please wait" % order
+                actions_signal.send(self, message=dict(type="info", text=message,),)
+                try:
+                    for resource, qty in order_details['requirements'].items():
+                        ship.remove_resource(resource, qty)
+                except RuntimeError:
+                    actions_signal.send(self, message=dict(type="error", text="Not enough resources to fulfill this order",),)
+                    return
+                yield order_details['time']
+                ship.save()
+                self.fulfill_order(order, ship, user)
+                actions_signal.send(self, message=dict(type="success", text="Ordered item was added to your inventory",),)
+
+    class Meta:
+        app_label = 'core'
+        proxy = True
+
+
+class Plant(Provider):
+    def fulfill_order(self, order, ship, user):
+        ship.add_resource(order, 1)
+
+    class Meta:
+        app_label = 'core'
+        proxy = True
 
 
 class Port(Building, ResourceContainer):
@@ -45,10 +90,11 @@ class Mine(Building):
 
 
 class Shipyard(Building):
-    def available_ships(self):
+    @staticmethod
+    def available_ships():
         return dict(
             Raven=dict(
-                resources=dict(
+                requirements=dict(
                     Coal=5,
                     Iron=3,
                 ),
@@ -70,6 +116,10 @@ class Shipyard(Building):
             ),
         )
 
+    def fulfill_order(self, order, ship, user):
+        new_ship = Ship(type=order, owner=user, system=self.planet.system)
+        new_ship.save()
+
     class Meta:
         proxy = True
 
@@ -79,7 +129,7 @@ class Warehouse(Building):
         proxy = True
 
 
-class Smelter(Building):
+class Smelter(Plant):
     class Meta:
         proxy = True
 
@@ -106,8 +156,8 @@ class PortSerializer(BuildingBaseSerializer):
     prices = serializers.Field(source='prices')
 
 
-class ShipyardSerializer(BuildingBaseSerializer):
-    available_ships = serializers.Field(source='available_ships')
+class ProviderSerializer(BuildingBaseSerializer):
+    processes = serializers.Field(source='processes')
 
 
 class WarehouseSerializer(BuildingBaseSerializer):
@@ -122,10 +172,11 @@ class WarehouseSerializer(BuildingBaseSerializer):
 
 class BuildingSerializer(serializers.HyperlinkedModelSerializer):
     def to_native(self, obj):
+        #TODO use isinstance
         if obj.type == "Port":
             return PortSerializer(obj, context=self.context).to_native(obj)
-        if obj.type == "Shipyard":
-            return ShipyardSerializer(obj, context=self.context).to_native(obj)
+        if isinstance(obj, Provider):
+            return ProviderSerializer(obj, context=self.context).to_native(obj)
         if obj.type == "Warehouse":
             return WarehouseSerializer(obj, context=self.context).to_native(obj)
         return super().to_native(obj)

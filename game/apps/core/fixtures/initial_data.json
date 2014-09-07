@@ -54,7 +54,15 @@
         "prices": {"Iron": 10, "Steel": 15, "Oil": 10, "Coal": 5}
     }}},
     {"model": "core.building", "pk": 2, "fields": {"planet": 1, "type": "Smelter", "data": {
-        "prices": {"ShipStructures": 10}
+        "processes": {
+            "Steel": {
+                "time": 5,
+                "requirements": {
+                    "Coal": 1,
+                    "Iron": 1
+                }
+            }
+        }
     }}},
     {"model": "core.building", "pk": 3, "fields": {"planet": 2, "type": "Port", "data": {
         "prices": {"ComponentStructures": 113}

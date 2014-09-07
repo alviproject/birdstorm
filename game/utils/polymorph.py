@@ -17,6 +17,10 @@ class PolymorphicBase(models.Model, metaclass=PolymorphicMeta):
     class Meta:
         abstract = True
 
+    @classmethod
+    def subclasses(cls):
+        return cls.__subclasses__() + [g for s in cls.__subclasses__() for g in s.subclasses()]
+
     def change_real_class(self):
         """changes class of an object basing on "type" field"""
         if not self.type:
@@ -27,7 +31,7 @@ class PolymorphicBase(models.Model, metaclass=PolymorphicMeta):
             return self
         #type is set, we can do actual change of the class
         #TODO it could be cached during creation of relevant subclasses
-        for cls in self.__class__.__subclasses__():
+        for cls in self.subclasses():
             if cls.__name__ == self.type:
                 self.__class__ = cls
                 return self

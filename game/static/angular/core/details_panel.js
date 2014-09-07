@@ -1,7 +1,7 @@
 (function() {
     var app = angular.module('game');
 
-    app.controller('DetailsPanelController', ['request_id', function(request_id) {
+    app.controller('DetailsPanelController', ['request_id', "$scope", function(request_id, $scope) {
         var detailsPanel = this;
         detailsPanel.tabs = new Array(20); //quite ugly, but works, it assumes that there will be no more than 20 tabs
 
@@ -10,9 +10,11 @@
         //
         detailsPanel.subscription_actions = connection.create_subscription('planetactionsprogress', function (data) {
             detailsPanel.scan_messages.push(data.message);
+            $scope.$apply();
         });
         detailsPanel.subscription_details = connection.create_subscription('planetdetails', function (data) {
             detailsPanel.data = data.planet;
+            $scope.$apply();
         });
 
         this.switch = function (choice, data) {
@@ -92,11 +94,12 @@
                     });
                 };
 
-                scope.order = function (building_id, ship) {
+                scope.order = function (building_id, order, quantity) {
                     var ship_id = this.controlPanel.currentShip.id;
                     $http.post('/api/core/buildings/'+building_id+'/order/', {
                         ship_id: ship_id,
-                        ordered_ship: ship
+                        order: order,
+                        quantity: quantity
                     });
                 };
 

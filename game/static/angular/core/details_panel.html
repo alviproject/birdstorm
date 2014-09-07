@@ -87,27 +87,29 @@
                                 <thead>
                                 <tr>
                                     <th>Resource</th>
-                                    <th>Planet</th>
+                                    <!--<th>Planet</th>-->
                                     <th>Ship</th>
                                     <th>Qty</th>
-                                    <th>Buy</th>
+                                    <!--<th>Buy</th>-->
                                     <th>Sell</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr ng-repeat="(type, price) in building.prices track by $index">
                                     <td>{{type}}</td>
-                                    <td ng-click="detailsPanel.quantities[$index]=price.available"><a href="#">{{price.available}}</a></td>
+                                    <!--<td ng-click="detailsPanel.quantities[$index]=price.available"><a href="#">{{price.available}}</a></td>-->
                                     <td ng-click="detailsPanel.quantities[$index]=controlPanel.currentShipDetails.resources[type] || 0">
                                         <a href="#">{{controlPanel.currentShipDetails.resources[type] || 0}}</a>
                                     </td>
                                     <!--TODO consider adding a popover with suggested quantities to sale and buy)-->
                                     <td><input class="input-sm" style="width: 50px" type="text" ng-model="detailsPanel.quantities[$index]"/></td>
+                                    <!-- TODO
                                     <td>
                                         <button class="btn btn-default btn-sm" ng-click="buy(building.id, type, $index)">
                                             Buy ({{price.sale_price * detailsPanel.quantities[$index]}}c)
                                         </button>
                                     </td>
+                                    -->
                                     <td>
                                         <button class="btn btn-default btn-sm" ng-click="sell(building.id, type, $index)">
                                             Sell ({{price.purchase_price * detailsPanel.quantities[$index]}}c)
@@ -205,7 +207,36 @@
                             Factory
                         </div>
                         <div ng-switch-when="Smelter">
-                            Smelter
+                            Industrial plant that allows to change raw materials into metals.
+                            <hr />
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Resource</th>
+                                    <th>Requirements</th>
+                                    <th>ETA</th>
+                                    <th>Order</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="(resource, details) in building.processes" ng-init="details.quantity=1">
+                                    <td>{{resource}}</td>
+                                    <td>
+                                        <ul class="list-unstyled">
+                                            <li
+                                                    ng-repeat="(requirement, quantity) in details.requirements"
+                                                    ng-class="{true:'text-success', false:'text-danger'}[controlPanel.currentShipDetails.resources[requirement] >= quantity * (details.quantity || 1)]"
+                                                    >
+                                                {{requirement}}: {{quantity * (details.quantity || 1)}}
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td>{{details.time * (details.quantity || 1)}}s</td>
+                                    <td><input class="input-sm" style="width: 50px" type="text" ng-model="details.quantity"/></td>
+                                    <td><button class="btn btn-default btn-sm" ng-click="order(building.id, resource, details.quantity || 1)">Order</button></td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </tab>
