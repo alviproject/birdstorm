@@ -1,5 +1,8 @@
 import blinker
 from django.db import models
+from game.apps.core.models.components.drills import Drill
+from game.apps.core.models.components.engines import Engine
+from game.apps.core.models.components.scanners import Scanner
 from game.apps.core.models.planet.models import Planet
 from game.apps.core.models.ships import Ship
 from game.utils.models import ResourceContainer
@@ -134,7 +137,29 @@ class Smelter(Plant):
         proxy = True
 
 
-class Workshop(Building):
+class Workshop(Provider):
+    def processes(self, ship=None):
+        result = {}
+        for name, details in self.data['processes'].items():
+            if details['component'] == 'Engine':
+                parameters = {"type": name}
+                if ship and ship.engine.type == name:
+                    parameters["mark"] = ship.engine.mark + 1
+                result[name] = Engine.create(parameters).process()
+            elif details['component'] == 'Drill':
+                parameters = {"type": name}
+                if ship and ship.drill.type == name:
+                    parameters["mark"] = ship.drill.mark + 1
+                result[name] = Drill.create(parameters).process()
+            elif details['component'] == 'Scanner':
+                parameters = {"type": name}
+                if ship and ship.scanner.type == name:
+                    parameters["mark"] = ship.scanner.mark + 1
+                result[name] = Scanner.create(parameters).process()
+            else:
+                raise RuntimeError("Unknown process: " + details['component'])
+        return result
+
     class Meta:
         proxy = True
 
@@ -160,13 +185,23 @@ class ProviderSerializer(BuildingBaseSerializer):
     processes = serializers.Field(source='processes')
 
 
+#class WorkshopSerializer(BuildingBaseSerializer):
+#    processes = serializers.SerializerMethodField('get_processes')
+#
+#    def get_processes(self, obj):
+#        user = self.context['request'].user
+#        if not user.is_authenticated():
+#            return {}
+#        return user.profile.warehouse_resources(obj.id)
+
+
 class WarehouseSerializer(BuildingBaseSerializer):
     resources = serializers.SerializerMethodField('get_resources')
 
     def get_resources(self, obj):
         user = self.context['request'].user
         if not user.is_authenticated():
-            return dict()
+            return {}
         return user.profile.warehouse_resources(obj.id)
 
 

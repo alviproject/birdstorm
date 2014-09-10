@@ -68,12 +68,34 @@
         "prices": {"ComponentStructures": 113}
     }}},
     {"model": "core.building", "pk": 4, "fields": {"planet": 2, "type": "Workshop", "data": {
+        "processes": {
+            "JetEngine": {
+                "component": "Engine",
+                "max_level": 3
+            },
+            "SteelDrill": {
+                "component": "Drill",
+                "max_level": 3
+            },
+            "BaseScanner": {
+                "component": "Scanner",
+                "max_level": 3
+            }
+        }
     }}},
 
     {"model": "core.building", "pk": 5, "fields": {"planet": 6, "type": "Port", "data": {
         "prices": {"Bauxite": 15, "Aluminium": 45}
     }}},
     {"model": "core.building", "pk": 6, "fields": {"planet": 6, "type": "Smelter", "data": {
+        "processes": {
+            "Aluminium": {
+                "time": 10,
+                "requirements": {
+                    "Bauxite": 2
+                }
+            }
+        }
     }}},
     {"model": "core.building", "pk": 7, "fields": {"planet": 9, "type": "Port", "data": {
         "prices": {"Oil": 10, "Polymer": 30}

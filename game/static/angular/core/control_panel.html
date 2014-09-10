@@ -33,14 +33,27 @@
             <li><b>Class:</b> 1</li>
             <li><b>ID:</b> {{ controlPanel.currentShipDetails.id }}</li>
             <li>
-                <b>Components:</b>
-                <a href="#" class="pull-right">
-                    <span class="fa fa-bars fa-fw"></span>
-                </a>
+                <b>Engine:</b>
                 <ul class="list-unstyled list-sublist">
-                    <li>Firepower: 20</li>
-                    <li>Speed: 20</li>
-                    <li>Capacity: 20</li>
+                    <li>Type: {{ controlPanel.currentShipDetails.engine.type }}</li>
+                    <li>Output: {{ controlPanel.currentShipDetails.engine.output }}</li>
+                    <li>Speed: {{ controlPanel.currentShipDetails.speed }}</li>
+                    <li>Range: {{ controlPanel.currentShipDetails.engine.range }}</li>
+                </ul>
+            </li>
+            <li>
+                <b>Drill:</b>
+                <ul class="list-unstyled list-sublist">
+                    <li>Type: {{ controlPanel.currentShipDetails.drill.type }}</li>
+                    <li>Deepness: {{ controlPanel.currentShipDetails.drill.deepness }}</li>
+                    <li>Speed: {{ controlPanel.currentShipDetails.drill.speed }}</li>
+                </ul>
+            </li>
+            <li>
+                <b>Scanner:</b>
+                <ul class="list-unstyled list-sublist">
+                    <li>Type: {{ controlPanel.currentShipDetails.scanner.type }}</li>
+                    <li>Deepness: {{ controlPanel.currentShipDetails.scanner.deepness }}</li>
                 </ul>
             </li>
             <li>

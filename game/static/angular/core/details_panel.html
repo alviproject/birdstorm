@@ -79,7 +79,8 @@
                 <tab
                         ng-repeat="building in detailsPanel.data.buildings track by $index"
                         heading="{{building.type}}"
-                        active="detailsPanel.tabs[2+$index]">
+                        active="detailsPanel.tabs[2+$index]"
+                        select="changeBuilding(building)">
                     <div ng-switch="building.type">
                         <!-- Port -->
                         <div ng-switch-when="Port">
@@ -205,6 +206,43 @@
                         </div>
                         <div ng-switch-when="Factory">
                             Factory
+                        </div>
+                        <div ng-switch-when="Workshop">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Component</th>
+                                    <th>Requirements</th>
+                                    <th>ETA</th>
+                                    <th>Parameters</th>
+                                    <th>Order</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="(resource, details) in building.processes" ng-init="details.quantity=1">
+                                    <td>{{resource}}</td>
+                                    <td>
+                                        <ul class="list-unstyled">
+                                            <li
+                                                    ng-repeat="(requirement, quantity) in details.requirements"
+                                                    ng-class="{true:'text-success', false:'text-danger'}[controlPanel.currentShipDetails.resources[requirement] >= quantity]"
+                                                    >
+                                                {{requirement}}: {{quantity}}
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td>{{details.time}}s</td>
+                                    <td>
+                                        <ul class="list-unstyled">
+                                            <li ng-repeat="(parameter, value) in details.parameters">
+                                                {{parameter}}: {{value}}
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td><button class="btn btn-default btn-sm" ng-click="order(building.id, resource, details.quantity || 1)">Order</button></td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                         <div ng-switch-when="Smelter">
                             Industrial plant that allows to change raw materials into metals.

@@ -1,6 +1,10 @@
 from contextlib import contextmanager
+
 import blinker
 from django.contrib.auth.models import User
+from game.apps.core.models.components.drills import Drill
+from game.apps.core.models.components.engines import Engine
+from game.apps.core.models.components.scanners import Scanner
 import game.apps.core.signals
 from game.apps.core.models.armors import Armor
 from game.apps.core.models.shields import Shield
@@ -33,6 +37,21 @@ class Ship(PolymorphicBase, ResourceContainer):
             Armor(),
         ]
 
+    @property
+    def engine(self):
+        #TODO cache
+        return Engine.create(self.data.get('components', {}).get('engine', {"mark": 0}))
+
+    @property
+    def drill(self):
+        #TODO cache
+        return Drill.create(self.data.get('components', {}).get('drill', {}))
+
+    @property
+    def scanner(self):
+        #TODO cache
+        return Scanner.create(self.data.get('components', {}).get('scanner', {}))
+
     @contextmanager
     def lock(self):
         if self.locked:
@@ -50,7 +69,7 @@ class Ship(PolymorphicBase, ResourceContainer):
 
     @staticmethod
     def speed():
-        return 2
+        return 2  # TODO
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -69,18 +88,41 @@ class Raven(Ship):
 class ShipSerializer(serializers.HyperlinkedModelSerializer):
     system_id = serializers.CharField(source='system_id', read_only=True)
     id = serializers.IntegerField(source='id', read_only=True)
+    engine = serializers.SerializerMethodField('get_engine')
+    drill = serializers.SerializerMethodField('get_drill')
+    scanner = serializers.SerializerMethodField('get_scanner')
+    speed = serializers.Field('speed')
+
+    def get_engine(self, obj):
+        return {
+            "mark": obj.engine.mark,
+            "type": obj.engine.type,
+            "output": obj.engine.output,
+            "range": obj.engine.range,
+        }
+
+    def get_drill(self, obj):
+        return {
+            "mark": obj.drill.mark,
+            "type": obj.drill.type,
+            "deepness": obj.drill.deepness,
+            "speed": obj.drill.speed,
+        }
+
+    def get_scanner(self, obj):
+        return {
+            "mark": obj.scanner.mark,
+            "type": obj.scanner.type,
+            "deepness": obj.scanner.deepness,
+        }
 
     class Meta:
         model = Ship
-        fields = ['id', 'url', 'type', 'system_id', 'owner', 'system']
+        fields = ['id', 'url', 'type', 'system_id', 'owner', 'system', 'engine', 'speed', 'drill', 'scanner']
 
 
-class OwnShipSerializer(serializers.HyperlinkedModelSerializer):
+class OwnShipSerializer(ShipSerializer):
     id = serializers.IntegerField(source='id', read_only=True)
-
-    class Meta:
-        model = Ship
-        fields = ['id', 'url', 'type']
 
 
 class OwnShipDetailsSerializer(OwnShipSerializer):
@@ -89,4 +131,4 @@ class OwnShipDetailsSerializer(OwnShipSerializer):
 
     class Meta:
         model = Ship
-        fields = ['id', 'url', 'type', 'owner', 'system', 'locked', 'resources', 'system_id']
+        fields = ShipSerializer.Meta.fields + ['locked', 'resources']

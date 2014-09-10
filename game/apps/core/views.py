@@ -310,6 +310,17 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         for delay in building.order(order, quantity, ship, user, request_id):
             yield delay
 
+    #TODO this shall be Workshop method
+    @action()
+    def analyze(self, request, pk=None):
+        #TODO check if ship is at the right system
+        user = request.user
+        building = self.get_queryset().get(pk=pk)
+        ship_id = request.DATA['ship_id']
+        ship = user.ship_set.get(pk=ship_id)
+        result = building.processes(ship)
+        return Response(result)
+
 
 def test_view(request):
     ship = Ship.objects.get(pk=1)
