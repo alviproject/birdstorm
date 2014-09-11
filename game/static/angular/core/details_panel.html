@@ -208,6 +208,69 @@
                             Factory
                         </div>
                         <div ng-switch-when="Workshop">
+                            <br />
+                            Upgrades:
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Component</th>
+                                    <th>Requirements</th>
+                                    <th>ETA</th>
+                                    <th>Parameters</th>
+                                    <th>Order</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="(component, details) in building.processes">
+                                    <td>{{component}}</td>
+                                    <td>
+                                        <ul class="list-unstyled">
+                                            <li
+                                                    ng-repeat="(requirement, quantity) in details.requirements"
+                                                    ng-class="{true:'text-success', false:'text-danger'}[controlPanel.currentShipDetails.resources[requirement] >= quantity]"
+                                                    >
+                                                {{requirement}}: {{quantity}}
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td>{{details.time}}s</td>
+                                    <td>
+                                        <ul class="list-unstyled">
+                                            <li ng-repeat="(parameter, value) in details.parameters">
+                                                {{parameter}}: {{value}}
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td><button class="btn btn-default btn-sm" ng-click="order(building.id, component, 1)">Order</button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <hr />
+                            Current ship components:
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Component</th>
+                                    <th>Parameters</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="(component, details) in controlPanel.currentShipDetails.components">
+                                    <td>{{component}}</td>
+                                    <td>
+                                        <ul class="list-unstyled">
+                                            <li ng-repeat="(parameter, value) in details.parameters">
+                                                {{parameter}}: {{value}}
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td><button class="btn btn-default btn-sm" ng-click="detach(building.id, component)">Detach</button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <hr />
+                            Components in cargo:
                             <table class="table table-hover">
                                 <thead>
                                 <tr>

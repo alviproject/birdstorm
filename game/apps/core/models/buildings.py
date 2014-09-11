@@ -1,3 +1,4 @@
+import abc
 import blinker
 from django.db import models
 from game.apps.core.models.components.drills import Drill
@@ -48,6 +49,9 @@ class Provider(Building):
                 ship.save()
                 self.fulfill_order(order, ship, user)
                 actions_signal.send(self, message=dict(type="success", text="Ordered item was added to your inventory",),)
+
+    def fulfill_order(self, order, ship, user):
+        raise NotImplementedError
 
     class Meta:
         app_label = 'core'
@@ -159,6 +163,9 @@ class Workshop(Provider):
             else:
                 raise RuntimeError("Unknown process: " + details['component'])
         return result
+
+    def fulfill_order(self, order, ship, user):
+        print(order)
 
     class Meta:
         proxy = True
