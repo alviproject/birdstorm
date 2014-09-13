@@ -2,9 +2,7 @@ from contextlib import contextmanager
 
 import blinker
 from django.contrib.auth.models import User
-from game.apps.core.models.components.drills import Drill
-from game.apps.core.models.components.engines import Engine
-from game.apps.core.models.components.scanners import Scanner
+from game.apps.core.models.components import create_kind
 import game.apps.core.signals
 from game.apps.core.models.armors import Armor
 from game.apps.core.models.shields import Shield
@@ -16,6 +14,9 @@ from django.db import models
 from jsonfield.fields import JSONField
 from rest_framework import serializers
 from concurrency.fields import IntegerVersionField
+from game.apps.core.models.components.drills import Drill
+from game.apps.core.models.components.engines import Engine
+from game.apps.core.models.components.scanners import Scanner
 
 
 class Ship(PolymorphicBase, ResourceContainer):
@@ -38,19 +39,36 @@ class Ship(PolymorphicBase, ResourceContainer):
         ]
 
     @property
-    def engine(self):
+    def components(self):
         #TODO cache
-        return Engine.create(self.data.get('components', {}).get('engine', {"mark": 0}))
+        result = {}
+        for kind, details in self.data.get('components', {}).items():
+            result[kind] = create_kind(kind).create(details)
+        return result
+
+    def get_component(self, kind):
+        try:
+            parameters = self.data['components'][kind]
+            component = create_kind(kind).create(parameters)
+        except KeyError:
+            component = create_kind(kind).create({})
+            self.set_component(component)
+        return component
+
+    def set_component(self, component):
+        self.data.setdefault('components', {})[component.kind()] = component.parameters()
+
+    @property
+    def engine(self):
+        return self.get_component("Engine")
 
     @property
     def drill(self):
-        #TODO cache
-        return Drill.create(self.data.get('components', {}).get('drill', {}))
+        return self.get_component("Drill")
 
     @property
     def scanner(self):
-        #TODO cache
-        return Scanner.create(self.data.get('components', {}).get('scanner', {}))
+        return self.get_component("Scanner")
 
     @contextmanager
     def lock(self):

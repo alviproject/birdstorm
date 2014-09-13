@@ -1,6 +1,7 @@
 import abc
 import blinker
 from django.db import models
+from game.apps.core.models import components
 from game.apps.core.models.components.drills import Drill
 from game.apps.core.models.components.engines import Engine
 from game.apps.core.models.components.scanners import Scanner
@@ -47,10 +48,10 @@ class Provider(Building):
                     return
                 yield order_details['time']
                 ship.save()
-                self.fulfill_order(order, ship, user)
+                self.fulfill_order(order, ship, user, order_details=order_details)
                 actions_signal.send(self, message=dict(type="success", text="Ordered item was added to your inventory",),)
 
-    def fulfill_order(self, order, ship, user):
+    def fulfill_order(self, order, ship, user, order_details=None):
         raise NotImplementedError
 
     class Meta:
@@ -59,7 +60,7 @@ class Provider(Building):
 
 
 class Plant(Provider):
-    def fulfill_order(self, order, ship, user):
+    def fulfill_order(self, order, ship, user, order_details=None):
         ship.add_resource(order, 1)
 
     class Meta:
@@ -123,7 +124,7 @@ class Shipyard(Building):
             ),
         )
 
-    def fulfill_order(self, order, ship, user):
+    def fulfill_order(self, order, ship, user, order_details=None):
         new_ship = Ship(type=order, owner=user, system=self.planet.system)
         new_ship.save()
 
@@ -145,27 +146,23 @@ class Workshop(Provider):
     def processes(self, ship=None):
         result = {}
         for name, details in self.data['processes'].items():
-            if details['component'] == 'Engine':
-                parameters = {"type": name}
-                if ship and ship.engine.type == name:
-                    parameters["mark"] = ship.engine.mark + 1
-                result[name] = Engine.create(parameters).process()
-            elif details['component'] == 'Drill':
-                parameters = {"type": name}
-                if ship and ship.drill.type == name:
-                    parameters["mark"] = ship.drill.mark + 1
-                result[name] = Drill.create(parameters).process()
-            elif details['component'] == 'Scanner':
-                parameters = {"type": name}
-                if ship and ship.scanner.type == name:
-                    parameters["mark"] = ship.scanner.mark + 1
-                result[name] = Scanner.create(parameters).process()
-            else:
-                raise RuntimeError("Unknown process: " + details['component'])
+            component_kind = components.create_kind(details['component'])
+            parameters = {"type": name}
+            if ship and ship.get_component(details['component']).type == name:
+                parameters["mark"] = ship.get_component(details['component']).mark + 1
+            result[name] = component_kind.create(parameters).process()
         return result
 
-    def fulfill_order(self, order, ship, user):
-        print(order)
+    def fulfill_order(self, order, ship, user, order_details=None):
+        component_kind = order_details['parameters']['kind']
+        current_component = ship.get_component(component_kind)
+        if current_component.type == order:
+            current_component.mark += 1
+            ship.set_component(current_component)
+        else:
+            component = components.create_kind(component_kind).create({type: order})
+            ship.add_item(component)
+        ship.save()
 
     class Meta:
         proxy = True

@@ -6,6 +6,7 @@ class Component:
     def process(self):
         result = self.process_cost()
         result.update({
-            "parameters": self.parameters()
+            "parameters": self.parameters(),
+            "mark": self.mark,
         })
         return result

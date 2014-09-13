@@ -8,6 +8,9 @@ class ResourceContainer:
         resources = self.data.setdefault('resources', {})
         resources[type] = resources.get(type, 0) + quantity
 
+    def add_item(self, item):
+        self.data.setdefault('items', []).append(item)
+
     def remove_resource(self, type, quantity):
         if quantity == 0:
             return

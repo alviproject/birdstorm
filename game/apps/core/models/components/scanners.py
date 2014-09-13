@@ -17,6 +17,10 @@ class Scanner(Component):
             "deepness": self.deepness(),
         }
 
+    @classmethod
+    def kind(cls):
+        return "Scanner"
+
 
 class BaseScanner(Scanner):
     def deepness(self):

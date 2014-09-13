@@ -22,6 +22,10 @@ class Drill(Component):
             "speed": self.speed(),
         }
 
+    @classmethod
+    def kind(cls):
+        return "Drill"
+
 
 class SteelDrill(Drill):
     def deepness(self):
@@ -40,6 +44,7 @@ class SteelDrill(Drill):
         return {
             'time': time,
             'requirements': {
-                'ComponentStructures': n
+                'ComponentStructures': n,
+                'Steel': 10,
             }
         }

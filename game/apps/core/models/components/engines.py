@@ -22,6 +22,10 @@ class Engine(Component):
             "output": self.output(),
         }
 
+    @classmethod
+    def kind(cls):
+        return "Engine"
+
 
 class JetEngine(Engine):
     def output(self):

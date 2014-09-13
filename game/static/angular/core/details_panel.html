@@ -209,7 +209,10 @@
                         </div>
                         <div ng-switch-when="Workshop">
                             <br />
-                            Upgrades:
+                            <h4>Available components</h4>
+                            This workshop offers you following ship components. <br />
+                            Keep in mind that most ships can utilize
+                            only one component of particular type. Usually there is no point to buy two engines, or drills.
                             <table class="table table-hover">
                                 <thead>
                                 <tr>
@@ -217,6 +220,7 @@
                                     <th>Requirements</th>
                                     <th>ETA</th>
                                     <th>Parameters</th>
+                                    <th>Mk</th>
                                     <th>Order</th>
                                 </tr>
                                 </thead>
@@ -241,36 +245,15 @@
                                             </li>
                                         </ul>
                                     </td>
+                                    <td>{{details.mark}}</td>
                                     <td><button class="btn btn-default btn-sm" ng-click="order(building.id, component, 1)">Order</button></td>
                                 </tr>
                                 </tbody>
                             </table>
                             <hr />
-                            Current ship components:
-                            <table class="table table-hover">
-                                <thead>
-                                <tr>
-                                    <th>Component</th>
-                                    <th>Parameters</th>
-                                    <th>Action</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="(component, details) in controlPanel.currentShipDetails.components">
-                                    <td>{{component}}</td>
-                                    <td>
-                                        <ul class="list-unstyled">
-                                            <li ng-repeat="(parameter, value) in details.parameters">
-                                                {{parameter}}: {{value}}
-                                            </li>
-                                        </ul>
-                                    </td>
-                                    <td><button class="btn btn-default btn-sm" ng-click="detach(building.id, component)">Detach</button></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <hr />
-                            Components in cargo:
+                            <h4>Cargo</h4>
+                            Your cargo contains following components.<br />
+                            You can attach them to current ship, store in Warehouse, sell in the Marketplace or retrieve some materials in Recycler.
                             <table class="table table-hover">
                                 <thead>
                                 <tr>
