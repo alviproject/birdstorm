@@ -8,5 +8,12 @@ class Component:
         result.update({
             "parameters": self.parameters(),
             "mark": self.mark,
+            "kind": self.kind(),
         })
         return result
+
+    def serialize(self):
+        return {
+            "mark": self.mark,
+            "type": self.type,
+        }

@@ -119,21 +119,25 @@
                     return result;
                 };
 
+                var currentShipChanged = function() {
+                };
+
+                scope.$watch('controlPanel.currentShipDetails', function(newVal, oldVal){
+                    currentShipChanged();
+                });
+
                 scope.changeBuilding = function(building) {
                     if(building.type==="Workshop") {
-                        scope.detailsPanel.scan_messages.push({
-                            type: 'info',
-                            text: "Analyzing your ship components, please wait..."
-                        });
-                        $http.post('/api/core/buildings/'+building.id+'/analyze/', {
-                            ship_id: scope.controlPanel.currentShipDetails.id
-                        }).success(function(data) {
-                            building.processes = data;
-                            scope.detailsPanel.scan_messages.push({
-                                type: 'info',
-                                text: "Ship analyzed, adjusted components were selected."
+                        currentShipChanged = function() {
+                            scope.workshopLocked = true;
+                            $http.post('/api/core/buildings/'+building.id+'/analyze/', {
+                                ship_id: scope.controlPanel.currentShipDetails.id
+                            }).success(function(data) {
+                                building.processes = data;
+                                scope.workshopLocked = false;
                             });
-                        });
+                        };
+                        currentShipChanged();
                     }
                 };
             }

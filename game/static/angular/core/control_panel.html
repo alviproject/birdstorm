@@ -32,28 +32,10 @@
             <li><b>Type:</b> {{ controlPanel.currentShipDetails.type }}</li>
             <li><b>Class:</b> 1</li>
             <li><b>ID:</b> {{ controlPanel.currentShipDetails.id }}</li>
-            <li>
-                <b>Engine:</b>
+            <li ng-repeat="(component, details) in controlPanel.currentShipDetails.components">
+                <b>{{details.type}} Mk {{details.mark}}</b>
                 <ul class="list-unstyled list-sublist">
-                    <li>Type: {{ controlPanel.currentShipDetails.engine.type }} Mk {{ controlPanel.currentShipDetails.engine.mark }}</li>
-                    <li>Output: {{ controlPanel.currentShipDetails.engine.output }}</li>
-                    <li>Speed: {{ controlPanel.currentShipDetails.speed }}</li>
-                    <li>Range: {{ controlPanel.currentShipDetails.engine.range }}</li>
-                </ul>
-            </li>
-            <li>
-                <b>Drill:</b>
-                <ul class="list-unstyled list-sublist">
-                    <li>Type: {{ controlPanel.currentShipDetails.drill.type }}</li>
-                    <li>Deepness: {{ controlPanel.currentShipDetails.drill.deepness }}</li>
-                    <li>Speed: {{ controlPanel.currentShipDetails.drill.speed }}</li>
-                </ul>
-            </li>
-            <li>
-                <b>Scanner:</b>
-                <ul class="list-unstyled list-sublist">
-                    <li>Type: {{ controlPanel.currentShipDetails.scanner.type }}</li>
-                    <li>Deepness: {{ controlPanel.currentShipDetails.scanner.deepness }}</li>
+                    <li ng-repeat="(name, value) in details" ng-if="name != 'type' && name != 'mark'">{{name}}: {{ value }}</li>
                 </ul>
             </li>
             <li>

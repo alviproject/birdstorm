@@ -210,9 +210,9 @@
                         <div ng-switch-when="Workshop">
                             <br />
                             <h4>Available components</h4>
-                            This workshop offers you following ship components. <br />
-                            Keep in mind that most ships can utilize
-                            only one component of particular type. Usually there is no point to buy two engines, or drills.
+                            Workshop allows you to buy new, or upgrade existing ship components.<br />
+                            Keep in mind that most ships can utilize only one component of particular type.
+                            Usually there is no point to buy two engines, or drills.
                             <table class="table table-hover">
                                 <thead>
                                 <tr>
@@ -220,13 +220,12 @@
                                     <th>Requirements</th>
                                     <th>ETA</th>
                                     <th>Parameters</th>
-                                    <th>Mk</th>
                                     <th>Order</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="text-nowrap">
                                 <tr ng-repeat="(component, details) in building.processes">
-                                    <td>{{component}}</td>
+                                    <td>{{component}} Mk {{details.mark}}</td>
                                     <td>
                                         <ul class="list-unstyled">
                                             <li
@@ -241,12 +240,15 @@
                                     <td>
                                         <ul class="list-unstyled">
                                             <li ng-repeat="(parameter, value) in details.parameters">
-                                                {{parameter}}: {{value}}
+                                                {{parameter}}: {{value|number}}
                                             </li>
                                         </ul>
                                     </td>
-                                    <td>{{details.mark}}</td>
-                                    <td><button class="btn btn-default btn-sm" ng-click="order(building.id, component, 1)">Order</button></td>
+                                    <td>
+                                        <button class="btn btn-default btn-sm" ng-click="order(building.id, component, 1)" ng-hide="workshopLocked">
+                                            {{details.mark > 1 ? "Upgrade" : "Order"}}
+                                        </button>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -254,41 +256,6 @@
                             <h4>Cargo</h4>
                             Your cargo contains following components.<br />
                             You can attach them to current ship, store in Warehouse, sell in the Marketplace or retrieve some materials in Recycler.
-                            <table class="table table-hover">
-                                <thead>
-                                <tr>
-                                    <th>Component</th>
-                                    <th>Requirements</th>
-                                    <th>ETA</th>
-                                    <th>Parameters</th>
-                                    <th>Order</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="(resource, details) in building.processes" ng-init="details.quantity=1">
-                                    <td>{{resource}}</td>
-                                    <td>
-                                        <ul class="list-unstyled">
-                                            <li
-                                                    ng-repeat="(requirement, quantity) in details.requirements"
-                                                    ng-class="{true:'text-success', false:'text-danger'}[controlPanel.currentShipDetails.resources[requirement] >= quantity]"
-                                                    >
-                                                {{requirement}}: {{quantity}}
-                                            </li>
-                                        </ul>
-                                    </td>
-                                    <td>{{details.time}}s</td>
-                                    <td>
-                                        <ul class="list-unstyled">
-                                            <li ng-repeat="(parameter, value) in details.parameters">
-                                                {{parameter}}: {{value}}
-                                            </li>
-                                        </ul>
-                                    </td>
-                                    <td><button class="btn btn-default btn-sm" ng-click="order(building.id, resource, details.quantity || 1)">Order</button></td>
-                                </tr>
-                                </tbody>
-                            </table>
                         </div>
                         <div ng-switch-when="Smelter">
                             Industrial plant that allows to change raw materials into metals.

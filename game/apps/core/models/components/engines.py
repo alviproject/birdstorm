@@ -32,7 +32,7 @@ class JetEngine(Engine):
         return int((1.2**self.mark) * 10)
 
     def range(self):
-        return int((1.2**self.mark) * 0.2)
+        return (1.2**self.mark) * 0.2
 
     def process_cost(self):
         if self.mark == 1:

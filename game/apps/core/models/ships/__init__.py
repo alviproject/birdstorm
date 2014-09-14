@@ -56,7 +56,7 @@ class Ship(PolymorphicBase, ResourceContainer):
         return component
 
     def set_component(self, component):
-        self.data.setdefault('components', {})[component.kind()] = component.parameters()
+        self.data.setdefault('components', {})[component.kind()] = component.serialize()
 
     @property
     def engine(self):
@@ -106,37 +106,33 @@ class Raven(Ship):
 class ShipSerializer(serializers.HyperlinkedModelSerializer):
     system_id = serializers.CharField(source='system_id', read_only=True)
     id = serializers.IntegerField(source='id', read_only=True)
-    engine = serializers.SerializerMethodField('get_engine')
-    drill = serializers.SerializerMethodField('get_drill')
-    scanner = serializers.SerializerMethodField('get_scanner')
+    components = serializers.SerializerMethodField('get_components')
     speed = serializers.Field('speed')
 
-    def get_engine(self, obj):
+    def get_components(self, obj):
         return {
-            "mark": obj.engine.mark,
-            "type": obj.engine.type,
-            "output": obj.engine.output,
-            "range": obj.engine.range,
-        }
-
-    def get_drill(self, obj):
-        return {
-            "mark": obj.drill.mark,
-            "type": obj.drill.type,
-            "deepness": obj.drill.deepness,
-            "speed": obj.drill.speed,
-        }
-
-    def get_scanner(self, obj):
-        return {
-            "mark": obj.scanner.mark,
-            "type": obj.scanner.type,
-            "deepness": obj.scanner.deepness,
+            "Engine": {
+                "mark": obj.engine.mark,
+                "type": obj.engine.type,
+                "output": obj.engine.output,
+                "range": obj.engine.range,
+            },
+            "Drill": {
+                "mark": obj.drill.mark,
+                "type": obj.drill.type,
+                "deepness": obj.drill.deepness,
+                "speed": obj.drill.speed,
+            },
+            "Scanner": {
+                "mark": obj.scanner.mark,
+                "type": obj.scanner.type,
+                "deepness": obj.scanner.deepness,
+            }
         }
 
     class Meta:
         model = Ship
-        fields = ['id', 'url', 'type', 'system_id', 'owner', 'system', 'engine', 'speed', 'drill', 'scanner']
+        fields = ['id', 'url', 'type', 'system_id', 'owner', 'system', 'components']
 
 
 class OwnShipSerializer(ShipSerializer):

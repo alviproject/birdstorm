@@ -24,11 +24,11 @@ class Building(PolymorphicBase):
 
 
 class Provider(Building):
-    def processes(self):
+    def processes(self, *args, **kwargs):
         return self.data['processes']
 
     def order(self, order, quantity, ship, user, request_id):
-        order_details = self.processes()[order]
+        order_details = self.processes(ship)[order]
 
         signal_id = "%d_%s" % (self.planet_id, request_id)
         actions_signal = blinker.signal(game.apps.core.signals.planet_actions_progress % signal_id)
@@ -154,7 +154,7 @@ class Workshop(Provider):
         return result
 
     def fulfill_order(self, order, ship, user, order_details=None):
-        component_kind = order_details['parameters']['kind']
+        component_kind = order_details['kind']
         current_component = ship.get_component(component_kind)
         if current_component.type == order:
             current_component.mark += 1
