@@ -245,7 +245,7 @@
                                         </ul>
                                     </td>
                                     <td>
-                                        <button class="btn btn-default btn-sm" ng-click="order(building.id, component, 1)" ng-hide="workshopLocked">
+                                        <button class="btn btn-default btn-sm" ng-click="order(building.id, component, 1)" ng-hide="workshopLocked || controlPanel.currentShipDetails.locked">
                                             {{details.mark > 1 ? "Upgrade" : "Order"}}
                                         </button>
                                     </td>
@@ -255,7 +255,7 @@
                             <hr />
                             <h4>Cargo</h4>
                             Your cargo contains following components.<br />
-                            You can attach them to current ship, store in Warehouse, sell in the Marketplace or retrieve some materials in Recycler.
+                            You can attach them to current ship in Workshop, store in Warehouse, sell in the Marketplace or retrieve some materials in Recycler.
                         </div>
                         <div ng-switch-when="Smelter">
                             Industrial plant that allows to change raw materials into metals.

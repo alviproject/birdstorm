@@ -149,7 +149,10 @@ class Workshop(Provider):
             component_kind = components.create_kind(details['component'])
             parameters = {"type": name}
             if ship and ship.get_component(details['component']).type == name:
-                parameters["mark"] = ship.get_component(details['component']).mark + 1
+                mark = ship.get_component(details['component']).mark + 1
+                if mark > details['max_level']:
+                    continue
+                parameters["mark"] = mark
             result[name] = component_kind.create(parameters).process()
         return result
 

@@ -35,7 +35,7 @@
             <li ng-repeat="(component, details) in controlPanel.currentShipDetails.components">
                 <b>{{details.type}} Mk {{details.mark}}</b>
                 <ul class="list-unstyled list-sublist">
-                    <li ng-repeat="(name, value) in details" ng-if="name != 'type' && name != 'mark'">{{name}}: {{ value }}</li>
+                    <li ng-repeat="(name, value) in details" ng-if="name != 'type' && name != 'mark'">{{name}}: {{ value | number}}</li>
                 </ul>
             </li>
             <li>
