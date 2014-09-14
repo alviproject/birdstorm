@@ -159,6 +159,17 @@ class Shipyard(Building):
 
 
 class Warehouse(Building):
+    class Container(ResourceContainer):
+        def __init__(self, user):
+            self.user = user
+        @property
+        def resources(self):
+            return self.user.data.setdefault('warehouse_resources', {})
+
+    @staticmethod
+    def get_resource_container(user):
+        return Warehouse.Container(user)
+
     class Meta:
         proxy = True
 
@@ -260,7 +271,7 @@ class WarehouseSerializer(BuildingBaseSerializer):
         user = self.context['request'].user
         if not user.is_authenticated():
             return {}
-        return user.profile.warehouse_resources(obj.id)
+        return obj.Container(user).resources
 
 
 class BuildingSerializer(serializers.HyperlinkedModelSerializer):

@@ -321,6 +321,33 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         result = building.processes(ship)
         return Response(result)
 
+    #TODO this shall be Warehouse method
+    @action()
+    def store(self, request, pk=None):
+        #TODO check if ship is at the right system
+        user = request.user
+        ship_id = request.DATA['ship_id']
+        resource = request.DATA['resource']
+        action = request.DATA['action']
+        quantity = int(request.DATA['quantity'])
+        #request_id = request.META['HTTP_X_REQUESTID']
+        warehouse = self.get_queryset().get(pk=pk)
+        ship = request.user.ship_set.get(pk=ship_id)
+
+        container = warehouse.get_resource_container(user)
+
+        if action == "unload":
+            quantity = min(quantity, ship.resources[resource])
+            ship.remove_resource(resource, quantity)
+            container.add_resource(resource, quantity)
+        else:
+            quantity = min(quantity, container.resources[resource])
+            ship.add_resource(resource, quantity)
+            container.remove_resource(resource, quantity)
+        ship.save()
+        user.save()
+        return Response()
+
 
 def test_view(request):
     ship = Ship.objects.get(pk=1)

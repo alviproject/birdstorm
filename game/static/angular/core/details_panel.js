@@ -106,7 +106,7 @@
                 scope.warehouseResources = function(building) {
                     var result = {};
                     $.each(building.resources, function(key, value) {
-                        r[key] = {warehouse: value, ship: 0};
+                        result[key] = {warehouse: value, ship: 0};
                     });
                     $.each(scope.controlPanel.currentShipDetails.resources, function(key, value) {
                         if(result.hasOwnProperty(key)) {
@@ -117,6 +117,16 @@
                         }
                     });
                     return result;
+                };
+
+                scope.store = function(building_id, resource, quantity, action) {
+                    var ship_id = this.controlPanel.currentShip.id;
+                    $http.post('/api/core/buildings/'+building_id+'/store/', {
+                        ship_id: ship_id,
+                        resource: resource,
+                        quantity: quantity,
+                        action: action
+                    });
                 };
 
                 var currentShipChanged = function() {

@@ -2,11 +2,10 @@ class ResourceContainer:
     """mixed in class"""
     @property
     def resources(self):
-        return self.data.get('resources', {})
+        return self.data.setdefault('resources', {})
 
     def add_resource(self, type, quantity):
-        resources = self.data.setdefault('resources', {})
-        resources[type] = resources.get(type, 0) + quantity
+        self.resources[type] = self.resources.get(type, 0) + quantity
 
     def add_item(self, item):
         self.data.setdefault('items', []).append(item)
@@ -14,11 +13,10 @@ class ResourceContainer:
     def remove_resource(self, type, quantity):
         if quantity == 0:
             return
-        resources = self.data.setdefault('resources', {})
-        current = resources.get(type, 0)
+        current = self.resources.get(type, 0)
         if current < quantity:
             raise RuntimeError("Not enought resources")
         if current == quantity:
-            del resources[type]
+            del self.resources[type]
             return
-        resources[type] -= quantity
+        self.resources[type] -= quantity

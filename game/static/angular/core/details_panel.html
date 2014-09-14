@@ -198,8 +198,16 @@
                                         <a href="#">{{details.ship}}</a>
                                     </td>
                                     <td><input class="input-sm" style="width: 50px" type="text" ng-model="detailsPanel.warehouse_quantities[$index]"/></td>
-                                    <td><button class="btn btn-default btn-sm" ng-click="load(building.id, resource)">Load</button></td>
-                                    <td><button class="btn btn-default btn-sm" ng-click="unload(building.id, resource)">Unload</button></td>
+                                    <td>
+                                        <button class="btn btn-default btn-sm" ng-click="store(building.id, resource, detailsPanel.warehouse_quantities[$index], 'load')">
+                                            Load
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-default btn-sm" ng-click="store(building.id, resource, detailsPanel.warehouse_quantities[$index], 'unload')">
+                                            Unload
+                                        </button>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
