@@ -63,6 +63,9 @@ class Plant(Provider):
     def fulfill_order(self, order, ship, user, order_details=None):
         ship.add_resource(order, 1)
 
+    def processes(self, *args, **kwargs):
+        return {name: self.PROCESSES[name] for name in self.data['processes']}
+
     class Meta:
         app_label = 'core'
         proxy = True
@@ -87,7 +90,30 @@ class Port(Building, ResourceContainer):
         proxy = True
 
 
-class Factory(Building):
+class Factory(Plant):
+    PROCESSES = {
+        "ShipStructures": {
+            "time": 5,
+            "requirements": {
+                "Steel": 2,
+                "Aluminium": 1,
+            },
+        },
+        "ComponentStructures": {
+            "time": 5,
+            "requirements": {
+                "Polymer": 1,
+                "Aluminium": 1,
+            },
+        },
+        "BuildingStructures": {
+            "time": 5,
+            "requirements": {
+                "Steel": 4,
+            },
+        },
+    }
+
     class Meta:
         proxy = True
 
@@ -138,6 +164,22 @@ class Warehouse(Building):
 
 
 class Smelter(Plant):
+    PROCESSES = {
+        "Steel": {
+            "time": 5,
+            "requirements": {
+                "Coal": 1,
+                "Iron": 1,
+            },
+        },
+        "Aluminium": {
+            "time": 10,
+            "requirements": {
+                "Bauxite": 2,
+            },
+        },
+    }
+
     class Meta:
         proxy = True
 
@@ -171,7 +213,16 @@ class Workshop(Provider):
         proxy = True
 
 
-class Refinery(Building):
+class Refinery(Plant):
+    PROCESSES = {
+        "Polymer": {
+            "time": 10,
+            "requirements": {
+                "Oil": 2
+            }
+        }
+    }
+
     class Meta:
         proxy = True
 

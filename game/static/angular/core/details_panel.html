@@ -204,9 +204,6 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div ng-switch-when="Factory">
-                            Factory
-                        </div>
                         <div ng-switch-when="Workshop">
                             <br />
                             <h4>Available components</h4>
@@ -257,8 +254,17 @@
                             Your cargo contains following components.<br />
                             You can attach them to current ship in Workshop, store in Warehouse, sell in the Marketplace or retrieve some materials in Recycler.
                         </div>
-                        <div ng-switch-when="Smelter">
-                            Industrial plant that allows to change raw materials into metals.
+
+                        <div ng-if="building.type == 'Factory' || building.type == 'Smelter' || building.type == 'Refinery'">
+                            <p ng-switch-when="Factory">
+                                Factory
+                            </p>
+                            <p ng-switch-when="Smelter">
+                                Industrial plant that allows to change raw materials into metals.
+                            </p>
+                            <p ng-switch-when="Refinery">
+                                Industrial plant that allows to change raw materials into metals.
+                            </p>
                             <hr />
                             <table class="table table-hover">
                                 <thead>
