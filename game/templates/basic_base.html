@@ -11,10 +11,6 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="/static/css/bootstrap.slate.min.css">
-    <link rel="stylesheet" href="/static/font-awesome-4.1.0/css/font-awesome.min.css">
-    <style>
-    </style>
     <!--<link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">-->
 
     <script src="/static/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
@@ -99,6 +95,9 @@
 <script src="/static/angular/core/context_panel.js"></script>
 <script src="/static/angular/core/control_panel.js"></script>
 <script src="/static/angular/core/details_panel.js"></script>
+
+{% block scripts %}
+{% endblock %}
 {% if UA %}
 <script>
     (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=

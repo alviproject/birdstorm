@@ -29,6 +29,11 @@
                     scope.$apply();
                     var chatPanel = $("#chat-panel");
                     chatPanel.scrollTop(chatPanel[0].scrollHeight);
+
+                    $('.chat-header').addClass('animated shake')
+                        .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
+                            $(this).removeClass('animated shake');
+                        });
                 });
                 this.subscription.subscribe('general_room');
 
@@ -42,8 +47,16 @@
                     $http.post("/api/chat/messages/", {text: chat.text});
                     chat.text = "";
                 };
+
             }
         }
     });
 })();
 
+
+$(function() {
+    //give focus to chat input
+    $('body').on('click touchstart', '.chat .chat-header .btn', function (e) {
+        $("#chat-text").focus();
+    });
+});

@@ -1,4 +1,4 @@
-<div ng-switch="detailsPanel.choice">
+<div ng-switch="detailsPanel.choice" id="details-panel">
     <!-- Planet -->
     <div ng-switch-when="planet">
     <div class="panel panel-default" id="context_menu">
@@ -103,7 +103,9 @@
                                         <a href="#">{{controlPanel.currentShipDetails.resources[type] || 0}}</a>
                                     </td>
                                     <!--TODO consider adding a popover with suggested quantities to sale and buy)-->
-                                    <td><input class="input-sm" style="width: 50px" type="text" ng-model="detailsPanel.quantities[$index]"/></td>
+                                    <td>
+                                        <input class="form-control input-sm" style="width: 50px" type="text" ng-model="detailsPanel.quantities[$index]"/>
+                                    </td>
                                     <!-- TODO
                                     <td>
                                         <button class="btn btn-default btn-sm" ng-click="buy(building.id, type, $index)">
@@ -197,7 +199,7 @@
                                     <td ng-click="detailsPanel.warehouse_quantities[$index]=details.ship">
                                         <a href="#">{{details.ship}}</a>
                                     </td>
-                                    <td><input class="input-sm" style="width: 50px" type="text" ng-model="detailsPanel.warehouse_quantities[$index]"/></td>
+                                    <td><input class="form-control input-sm" style="width: 50px" type="text" ng-model="detailsPanel.warehouse_quantities[$index]"/></td>
                                     <td>
                                         <button class="btn btn-default btn-sm" ng-click="store(building.id, resource, detailsPanel.warehouse_quantities[$index], 'load')">
                                             Load
@@ -280,6 +282,7 @@
                                     <th>Resource</th>
                                     <th>Requirements</th>
                                     <th>ETA</th>
+                                    <th>Qty</th>
                                     <th>Order</th>
                                 </tr>
                                 </thead>
@@ -297,7 +300,7 @@
                                         </ul>
                                     </td>
                                     <td>{{details.time * (details.quantity || 1)}}s</td>
-                                    <td><input class="input-sm" style="width: 50px" type="text" ng-model="details.quantity"/></td>
+                                    <td><input class="form-control input-sm" style="width: 50px" type="text" ng-model="details.quantity"/></td>
                                     <td><button class="btn btn-default btn-sm" ng-click="order(building.id, resource, details.quantity || 1)">Order</button></td>
                                 </tr>
                                 </tbody>

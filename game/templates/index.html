@@ -1,21 +1,75 @@
-{% extends "basic_base.html" %}
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<html ng-app="game">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-{% block body_content %}
+    <!--<link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">-->
+
+    <script src="/static/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <!-- template CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/template/animate.min.css" rel="stylesheet">
+    <link href="/static/css/template/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/css/template/form.css" rel="stylesheet">
+    <link href="/static/css/template/calendar.css" rel="stylesheet">
+    <link href="/static/css/template/style.css" rel="stylesheet">
+    <link href="/static/css/template/icons.css" rel="stylesheet">
+    <link href="/static/css/template/generics.css" rel="stylesheet">
+
+    <!-- custom CSS -->
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/core.css">
+</head>
+<body ng-controller="AccountController as account">
+<!--[if lt IE 7]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+<header id="header" class="media" style="z-index: 1">
+    <a class="logo pull-left" href="/">BirdStorm.net <sup>Beta</sup></a>
+
+    <div class="media-body">
+        <div class="media" id="top-menu">
+                <ul class="nav navbar-nav">
+                <li><a href="/forum" target="_blank">Forum</a></li>
+                <li>
+                    <form class="navbar-form navbar-right" role="form" action="/test/" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">Test</button>
+                    </form>
+                </li>
+                <li>
+                    <form class="navbar-form navbar-right" role="form" action="/api/account/register" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">One Click Register</button>
+                    </form>
+                </li>
+                    </ul>
+        </div>
+    </div>
+</header>
+
+<div class="clearfix"></div>
+
 {% verbatim %}
-<br />
-
 <div ng-controller="ContextPanelController as contextPanel">
     <div ng-controller="ControlPanelController as controlPanel">
         <div ng-controller="DetailsPanelController as detailsPanel">
             <div ng-controller="MapController as map">
 
                 <core-map context-panel-switch="contextPanel.switch" map="map"  details-panel="detailsPanel"></core-map>
-
+                <br />
                 <div class="container">
                     <div class="row">
                         <div class="col-md-3">
                             <core-control-panel map="map" control-panel="controlPanel" account-data="account.data"></core-control-panel>
-                            <chat></chat>
                         </div>
                         <div class="col-md-6">
                             <core-details-panel details-panel="detailsPanel" control-panel="controlPanel"></core-details-panel>
@@ -31,5 +85,94 @@
         </div>
     </div>
 </div>
+
+<chat></chat>
 {% endverbatim %}
-{% endblock %}
+
+<hr>
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <p>&copy; BirdStorm.net 2014</p>
+        </div>
+    </div>
+</footer>
+</div> <!-- /container -->
+<!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>--><!-- TODO -->
+<script>window.jQuery || document.write('<script src="/static/js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
+
+<script src="/static/js/vendor/sockjs-0.3.min.js"></script>
+<!--<script src="/static/js/vendor/angular.1.2.min.js"></script>--> <!--TODO-->
+<script src="/static/js/vendor/angular.1.2.js"></script>
+<script src="/static/js/vendor/ui-bootstrap-tpls-0.11.0.min.js"></script>
+<!--<script src="/static/js/vendor/bootstrap.min.js"></script>-->
+<script src="/static/js/vendor/angular-cookies.1.3.0-beta.14.min.js"></script> <!--TODO -->
+<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.14/angular.js"></script> <!--TODO -->
+<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.14/angular-cookies.min.js"></script> <!--TODO -->
+
+<script src="/static/js/plugins.js"></script>
+<script src="/static/js/vendor/d3.min.js"></script>
+<script src="/static/js/connection.js"></script>
+<script src="/static/js/utils.js"></script>
+
+<script src="/static/angular/app.js"></script>
+
+<!-- TODO use module dependencies -->
+<script src="/static/angular/account.js"></script>
+<script src="/static/angular/chat.js"></script>
+<script src="/static/angular/core/map.js"></script>
+<script src="/static/angular/core/context_panel.js"></script>
+<script src="/static/angular/core/control_panel.js"></script>
+<script src="/static/angular/core/details_panel.js"></script>
+
+
+<!-- template -->
+<!-- Javascript Libraries -->
+<!-- jQuery -->
+<script src="/static/js/template/jquery.min.js"></script> <!-- jQuery Library -->
+<script src="/static/js/template/jquery-ui.min.js"></script> <!-- jQuery UI -->
+<script src="/static/js/template/jquery.easing.1.3.js"></script> <!-- jQuery Easing - Requirred for Lightbox + Pie Charts-->
+
+<!-- Bootstrap -->
+<script src="/static/js/template/bootstrap.min.js"></script>
+
+<!-- Charts -->
+<script src="/static/js/template/charts/jquery.flot.js"></script> <!-- Flot Main -->
+<script src="/static/js/template/charts/jquery.flot.time.js"></script> <!-- Flot sub -->
+<script src="/static/js/template/charts/jquery.flot.animator.min.js"></script> <!-- Flot sub -->
+<script src="/static/js/template/charts/jquery.flot.resize.min.js"></script> <!-- Flot sub - for repaint when resizing the screen -->
+
+<script src="/static/js/template/sparkline.min.js"></script> <!-- Sparkline - Tiny charts -->
+<script src="/static/js/template/easypiechart.js"></script> <!-- EasyPieChart - Animated Pie Charts -->
+<script src="/static/js/template/charts.js"></script> <!-- All the above chart related functions -->
+
+<!-- Map -->
+<script src="/static/js/template/maps/jvectormap.min.js"></script> <!-- jVectorMap main library -->
+<script src="/static/js/template/maps/usa.js"></script> <!-- USA Map for jVectorMap -->
+
+<!--  Form Related -->
+<script src="/static/js/template/icheck.js"></script> <!-- Custom Checkbox + Radio -->
+
+<!-- UX -->
+<script src="/static/js/template/scroll.min.js"></script> <!-- Custom Scrollbar -->
+
+<!-- Other -->
+<script src="/static/js/template/calendar.min.js"></script> <!-- Calendar -->
+<script src="/static/js/template/feeds.min.js"></script> <!-- News Feeds -->
+
+
+<!-- All JS functions -->
+<script src="/static/js/template/functions.js"></script>
+{% if UA %}
+<script>
+    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+        e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+        e.src='//www.google-analytics.com/analytics.js';
+        r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+    ga('create','{{UA}}');ga('send','pageview');
+</script>
+{% endif %}
+</body>
+</html>

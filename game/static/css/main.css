@@ -1,16 +1,6 @@
 body {
-    padding-top: 50px;
     padding-bottom: 20px;
-}
-
-#chat-panel {
-    height: 300px;
-    overflow-y: scroll;
-    overflow-x: auto;
-}
-
-input#chat-text {
-    width: 160px;
+    background-color: #808080;
 }
 
 .broadcast-connection {
@@ -29,4 +19,55 @@ ul.list-sublist {
 
 .form-control {
     height: auto;
+}
+
+
+/* template customisation */
+.logo {
+    padding-left: 0;
+}
+
+.panel {
+    border: 1px solid rgba(255,255,255,0.15);
+    background-color: rgba(255,255,255,0.15);
+    /*background-color: rgba(167, 255, 162,0.15);*/
+}
+
+.chat-footer {
+    height: 25px;
+}
+
+.chat-body {
+    height: 302px;
+}
+
+#chat-text {
+    width: 250px;
+    color: black;
+    text-shadow: 0 0 0 rgba(0, 0, 0, 0.5);
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+    border-color: transparent;
+    background: rgba(0,0,0,1);
+    color: #fff;
+}
+
+a {
+    border-bottom: 1px dotted rgba(255,255,255,0.15);
+}
+
+a:hover, a:focus {
+    color: #a7ffa2;
+    text-decoration: none;
+    border-bottom: 1px dotted rgba(167, 255, 162,0.15);
+}
+
+header {
+    background-color: rgba(255,255,255,0.15);
+}
+
+body, a, input, .help-block {
+    color: #fff;
+    text-shadow: none;
 }

@@ -1,28 +1,30 @@
-<div class="panel panel-default">
-    <div class="broadcast-connection">chat.general_room</div>
-    <div class="panel-heading">
-        Chat
-        <a href="#" class="panel-minimize pull-right" title="Close">
-            <span class="fa fa-minus fa-fw "></span>
-        </a>
-    </div>
-    <div class="panel-body" id="chat-panel">
-        <div ng-repeat="message in chat.messages">
-            {{ message.author }}: {{ message.text }}
+<div class="broadcast-connection">chat.general_room</div>
+
+<div class="chat">
+
+    <!-- Chat Area -->
+    <div class="media-body">
+        <div class="chat-header">
+            <a class="btn btn-sm" href="">
+                <i class="fa fa-circle-o status m-r-5"></i> Chat
+            </a>
         </div>
-    </div>
-    <div class="panel-footer">
+
+        <div class="chat-body" id="chat-panel">
+            <div ng-repeat="message in chat.messages">
+                {{ message.author }}: {{ message.text }}
+            </div>
+        </div>
         <form class="form-inline" role="form" method="post" action="">
             <div class="form-group">
                 <input
                         type="text"
-                        class="form-control"
                         name="message"
                         placeholder="Enter message"
                         id="chat-text"
                         ng-model="chat.text" />
             </div>
-            <button type="submit" class="btn btn-default" ng-click="chat.send()">Send</button>
+            <button type="submit" class="pull-right" ng-click="chat.send()">Send</button>
         </form>
     </div>
 </div>
