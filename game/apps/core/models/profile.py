@@ -17,7 +17,7 @@ schema_resources = {
         "Aluminium": {"type": "number", "minimum": 0, },
         "Polymer": {"type": "number", "minimum": 0, },
     },
-    "additionalProperties": False,
+    "additionalProperties": True,  # TODO
 }
 
 data_schema = {
@@ -38,10 +38,10 @@ data_schema = {
                     "items": schema_resources,
                 },
             },
-            "additionalProperties": False,
+            "additionalProperties": True,  # TODO
         },
     },
-    "additionalProperties": False
+    "additionalProperties": True,  # TODO
 }
 
 
