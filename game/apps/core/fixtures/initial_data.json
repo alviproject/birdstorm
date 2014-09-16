@@ -102,15 +102,5 @@
     }}},
     {"model": "core.building", "pk": 13, "fields": {"planet": 11, "type": "Port", "data": {
         "prices": {"ComponentStructures": 113, "ShipStructures": 137}
-    }}},
-
-    {"model": "core.ship", "pk": 1, "fields": {"owner": 1, "system": 1, "type": "Raven", "data": {
-        "mining": {"drilled_planets": [], "scan_results": []}
-    }}},
-    {"model": "core.ship", "pk": 2, "fields": {"owner": 1, "system": 2, "type": "Raven", "data": {
-        "mining": {"drilled_planets": [], "scan_results": []}
-    }}},
-    {"model": "core.ship", "pk": 3, "fields": {"owner": 1, "system": 3, "type": "Raven", "data": {
-        "mining": {"drilled_planets": [], "scan_results": []}
     }}}
 ]
