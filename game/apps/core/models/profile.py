@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from django.contrib.auth.models import User
 from django.db.models.fields import PositiveIntegerField
+from django.db.models.signals import post_save
 from jsonfield.fields import JSONField
 from jsonschema import validate
 import django.db.models as models
@@ -81,3 +82,11 @@ class Profile(models.Model):
             planets.pop(0)
         planets.append(planet_id)
         del self.data['scan_results']
+
+
+def create_profile(sender, instance, created, **kwargs):
+    if created and not Profile.objects.filter(user=instance).exists():
+        Profile.objects.create(user=instance)
+
+
+post_save.connect(create_profile, sender=User, dispatch_uid="create_profile")

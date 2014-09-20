@@ -13,6 +13,11 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 #own account
 #TODO move this class to core.profile
 class AccountSerializer(serializers.HyperlinkedModelSerializer):
+    credits = serializers.SerializerMethodField('get_credits')
+
+    def get_credits(self, obj):
+        return obj.profile.credits
+
     class Meta:
         model = User
         fields = ('url', 'username', 'id', 'credits')
