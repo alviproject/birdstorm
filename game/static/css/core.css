@@ -10,7 +10,7 @@ svg {
 
 .ship text {
     font: 12px sans-serif;
-    fill: black;
+    fill: white;
     cursor: pointer;
 }
 

@@ -37,7 +37,7 @@
             <a xlink:href="#" ng-click="contextPanelSwitch('ship', ship)">
                 <text x="0" y="0" alignment-baseline="before-edge" text-anchor="middle">
                     <tspan x="0" dy="1.2em">{{ ship.type }}</tspan>
-                    <tspan x="0" dy="1.2em">({{ ship.system().x | number:2 }}, {{ ship.system().y | number:2 }})</tspan>
+                    <tspan x="0" dy="1.2em">({{ship.owner_username}})</tspan>
                 </text>
             </a>
         </g>

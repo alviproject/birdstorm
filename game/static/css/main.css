@@ -13,6 +13,10 @@ ul.list-sublist {
 
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
 
+.bold {
+    font-weight: bold;
+}
+
 /* PYBBM */
 .post-content {
 }
