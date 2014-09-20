@@ -25,6 +25,7 @@ import django.core.management
 
 
 link = sys.platform != 'win32'
-#django.core.management.call_command('collectstatic', link=link, interactive=False)
+django.core.management.call_command('collectstatic', link=link, interactive=False)
+django.core.management.call_command('migrate', interactive=False)
 game.server.main()
 
