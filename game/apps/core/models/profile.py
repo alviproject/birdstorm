@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.fields import PositiveIntegerField
 from jsonfield.fields import JSONField
 from jsonschema import validate
+import django.db.models as models
 
 
 #TODO move to other file (this is a generic schema)
@@ -20,6 +21,7 @@ schema_resources = {
     "additionalProperties": True,  # TODO
 }
 
+#TODO not used at the moment
 data_schema = {
     "$schema": "http://json-schema.org/draft-04/schema#",
 
@@ -45,18 +47,10 @@ data_schema = {
 }
 
 
-class Profile:
-    def __init__(self, user):
-        self.user = user
-
-    @property
-    def data(self):
-        # TODO thw whole if, the reason for this workaround is that if user is created from outside
-        # (fe. by manage.py createsuperuser) then default value ('{}') is not taken into account and data is a string
-        # instead of JSON, this could be fixed in JSONFiled
-        if self.user.data == '':
-            self.user.data = {}
-        return self.user.data
+class Profile(models.Model):
+    user = models.OneToOneField(User)
+    data = JSONField(default={})
+    credits = PositiveIntegerField(default=0)
 
     def is_drilled(self, planet_id):
         return self.data.get('drilled_planets', []).count(planet_id) > 0
@@ -87,17 +81,3 @@ class Profile:
             planets.pop(0)
         planets.append(planet_id)
         del self.data['scan_results']
-
-    def save(self):
-        validate(self.data, data_schema)
-        self.user.save()
-
-
-@property
-def profile(self):
-    return Profile(self)
-
-
-User.profile = profile
-JSONField(default={}).contribute_to_class(User, 'data')
-PositiveIntegerField(default=0).contribute_to_class(User, 'credits')
