@@ -52,7 +52,8 @@
             templateUrl: '/static/angular/core/details_panel.html',
             scope: {
                 detailsPanel: '=detailsPanel',
-                controlPanel: '=controlPanel'
+                controlPanel: '=controlPanel',
+                contextPanel: '=contextPanel'
             },
             link: function(scope, element) {
                 scope.scan = function (planet_id, level) {

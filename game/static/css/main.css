@@ -13,8 +13,9 @@ ul.list-sublist {
 
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
 
-.bold {
+li.active, li.active a{
     font-weight: bold;
+    color: #FFD600;
 }
 
 /* PYBBM */

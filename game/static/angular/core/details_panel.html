@@ -3,6 +3,10 @@
     <div ng-switch-when="planet">
     <div class="panel panel-default" id="context_menu">
         <div class="panel-body">
+        <ol class="breadcrumb">
+            <li>System {{contextPanel.data.id}} ({{contextPanel.data.type}})</li>
+            <li>Planet {{detailsPanel.data.id}} ({{detailsPanel.data.type}})</li>
+        </ol>
             <tabset>
                 <tab heading="Planet" active="detailsPanel.tabs[0]">
                         <ul class="list-unstyled">
