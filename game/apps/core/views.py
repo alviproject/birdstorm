@@ -6,8 +6,9 @@ from django.shortcuts import render
 from django.template.context import RequestContext
 from game.apps.account.models import AccountSerializer
 from game.apps.core import models
+from game.apps.core import serializers
 from game.apps.core.models.planet.models import TerrestrialPlanet
-from game.apps.core.models.planet.serializers import PlanetDetailsSerializer
+from game.apps.core.serializers.planet import PlanetDetailsSerializer
 from game.apps.core.models.ships import Ship
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -20,31 +21,31 @@ from django.conf import settings
 
 class Ships(viewsets.ReadOnlyModelViewSet):
     model = models.Ship
-    serializer_class = models.ShipSerializer
+    serializer_class = serializers.ShipSerializer
 
 
 class Systems(viewsets.ReadOnlyModelViewSet):
     model = models.System
-    serializer_class = models.SystemSerializer
+    serializer_class = serializers.SystemSerializer
 
     def retrieve(self, request, pk=None, *args, **kwargs):
         system = get_object_or_404(self.get_queryset(), pk=pk)
-        serializer = models.SystemDetailsSerializer(system, context=dict(request=request))
+        serializer = serializers.SystemDetailsSerializer(system, context=dict(request=request))
         return Response(serializer.data)
 
 
 class Planets(viewsets.ReadOnlyModelViewSet):
     model = models.Planet
-    serializer_class = models.PlanetSerializer
+    serializer_class = serializers.PlanetSerializer
 
     def retrieve(self, request, pk=None, *args, **kwargs):
         planet = get_object_or_404(self.get_queryset(), pk=pk)
-        serializer = models.PlanetDetailsSerializer(planet, context=dict(request=request))
+        serializer = serializers.PlanetDetailsSerializer(planet, context=dict(request=request))
         return Response(serializer.data)
 
 
 class OwnShips(viewsets.ReadOnlyModelViewSet):
-    serializer_class = models.OwnShipSerializer
+    serializer_class = serializers.OwnShipSerializer
 
     def get_queryset(self, request):
         return models.Ship.objects.filter(owner=request.user)
@@ -58,7 +59,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
 
     def retrieve(self, request, pk=None, *args, **kwargs):
         ship = get_object_or_404(self.get_queryset(request), pk=pk)
-        serializer = models.OwnShipDetailsSerializer(ship, context=dict(request=request))
+        serializer = serializers.OwnShipDetailsSerializer(ship, context=dict(request=request))
         return Response(serializer.data)
 
     @async_action
@@ -211,7 +212,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
 
 class Buildings(viewsets.ReadOnlyModelViewSet):
     model = models.Building
-    serializer_class = models.BuildingSerializer
+    serializer_class = serializers.BuildingSerializer
 
     #TODO this shall be Port method
     @action()

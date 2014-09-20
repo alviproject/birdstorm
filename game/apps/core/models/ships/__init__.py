@@ -12,11 +12,7 @@ from game.utils.models import ResourceContainer
 from game.utils.polymorph import PolymorphicBase
 from django.db import models
 from jsonfield.fields import JSONField
-from rest_framework import serializers
 from concurrency.fields import IntegerVersionField
-from game.apps.core.models.components.drills import Drill
-from game.apps.core.models.components.engines import Engine
-from game.apps.core.models.components.scanners import Scanner
 
 
 class Ship(PolymorphicBase, ResourceContainer):
@@ -92,7 +88,10 @@ class Ship(PolymorphicBase, ResourceContainer):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         ship_signal = blinker.signal(game.apps.core.signals.own_ship_data % self.id)
-        ship_signal.send(None, ship=OwnShipDetailsSerializer(self).data)
+
+        #TODO refactor
+        from game.apps.core.serializers.ship import OwnShipDetailsSerializer
+        ship_signal.send(None, ship=OwnShipDetailsSerializer(self, context={'request': 0}).data)
 
     class Meta:
         app_label = 'core'
@@ -101,48 +100,3 @@ class Ship(PolymorphicBase, ResourceContainer):
 class Raven(Ship):
     class Meta:
         proxy = True
-
-
-class ShipSerializer(serializers.HyperlinkedModelSerializer):
-    system_id = serializers.CharField(source='system_id', read_only=True)
-    id = serializers.IntegerField(source='id', read_only=True)
-    components = serializers.SerializerMethodField('get_components')
-    speed = serializers.Field('speed')
-
-    def get_components(self, obj):
-        return {
-            "Engine": {
-                "mark": obj.engine.mark,
-                "type": obj.engine.type,
-                "output": obj.engine.output,
-                "range": obj.engine.range,
-            },
-            "Drill": {
-                "mark": obj.drill.mark,
-                "type": obj.drill.type,
-                "deepness": obj.drill.deepness,
-                "speed": obj.drill.speed,
-            },
-            "Scanner": {
-                "mark": obj.scanner.mark,
-                "type": obj.scanner.type,
-                "deepness": obj.scanner.deepness,
-            }
-        }
-
-    class Meta:
-        model = Ship
-        fields = ['id', 'url', 'type', 'system_id', 'owner', 'system', 'components']
-
-
-class OwnShipSerializer(ShipSerializer):
-    id = serializers.IntegerField(source='id', read_only=True)
-
-
-class OwnShipDetailsSerializer(OwnShipSerializer):
-    system_id = serializers.CharField(source='system_id', read_only=True)
-    resources = serializers.Field(source='resources')
-
-    class Meta:
-        model = Ship
-        fields = ShipSerializer.Meta.fields + ['locked', 'resources']

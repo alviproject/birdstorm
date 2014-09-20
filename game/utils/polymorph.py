@@ -12,7 +12,7 @@ class PolymorphicMeta(ModelBase):
 
 
 class PolymorphicBase(models.Model, metaclass=PolymorphicMeta):
-    type = models.CharField(max_length=255)
+    type = models.CharField(max_length=255, help_text=None)
 
     class Meta:
         abstract = True

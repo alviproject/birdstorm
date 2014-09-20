@@ -1,6 +1,6 @@
-import os
 import sys
-import os.path
+import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "game.settings")
 
 if os.path.exists(".env_local"):
     env_input = ".env_local"
@@ -16,11 +16,15 @@ with open(env_input) as env:
         print(var)
         os.environ.setdefault(*var)
 
+import game.utils.patch
+import django
+django.setup()
+
 import game.server
 import django.core.management
 
 
 link = sys.platform != 'win32'
-django.core.management.call_command('collectstatic', link=link, interactive=False)
+#django.core.management.call_command('collectstatic', link=link, interactive=False)
 game.server.main()
 

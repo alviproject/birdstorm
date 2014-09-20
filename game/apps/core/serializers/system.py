@@ -1,4 +1,4 @@
-from game.apps.core.models.planet.serializers import PlanetSerializer
+from game.apps.core.serializers.planet import PlanetSerializer
 from game.apps.core.models.system.models import System
 from rest_framework import serializers
 

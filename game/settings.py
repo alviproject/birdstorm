@@ -144,3 +144,4 @@ RAVEN_CONFIG = {
     'dsn': config.raven_dsn,
 }
 
+PYBB_AUTO_USER_PERMISSIONS = False

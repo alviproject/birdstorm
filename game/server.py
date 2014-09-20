@@ -1,6 +1,5 @@
-import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "game.settings")
 from game.utils import config
+import os
 
 import logging
 import json

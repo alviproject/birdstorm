@@ -1,4 +1,4 @@
-from game.apps.core.models.buildings import BuildingSerializer
+from game.apps.core.serializers.buildings import BuildingSerializer
 from rest_framework import serializers
 from game.apps.core.models.planet.models import Planet
 
