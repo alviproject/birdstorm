@@ -14,6 +14,8 @@
                 .success(function (data, status, headers, config) {
                     //set extended data
                     contextPanel.data = data;
+
+                    detailsPanel.switch('planet', data.planets[0]);
                 });
         }
     }]);

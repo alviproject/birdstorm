@@ -12,7 +12,13 @@
                     <li>
                         <b>Distance:</b>
                         {{distance()|number:2}}
-                        <a href="#" class="ajax-link pull-right" title="Go" ng-click="go_to_system(contextPanel.data.id)" ng-hide="controlPanel.currentShipDetails.locked">
+                        <a
+                                href="#"
+                                class="ajax-link pull-right"
+                                title="Go"
+                                ng-click="go_to_system(contextPanel.data.id)"
+                                ng-hide="controlPanel.currentShipDetails.locked || controlPanel.currentShipDetails.system_id === contextPanel.data.id"
+                                >
                             Go<span class="fa fa-plane fa-fw"></span>
                         </a>
                     </li>

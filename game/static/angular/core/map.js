@@ -62,6 +62,9 @@
         ship.system = function() {
             return system;
         };
+        ship.set_system = function(new_system) {
+            system = new_system;
+        };
         ship.display_x = ship.system().display_x;
         ship.display_y = ship.system().display_y;
 
@@ -104,8 +107,7 @@
                 retrieve_data($http, map);
 
                 scope.dataSwitch = function(choice, data) {
-                    scope.contextPanelSwitch(choice, data);
-                    scope.detailsPanel.choice = '';
+                    scope.contextPanelSwitch(choice, data, scope.detailsPanel);
                 };
 
                 //
@@ -142,11 +144,12 @@
                     var ship = map.ships[data.ship];
                     var time = data.time;
                     var target_system = map.systems[data.target_system];
+                    ship.set_system(target_system);
+
                     var element = d3.select("#ship_"+data.ship);
                     element.transition()
                         .duration(time*1000)
                         .tween("position", function() {
-                            console.log(ship.system);
                             var x = d3.interpolateRound(ship.display_x, target_system.display_x);
                             var y = d3.interpolateRound(ship.display_y, target_system.display_y + target_system.r);
                             return function(t) {
