@@ -18,6 +18,13 @@
         });
 
         this.switch = function (choice, data) {
+            detailsPanel.choice = choice;
+            //set basic data, extended data will be requested
+            detailsPanel.data = data;
+            if(choice === 'system') {
+                return;
+            }
+            //planet
             //TODO once port will have it's own directive it shall be moved
             detailsPanel.quantities = [];
             var i;
@@ -29,9 +36,6 @@
                 detailsPanel.warehouse_quantities.push(1);
             }
 
-            detailsPanel.choice = choice;
-            //set basic data, extended data will be requested
-            detailsPanel.data = data;
             detailsPanel.scan_messages = [];
             detailsPanel.subscription_actions.subscribe(data.id+"_"+request_id());//TODO change request_id to planet_id
             detailsPanel.subscription_details.subscribe(data.id+"_"+request_id());//TODO change request_id to planet_id

@@ -1,11 +1,13 @@
 <div ng-switch="detailsPanel.choice" id="details-panel">
-    <!-- Planet -->
-    <div ng-switch-when="planet">
     <div class="panel panel-default" id="context_menu">
         <div class="panel-body">
         <ol class="breadcrumb">
-            <li>System {{contextPanel.data.type}} {{contextPanel.data.id}}</li>
-            <li class="active">{{detailsPanel.data.type}} {{detailsPanel.data.id}}</li>
+            <li>
+                <a href="#" ng-click="detailsPanel.switch('system', contextPanel.data.id)">
+                    System {{contextPanel.data.type}} {{contextPanel.data.id}}
+                </a>
+            </li>
+            <li class="active" ng-if="detailsPanel.choice === 'planet'">{{detailsPanel.data.type}} {{detailsPanel.data.id}}</li>
             <li ng-hide="controlPanel.currentShipDetails.locked || controlPanel.currentShipDetails.system_id === contextPanel.data.id">
                 <a href="#" title="Go" ng-click="contextPanel.go_to_system(contextPanel.data.id, controlPanel)">
                     Go to this star system<span class="fa fa-plane fa-fw"></span>
@@ -18,6 +20,25 @@
                 You are currently flying to this system
             </li>
         </ol>
+        <!-- System -->
+        <div ng-switch-when="system">
+            <tabset>
+                <tab heading="Star System">
+                    This is a description of a star system: {{detailsPanel.data.type}}
+                    <br />
+                    <b>Planets:</b>
+                    <ul class="list-unstyled list-sublist">
+                        <li ng-repeat="planet in contextPanel.data.planets track by $index"  ng-class="{active: planet.id==detailsPanel.data.id}">
+                            <a href="#" ng-click="detailsPanel.switch('planet', planet)">
+                                {{ planet.type }} {{planet.id}}
+                            </a>
+                        </li>
+                    </ul>
+                </tab>
+            </tabset>
+        </div>
+        <!-- Planet -->
+        <div ng-switch-when="planet">
             <tabset>
                 <tab heading="Planet" active="detailsPanel.tabs[0]">
                         <ul class="list-unstyled">
@@ -324,6 +345,7 @@
                     </div>
                 </tab>
             </tabset>
+        </div>
             <hr />
             <ul class="list-unstyled">
                 <li ng-repeat="message in detailsPanel.scan_messages track by $index"
@@ -331,7 +353,6 @@
                     {{ message.text }}
                 </li>
             </ul>
-        </div>
     </div>
 </div>
 </div>

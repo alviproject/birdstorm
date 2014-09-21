@@ -16,7 +16,7 @@
                     contextPanel.data = data;
 
                     if(detailsPanel) {
-                        detailsPanel.switch('planet', data.planets[0]);
+                        detailsPanel.switch('system', data);
                     }
                 });
         }
