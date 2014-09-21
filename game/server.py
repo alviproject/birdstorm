@@ -78,6 +78,11 @@ class BroadcastConnection(SockJSConnection):
         #TODO remove all channel connections
 
 
+class NoCacheStaticFileHandler(tornado.web.StaticFileHandler):
+    def set_extra_headers(self, path):
+        self.set_header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+
+
 def main():
     wsgi_app = tornado.wsgi.WSGIContainer(django.core.handlers.wsgi.WSGIHandler())
 
@@ -86,7 +91,7 @@ def main():
     app = tornado.web.Application(
         broadcast_router.urls +
         [
-            (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": os.path.join(settings.PROJECT_DIR, 'static_generated')}),
+            (r"/static/(.*)", NoCacheStaticFileHandler, {"path": os.path.join(settings.PROJECT_DIR, 'static_generated')}),
             #(r"/()$", tornado.web.StaticFileHandler, {"path": os.path.join(settings.PROJECT_DIR, 'static_generated', "angular", "index.html")}),
             ('.*', tornado.web.FallbackHandler, dict(fallback=wsgi_app)),
         ],
