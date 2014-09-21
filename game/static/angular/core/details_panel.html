@@ -8,11 +8,14 @@
             <li class="active">{{detailsPanel.data.type}} {{detailsPanel.data.id}}</li>
             <li ng-hide="controlPanel.currentShipDetails.locked || controlPanel.currentShipDetails.system_id === contextPanel.data.id">
                 <a href="#" title="Go" ng-click="contextPanel.go_to_system(contextPanel.data.id, controlPanel)">
-                    Go to this planet<span class="fa fa-plane fa-fw"></span>
+                    Go to this star system<span class="fa fa-plane fa-fw"></span>
                 </a>
             </li>
-            <li ng-show="controlPanel.currentShipDetails.system_id === contextPanel.data.id">
+            <li ng-show="controlPanel.currentShipDetails.system_id === contextPanel.data.id && !controlPanel.currentShipDetails.locked">
                 You are currently in this system
+            </li>
+            <li ng-show="controlPanel.currentShipDetails.system_id === contextPanel.data.id && controlPanel.currentShipDetails.locked">
+                You are currently flying to this system
             </li>
         </ol>
             <tabset>
