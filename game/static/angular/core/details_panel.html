@@ -6,6 +6,14 @@
         <ol class="breadcrumb">
             <li>System {{contextPanel.data.type}} {{contextPanel.data.id}}</li>
             <li class="active">{{detailsPanel.data.type}} {{detailsPanel.data.id}}</li>
+            <li ng-hide="controlPanel.currentShipDetails.locked || controlPanel.currentShipDetails.system_id === contextPanel.data.id">
+                <a href="#" title="Go" ng-click="contextPanel.go_to_system(contextPanel.data.id, controlPanel)">
+                    Go to this planet<span class="fa fa-plane fa-fw"></span>
+                </a>
+            </li>
+            <li ng-show="controlPanel.currentShipDetails.system_id === contextPanel.data.id">
+                You are currently in this system
+            </li>
         </ol>
             <tabset>
                 <tab heading="Planet" active="detailsPanel.tabs[0]">

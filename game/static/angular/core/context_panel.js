@@ -1,7 +1,7 @@
 (function() {
     var app = angular.module('game');
 
-    app.controller('ContextPanelController', ['$scope', '$timeout', function($scope, $timeout) {
+    app.controller('ContextPanelController', ['$scope', '$timeout', '$http', function($scope, $timeout, $http) {
         var contextPanel = this;
         this.switch = function (choice, data, detailsPanel) { //TODO remove detailsPanel parameter
             contextPanel.choice = choice;
@@ -20,6 +20,13 @@
                     }
                 });
         }
+
+        this.go_to_system = function (system_id, controlPanel) {
+            var ship_id = controlPanel.currentShip.id;
+            $http.post('/api/core/own_ships/'+ship_id+'/move/', {
+                system_id: system_id
+            });
+        };
     }]);
 
     app.directive('coreContextPanel', function($http) {
@@ -33,12 +40,6 @@
                 map: '=map'
             },
             link: function(scope, element) {
-                scope.go_to_system = function (system_id) {
-                    var ship_id = this.controlPanel.currentShip.id;
-                    $http.post('/api/core/own_ships/'+ship_id+'/move/', {
-                        system_id: system_id
-                    });
-                };
                 scope.distance = function() {
                     var ship_system = scope.map.ships[scope.controlPanel.currentShipDetails.id].system();
                     var system = scope.contextPanel.data;

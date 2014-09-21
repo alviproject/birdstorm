@@ -16,7 +16,7 @@
                                 href="#"
                                 class="ajax-link pull-right"
                                 title="Go"
-                                ng-click="go_to_system(contextPanel.data.id)"
+                                ng-click="contextPanel.go_to_system(contextPanel.data.id, controlPanel)"
                                 ng-hide="controlPanel.currentShipDetails.locked || controlPanel.currentShipDetails.system_id === contextPanel.data.id"
                                 >
                             Go<span class="fa fa-plane fa-fw"></span>
