@@ -84,21 +84,20 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
         planet = models.Planet.objects.get(pk=planet_id)
         ship = self.get_queryset(request).get(pk=pk)
         user = request.user
-        signal_id = "%d_%s" % (planet_id, request_id)
-        scan_progress_signal = blinker.signal(game.apps.core.signals.planet_actions_progress % signal_id)
+        messages = blinker.signal(game.apps.core.signals.messages % user.id)
 
         with ship.lock():
             results = user.profile.get_scan_results(planet_id)
             if level < 0 or level >= len(results):
                 level = len(results)
             #TODO check why we have to pass self as a first argument
-            scan_progress_signal.send(self, message=dict(
+            messages.send(self, message=dict(
                 type="info",
                 text="Scanning level %d, please stand by..." % level,
             ))
 
             if ship.system != planet.system:
-                scan_progress_signal.send(self, message=dict(
+                messages.send(self, message=dict(
                     type="error",
                     text="Current ship is not located next to the scanned planet.",
                 ))
@@ -107,21 +106,21 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
             yield pow(settings.FACTOR, level)
 
             if not isinstance(planet, TerrestrialPlanet):
-                scan_progress_signal.send(self, message=dict(
+                messages.send(self, message=dict(
                     type="error",
                     text="This planet type is not supported by equipped scanner.",
                 ))
                 return
 
             if user.profile.is_drilled(planet_id):
-                scan_progress_signal.send(self, message=dict(
+                messages.send(self, message=dict(
                     type="error",
                     text="Planet was already drilled, you have to wait some time before next scan.",
                 ))
                 return
 
             if level >= 2:
-                scan_progress_signal.send(self, message=dict(
+                messages.send(self, message=dict(
                     type="error",
                     text="Equipped scanner cannot scan any deeper.",
                 ))
@@ -130,7 +129,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
             try:
                 level_resources = planet.data['resources'][level]
             except (IndexError, KeyError):
-                scan_progress_signal.send(self, message=dict(
+                messages.send(self, message=dict(
                     type="error",
                     text="Some solid structures below surface of this planet block deeper scans.",
                 ))
@@ -138,7 +137,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
             current_level_result = {}
             for type, quantity in level_resources.items():
                 current_level_result[type] = quantity
-            scan_progress_signal.send(self, level=level, message=dict(type="success", text="Scan successful", ), )
+            messages.send(self, level=level, message=dict(type="success", text="Scan successful", ), )
 
             user.profile.set_scan_result(planet_id, level, current_level_result)
             user.profile.save()
@@ -156,21 +155,20 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
         planet = models.Planet.objects.get(pk=planet_id)
         ship = self.get_queryset(request).get(pk=pk)
         user = request.user
-        signal_id = "%d_%s" % (planet_id, request_id)
-        scan_progress_signal = blinker.signal(game.apps.core.signals.planet_actions_progress % signal_id)
+        messages = blinker.signal(game.apps.core.signals.messages % user.id)
 
         with ship.lock():
             results = user.profile.get_scan_results(planet_id)
             if level < 0 or level >= len(results):
                 raise RuntimeError("Wrong level")
 
-            scan_progress_signal.send(self, message=dict(
+            messages.send(self, message=dict(
                 type="info",
                 text="Extracting %s, please stand by..." % resource_type,
             ))
 
             if ship.system != planet.system:
-                scan_progress_signal.send(self, message=dict(
+                messages.send(self, message=dict(
                     type="error",
                     text="Current ship is not located next to the scanned planet.",
                 ))
@@ -179,14 +177,14 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
             yield pow(settings.FACTOR, level*2)
 
             if user.profile.is_drilled(planet_id):
-                scan_progress_signal.send(self, message=dict(
+                messages.send(self, message=dict(
                     type="error",
                     text="Planet was already drilled, you have to wait some time before next extraction.",
                 ))
                 return
 
             if level >= 2:
-                scan_progress_signal.send(self, message=dict(
+                messages.send(self, message=dict(
                     type="error",
                     text="Equipped drill cannot scan any deeper.",
                 ))
@@ -195,7 +193,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
             resources = results[level]
             ship.add_resource(resource_type, resources[resource_type])
             ship.save()
-            scan_progress_signal.send(
+            messages.send(
                 self,
                 message=dict(
                     type="success",
@@ -240,8 +238,8 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         account_signal = blinker.signal(game.apps.core.signals.account_data % user.id)
         account_signal.send(None, data=AccountSerializer(user).data)
         signal_id = "%d_%s" % (port.planet_id, request_id)
-        actions_signal = blinker.signal(game.apps.core.signals.planet_actions_progress % signal_id)
-        actions_signal.send(
+        messages = blinker.signal(game.apps.core.signals.messages % signal_id)
+        messages.send(
             self,
             message=dict(
                 type="success",
@@ -280,9 +278,8 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         account_signal = blinker.signal(game.apps.core.signals.account_data % user.id)
         account_signal.send(None, data=AccountSerializer(user).data)
 
-        signal_id = "%d_%s" % (port.planet_id, request_id)
-        actions_signal = blinker.signal(game.apps.core.signals.planet_actions_progress % signal_id)
-        actions_signal.send(
+        messages = blinker.signal(game.apps.core.signals.messages % user.id)
+        messages.send(
             self,
             message=dict(
                 type="success",

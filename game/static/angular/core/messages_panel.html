@@ -2,14 +2,10 @@
     <h2 class="tile-title">Messages</h2>
     <div class="panel-body">
         <ul class="list-unstyled">
-            <li>Message 1</li>
-            <li>Message 1</li>
-            <li>Message 1</li>
-            <li>Message 1</li>
-            <li>Message 1</li>
-            <li>Message 1</li>
-            <li>Message 1</li>
-            <li>Message 1</li>
+            <li ng-repeat="message in messages track by $index"
+                ng-class="{info:'text-muted', error:'text-danger', success:'text-success'}[message.type]">
+                {{ message.text }}
+            </li>
         </ul>
     </div>
 </div>

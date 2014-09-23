@@ -29,8 +29,7 @@ class Provider(Building):
     def order(self, order, quantity, ship, user, request_id):
         order_details = self.processes(ship)[order]
 
-        signal_id = "%d_%s" % (self.planet_id, request_id)
-        actions_signal = blinker.signal(game.apps.core.signals.planet_actions_progress % signal_id)
+        messages = blinker.signal(game.apps.core.signals.messages % user.id)
 
         with ship.lock():
             for i in range(quantity):
@@ -38,17 +37,17 @@ class Provider(Building):
                     message = "Producing %s, phase %d/%d, please wait" % (order, i+1, quantity)
                 else:
                     message = "Producing %s, please wait" % order
-                actions_signal.send(self, message=dict(type="info", text=message,),)
+                messages.send(self, message=dict(type="info", text=message,),)
                 try:
                     for resource, qty in order_details['requirements'].items():
                         ship.remove_resource(resource, qty)
                 except RuntimeError:
-                    actions_signal.send(self, message=dict(type="error", text="Not enough resources to fulfill this order",),)
+                    messages.send(self, message=dict(type="error", text="Not enough resources to fulfill this order",),)
                     return
                 yield order_details['time']
                 ship.save()
                 self.fulfill_order(order, ship, user, order_details=order_details)
-                actions_signal.send(self, message=dict(type="success", text="Ordered item was added to your inventory",),)
+                messages.send(self, message=dict(type="success", text="Ordered item was added to your inventory",),)
 
     def fulfill_order(self, order, ship, user, order_details=None):
         raise NotImplementedError

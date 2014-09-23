@@ -19,9 +19,10 @@ class PlanetDetails(Channel):
         return dict(**kwargs)
 
 
-class PlanetActionsProgress(Channel):
-    @receiver(game.apps.core.signals.planet_actions_progress)
-    def planet_actions_progress(self, channel_instance, **kwargs):
+#TODO consider moving this to account
+class Messages(Channel):
+    @receiver(game.apps.core.signals.messages)
+    def messages(self, channel_instance, **kwargs):
         return dict(**kwargs)
 
 

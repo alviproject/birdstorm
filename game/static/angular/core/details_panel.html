@@ -357,13 +357,6 @@
                 </tab>
             </tabset>
         </div>
-            <hr />
-            <ul class="list-unstyled">
-                <li ng-repeat="message in detailsPanel.scan_messages track by $index"
-                    ng-class="{info:'text-muted', error:'text-danger', success:'text-success'}[message.type]">
-                    {{ message.text }}
-                </li>
-            </ul>
     </div>
 </div>
 </div>
