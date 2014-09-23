@@ -63,7 +63,6 @@
     <div ng-controller="ControlPanelController as controlPanel">
         <div ng-controller="DetailsPanelController as detailsPanel">
             <div ng-controller="MapController as map">
-
                 <core-map context-panel-switch="contextPanel.switch" map="map"  details-panel="detailsPanel"></core-map>
                 <br />
                 <div class="container">
@@ -76,6 +75,8 @@
                         </div>
                         <div class="col-md-3">
                             <core-context-panel context-panel="contextPanel" control-panel="controlPanel" details-panel="detailsPanel" map="map"></core-context-panel>
+                            <core-messages-panel></core-messages-panel>
+                            <core-tasks-panel></core-tasks-panel>
                         </div>
                     </div>
                 </div>
@@ -125,6 +126,8 @@
 <script src="/static/angular/core/context_panel.js"></script>
 <script src="/static/angular/core/control_panel.js"></script>
 <script src="/static/angular/core/details_panel.js"></script>
+<script src="/static/angular/core/tasks_panel.js"></script>
+<script src="/static/angular/core/messages_panel.js"></script>
 
 
 <!-- template -->

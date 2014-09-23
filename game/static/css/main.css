@@ -18,6 +18,10 @@ li.active, li.active a{
     color: #FFD600;
 }
 
+.side-panel {
+    max-width: 250px;
+}
+
 /* PYBBM */
 .post-content {
 }
@@ -75,4 +79,9 @@ header {
 body, a, input, .help-block {
     color: #fff;
     text-shadow: none;
+}
+
+.breadcrumb {
+    float: none;
+    padding: 0;
 }

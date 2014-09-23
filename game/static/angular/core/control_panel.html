@@ -1,10 +1,26 @@
-<div class="panel pull-right">
-    <h2 class="tile-title">Control panel</h2>
+<div class="panel side-panel" style="margin-left: auto">
+    <h2 class="tile-title">User: {{accountData.username}}</h2>
     <div class="panel-body">
         Credits: {{accountData.credits}}
-        <hr />
-        <br />
-        Ship:
+    </div>
+    <div class="pull-right">
+        Map ({{ (map.scale * 100)|number:0 }}%)
+        <a href="#" ng-click="map.zoomIn()">
+            <span class="fa fa-search-plus fa-fw"></span>
+
+        </a>
+        <a href="#" ng-click="map.zoomOut()">
+            <span class="fa fa-search-minus fa-fw"></span>
+        </a>
+        <a href="#" ng-click="map.reset()">
+            <span class="fa fa-refresh fa-fw"></span>
+        </a>
+    </div>
+    <br class="clearfix" />
+</div>
+
+<div class="panel side-panel" style="margin-left: auto">
+    <h2 class="tile-title">
         <span class="dropdown" is-open="controlPanel.ship_menu_expanded">
             <a href class="dropdown-toggle">
                 {{controlPanel.currentShip.type}} Mk 1<span class="caret"></span>
@@ -15,10 +31,15 @@
                 </li>
             </ul>
         </span>
-        <br />
-        <br />
+        <span class="pull-right">
+            ID: {{ controlPanel.currentShipDetails.id }}
+        </span>
+    </h2>
+    <div class="panel-body">
         <ul class="list-unstyled">
-            <li><b>ID:</b> {{ controlPanel.currentShipDetails.id }}</li>
+            <li>
+                <strong>Action:</strong> None
+            </li>
             <li ng-repeat="(component, details) in controlPanel.currentShipDetails.components">
                 <b>{{details.type}} Mk {{details.mark}}</b>
                 <ul class="list-unstyled list-sublist">
@@ -34,18 +55,5 @@
                 </ul>
             </li>
         </ul>
-        <div class="pull-right">
-            Map ({{ (map.scale * 100)|number:0 }}%)
-            <a href="#" ng-click="map.zoomIn()">
-                <span class="fa fa-search-plus fa-fw"></span>
-
-            </a>
-            <a href="#" ng-click="map.zoomOut()">
-                <span class="fa fa-search-minus fa-fw"></span>
-            </a>
-            <a href="#" ng-click="map.reset()">
-                <span class="fa fa-refresh fa-fw"></span>
-            </a>
-        </div>
     </div>
 </div>
