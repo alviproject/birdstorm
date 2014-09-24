@@ -1,0 +1,17 @@
+<div>
+    <tabset>
+        <tab heading="Star System">
+            This is a description of a star system: {{detailsPanel.data.type}}
+            <br />
+            <b>Planets:</b>
+            <ul class="list-unstyled list-sublist">
+                <li ng-repeat="planet in contextPanel.data.planets track by $index"  ng-class="{active: planet.id==detailsPanel.data.id}">
+                    <a href="#" ng-click="detailsPanel.switch('planet', planet)">
+                        {{ planet.type }} {{planet.id}}
+                    </a>
+                </li>
+            </ul>
+        </tab>
+    </tabset>
+    system {{system_id}}
+</div>

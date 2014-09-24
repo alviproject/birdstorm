@@ -1,7 +1,17 @@
 (function() {
-    var app = angular.module('game');
+    var module = angular.module('game.details_panel', []);
 
-    app.controller('DetailsPanelController', ['request_id', "$scope", function(request_id, $scope) {
+    module.config(function($stateProvider) {
+        $stateProvider.state('map.system', {
+            url: "/system/:system_id",
+            templateUrl: "/static/angular/core/details_panel/system.html",
+            controller: function($stateParams, $scope) {
+                $scope.system_id = $stateParams.system_id;
+            }
+        })
+    });
+
+    module.controller('DetailsPanelController', ['request_id', "$scope", '$state', function(request_id, $scope, $state) {
         var detailsPanel = this;
         detailsPanel.tabs = new Array(20); //quite ugly, but works, it assumes that there will be no more than 20 tabs
 
@@ -44,7 +54,7 @@
         }
     }]);
 
-    app.directive('coreDetailsPanel', function($http) {
+    module.directive('coreDetailsPanel', function($http) {
         return {
             restrict: 'E',
             templateUrl: '/static/angular/core/details_panel.html',
