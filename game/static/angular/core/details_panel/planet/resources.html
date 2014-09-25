@@ -1,0 +1,37 @@
+<div ng-switch="planet.is_drilled">
+    <div ng-switch-when="true">
+        Planet is already drilled. You have to wait some time, before you can extract resources
+        again.
+    </div>
+    <div ng-switch-default>
+            <span class="pull-right">
+                    <a
+                            href
+                            ng-click="scan(detailsPanel.data.id, -1)"
+                            ng-hide="controlPanel.currentShipDetails.locked">
+                        Scan
+                    </a>
+                </span>
+        <div ng-hide="planet.scan_results.length">
+            You have to scan the planet to see available resources.
+        </div>
+
+        <div ng-repeat="level_resources in planet.scan_results track by $index">
+            Level {{$index}}
+            <ul>
+                <li ng-repeat="(type, quantity) in level_resources">
+                    {{type}}: {{quantity}}
+                            <span ng-hide="controlPanel.currentShipDetails.locked">
+                                -
+                                <a
+                                        href
+                                        ng-click="extract(planet.id, $parent.$index, type)">
+                                    Extract
+                                </a>
+                            </span>
+                </li>
+            </ul>
+            <hr/>
+        </div>
+    </div>
+</div>

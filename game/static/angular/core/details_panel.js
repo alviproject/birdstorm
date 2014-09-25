@@ -2,18 +2,61 @@
     var module = angular.module('game.details_panel', []);
 
     module.config(function($stateProvider) {
-        $stateProvider.state('map.system', {
-            url: "/system/:system_id",
-            templateUrl: "/static/angular/core/details_panel/system.html",
-            controller: function($stateParams, $scope) {
-                $scope.system_id = $stateParams.system_id;
-            }
-        })
+        $stateProvider
+            .state('map.system', {
+                url: "/system/:system_id",
+                templateUrl: "/static/angular/core/details_panel/system.html",
+                resolve: {
+                    system: function($http, $stateParams){
+                        return $http.get("/api/core/systems/"+$stateParams.system_id+"/").then(function(data) {
+                            return data.data;
+                        });
+                    }
+                },
+                controller: function($stateParams, $scope, system) {
+                    $scope.system = system;
+                }
+            })
+            .state('map.system.planet', {
+                url: "/planet/:planet_id",
+                templateUrl: "/static/angular/core/details_panel/planet/index.html",
+                resolve: {
+                    planet: function($http, $stateParams){
+                        return $http.get("/api/core/planets/"+$stateParams.planet_id+"/").then(function(data) {
+                            return data.data;
+                        });
+                    }
+                },
+                controller: function($stateParams, $scope, $state, planet) {
+                    $scope.planet = planet;
+                    $scope.go = function(route){
+                        $state.go(route);
+                    };
+                    $scope.active = function(route){
+                        return $state.is(route);
+                    };
+                    $scope.$on("$stateChangeSuccess", function(event, toState, toParams, fromState, fromParams) {
+                        console.log(event, toState, toParams, fromState, fromParams);
+                        $scope.tabs.forEach(function(tab) {
+                            tab.active = $scope.active(tab.route);
+                        });
+                    });
+                    $scope.tabs = [
+                        {heading: "Planet", route: "", active: false},
+                        {heading: "Resources", route: ".resources", active: false}
+                    ];
+                }
+            })
+            .state('map.system.planet.resources', {
+                url: "/resources",
+                templateUrl: "/static/angular/core/details_panel/planet/resources.html",
+                controller: function($stateParams, $scope, system) {
+                }
+            })
     });
 
     module.controller('DetailsPanelController', ['request_id', "$scope", '$state', function(request_id, $scope, $state) {
         var detailsPanel = this;
-        detailsPanel.tabs = new Array(20); //quite ugly, but works, it assumes that there will be no more than 20 tabs
 
         //
         // connect to details channel
@@ -24,12 +67,6 @@
         });
 
         this.switch = function (choice, data) {
-            detailsPanel.choice = choice;
-            //set basic data, extended data will be requested
-            detailsPanel.data = data;
-            if(choice === 'system') {
-                return;
-            }
             //planet
             //TODO once port will have it's own directive it shall be moved
             detailsPanel.quantities = [];
@@ -56,13 +93,6 @@
 
     module.directive('coreDetailsPanel', function($http) {
         return {
-            restrict: 'E',
-            templateUrl: '/static/angular/core/details_panel.html',
-            scope: {
-                detailsPanel: '=detailsPanel',
-                controlPanel: '=controlPanel',
-                contextPanel: '=contextPanel'
-            },
             link: function(scope, element) {
                 scope.scan = function (planet_id, level) {
                     var ship_id = this.controlPanel.currentShip.id;
