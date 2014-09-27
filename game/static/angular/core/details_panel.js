@@ -1,6 +1,22 @@
 (function() {
     var module = angular.module('game.details_panel', []);
 
+    function buildingState(type, controller) {
+        return {
+            name: 'map.system.planet.'+type,
+            url: "/"+type+"/:building_id",
+            templateUrl: "/static/angular/core/details_panel/planet/"+type+".html",
+            resolve: {
+                building: function($http, $stateParams){
+                    return $http.get("/api/core/buildings/"+$stateParams.building_id+"/").then(function(data) {
+                        return data.data;
+                    });
+                }
+            },
+            controller: controller
+        }
+    }
+
     module.config(function($stateProvider) {
         $stateProvider
             .state('map.system', {
@@ -29,22 +45,14 @@
                 },
                 controller: function($stateParams, $scope, $state, planet) {
                     $scope.planet = planet;
-                    $scope.go = function(route){
-                        $state.go(route);
-                    };
-                    $scope.active = function(route){
-                        return $state.is(route);
-                    };
-                    $scope.$on("$stateChangeSuccess", function(event, toState, toParams, fromState, fromParams) {
-                        console.log(event, toState, toParams, fromState, fromParams);
-                        $scope.tabs.forEach(function(tab) {
-                            tab.active = $scope.active(tab.route);
-                        });
-                    });
                     $scope.tabs = [
-                        {heading: "Planet", route: "", active: false},
-                        {heading: "Resources", route: ".resources", active: false}
+                        {heading: "Planet", route: "."},
+                        {heading: "Resources", route: ".resources"}
                     ];
+                    //add tabs for buildings
+                    $.each(planet.buildings, function(i, building){
+                        $scope.tabs.push({heading: building.type, route: "."+building.type+"({building_id:"+building.id+"})"});
+                    });
                 }
             })
             .state('map.system.planet.resources', {
@@ -53,6 +61,13 @@
                 controller: function($stateParams, $scope, system) {
                 }
             })
+            .state(buildingState("Port", function($stateParams, $scope, currentShip, building) {
+                $scope.building = building;
+                $scope.currentShipLoad = function(resource) {
+                    return currentShip.resources[resource] || 0;
+                }
+            }))
+            .state(buildingState("Workshop"))
     });
 
     module.controller('DetailsPanelController', ['request_id', "$scope", '$state', function(request_id, $scope, $state) {
