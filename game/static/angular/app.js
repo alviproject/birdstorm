@@ -10,6 +10,28 @@
         };
     }]);
 
+    //TODO move to core
+    app.service('currentShip', ['$http', function($http) {
+        var ship = this;
+
+        var subscription = connection.create_subscription('ownship', function (data) {
+            ship.updateData(data.ship);
+        });
+
+        ship.id = undefined;
+        ship.change = function(id) {
+            $http.get("/api/core/own_ships/"+id).success(function(data, status, headers, config){
+                ship.updateData(data);
+            });
+            subscription.subscribe(id);
+        };
+        ship.updateData = function(data) {
+            $.each(data, function(key, value) {
+                ship[key] = value;
+            });
+        }
+    }]);
+
     app.config(function($stateProvider, $urlRouterProvider){
         $urlRouterProvider.otherwise("/map");
 
