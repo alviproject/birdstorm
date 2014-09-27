@@ -1,11 +1,12 @@
 (function() {
     var module = angular.module('game.details_panel', []);
 
-    function buildingState(type, controller) {
+    function buildingState(params) {
+        var templateFile = params.templateFile || params.type;
         return {
-            name: 'map.system.planet.'+type,
-            url: "/"+type+"/:building_id",
-            templateUrl: "/static/angular/core/details_panel/planet/"+type+".html",
+            name: 'map.system.planet.'+params.type,
+            url: "/"+params.type+"/:building_id",
+            templateUrl: "/static/angular/core/details_panel/planet/"+templateFile+".html",
             resolve: {
                 building: function($http, $stateParams){
                     return $http.get("/api/core/buildings/"+$stateParams.building_id+"/").then(function(data) {
@@ -13,8 +14,21 @@
                     });
                 }
             },
-            controller: controller
+            controller: params.controller
         }
+    }
+
+    function providerController($scope, $http, currentShip, building) {
+        $scope.building = building;
+
+        $scope.order = function (building_id, order, quantity) {
+            var ship_id = currentShip.id;
+            $http.post('/api/core/buildings/'+building_id+'/order/', {
+                ship_id: ship_id,
+                order: order,
+                quantity: quantity
+            });
+        };
     }
 
     module.config(function($stateProvider) {
@@ -58,16 +72,74 @@
             .state('map.system.planet.resources', {
                 url: "/resources",
                 templateUrl: "/static/angular/core/details_panel/planet/resources.html",
-                controller: function($stateParams, $scope, system) {
+                controller: function($stateParams, $scope, $http, currentShip, system) {
+                    $scope.scan = function (planet_id, level) {
+                        var ship_id = currentShip.id;
+                        $http.post('/api/core/own_ships/'+ship_id+'/scan/', {
+                            planet_id: planet_id,
+                            level: level
+                        });
+                    };
+
+                    $scope.extract = function (planet_id, level, resource_type) {
+                        var ship_id = currentShip.id;
+                        $http.post('/api/core/own_ships/'+ship_id+'/extract/', {
+                            planet_id: planet_id,
+                            level: level,
+                            resource_type: resource_type
+                        });
+                    };
                 }
             })
-            .state(buildingState("Port", function($stateParams, $scope, currentShip, building) {
-                $scope.building = building;
-                $scope.currentShipLoad = function(resource) {
-                    return currentShip.resources[resource] || 0;
-                }
+            .state(buildingState({
+                type: "Port",
+                controller: function($stateParams, $scope, $http, currentShip, building) {
+                    $scope.building = building;
+                    $scope.quantities = {};
+                    $.each(building.prices, function(type, price) {
+                        $scope.quantities[type] = 1;
+                    });
+                    $scope.currentShipLoad = function(resource) {
+                        if(currentShip.resources && currentShip.resources[resource]) {
+                            return currentShip.resources[resource];
+                        }
+                        return 0;
+                    };
+                    $scope.sell = function (building_id, resource) {
+                        var quantity = $scope.quantities[resource];
+                        $scope.quantities[resource] = 0;
+                        var ship_id = currentShip.id;
+                        $http.post('/api/core/buildings/'+building_id+'/sell/', {
+                            ship_id: ship_id,
+                            resource: resource,
+                            quantity: quantity
+                        });
+                    };
+            }}))
+            .state(buildingState({
+                type: "Smelter",
+                templateFile: "Plant",
+                controller: providerController
             }))
-            .state(buildingState("Workshop"))
+            .state(buildingState({
+                type: "Workshop",
+                controller: providerController
+            }))
+            .state(buildingState({
+                type: "Refinery",
+                templateFile: "Plant",
+                controller: providerController
+            }))
+            .state(buildingState({
+                type: "Factory",
+                templateFile: "Plant",
+                controller: providerController
+            }))
+            .state(buildingState({
+                type: "Warehouse",
+                controller: function($stateParams, $scope, $http, currentShip, building) {
+                    $scope.building = building;
+            }}))
     });
 
     module.controller('DetailsPanelController', ['request_id', "$scope", '$state', function(request_id, $scope, $state) {
@@ -109,53 +181,6 @@
     module.directive('coreDetailsPanel', function($http) {
         return {
             link: function(scope, element) {
-                scope.scan = function (planet_id, level) {
-                    var ship_id = this.controlPanel.currentShip.id;
-                    $http.post('/api/core/own_ships/'+ship_id+'/scan/', {
-                        planet_id: planet_id,
-                        level: level
-                    });
-                };
-
-                scope.extract = function (planet_id, level, resource_type) {
-                    var ship_id = this.controlPanel.currentShip.id;
-                    $http.post('/api/core/own_ships/'+ship_id+'/extract/', {
-                        planet_id: planet_id,
-                        level: level,
-                        resource_type: resource_type
-                    });
-                };
-
-                scope.buy = function (building_id, resource, index) {
-                    var quantity = this.detailsPanel.quantities[index];
-                    this.detailsPanel.quantities[index] = 0;
-                    var ship_id = this.controlPanel.currentShip.id;
-                    $http.post('/api/core/buildings/'+building_id+'/buy/', {
-                        ship_id: ship_id,
-                        resource: resource,
-                        quantity: quantity
-                    });
-                };
-
-                scope.sell = function (building_id, resource, index) {
-                    var quantity = this.detailsPanel.quantities[index];
-                    this.detailsPanel.quantities[index] = 0;
-                    var ship_id = this.controlPanel.currentShip.id;
-                    $http.post('/api/core/buildings/'+building_id+'/sell/', {
-                        ship_id: ship_id,
-                        resource: resource,
-                        quantity: quantity
-                    });
-                };
-
-                scope.order = function (building_id, order, quantity) {
-                    var ship_id = this.controlPanel.currentShip.id;
-                    $http.post('/api/core/buildings/'+building_id+'/order/', {
-                        ship_id: ship_id,
-                        order: order,
-                        quantity: quantity
-                    });
-                };
 
                 scope.warehouseResources = function(building) {
                     var result = {};

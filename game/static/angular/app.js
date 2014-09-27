@@ -11,16 +11,17 @@
     }]);
 
     //TODO move to core
-    app.service('currentShip', ['$http', function($http) {
+    app.service('currentShip', ['$http', '$rootScope', function($http, $rootScope) {
         var ship = this;
 
         var subscription = connection.create_subscription('ownship', function (data) {
             ship.updateData(data.ship);
+            $rootScope.$apply();
         });
 
         ship.id = undefined;
         ship.change = function(id) {
-            $http.get("/api/core/own_ships/"+id).success(function(data, status, headers, config){
+            $http.get("/api/core/own_ships/"+id).success(function(data){
                 ship.updateData(data);
             });
             subscription.subscribe(id);
@@ -28,6 +29,7 @@
         ship.updateData = function(data) {
             $.each(data, function(key, value) {
                 ship[key] = value;
+                console.log("updateData", key, value);
             });
         }
     }]);

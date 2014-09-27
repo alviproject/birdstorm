@@ -1,0 +1,41 @@
+<div ng-switch="building.type">
+<p ng-switch-when="Factory">
+    Factory
+</p>
+<p ng-switch-when="Smelter">
+    Industrial plant that allows to change raw materials into metals.
+</p>
+<p ng-switch-when="Refinery">
+    Industrial plant that allows to change raw materials into metals.
+</p>
+</div>
+<hr />
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Resource</th>
+        <th>Requirements</th>
+        <th>ETA</th>
+        <th>Qty</th>
+        <th>Order</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="(resource, details) in building.processes" ng-init="details.quantity=1">
+        <td>{{resource}}</td>
+        <td>
+            <ul class="list-unstyled">
+                <li
+                        ng-repeat="(requirement, quantity) in details.requirements"
+                        ng-class="{true:'text-success', false:'text-danger'}[controlPanel.currentShipDetails.resources[requirement] >= quantity * (details.quantity || 1)]"
+                        >
+                    {{requirement}}: {{quantity * (details.quantity || 1)}}
+                </li>
+            </ul>
+        </td>
+        <td>{{details.time * (details.quantity || 1)}}s</td>
+        <td><input class="form-control input-sm" style="width: 50px" type="text" ng-model="details.quantity"/></td>
+        <td><button class="btn btn-default btn-sm" ng-click="order(building.id, resource, details.quantity || 1)">Order</button></td>
+    </tr>
+    </tbody>
+</table>

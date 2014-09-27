@@ -7,8 +7,8 @@
             <span class="pull-right">
                     <a
                             href
-                            ng-click="scan(detailsPanel.data.id, -1)"
-                            ng-hide="controlPanel.currentShipDetails.locked">
+                            ng-click="scan(planet.id, -1)"
+                            ng-hide="currentShip.locked">
                         Scan
                     </a>
                 </span>
@@ -21,7 +21,7 @@
             <ul>
                 <li ng-repeat="(type, quantity) in level_resources">
                     {{type}}: {{quantity}}
-                            <span ng-hide="controlPanel.currentShipDetails.locked">
+                            <span ng-hide="currentShip.locked">
                                 -
                                 <a
                                         href

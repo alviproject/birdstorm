@@ -271,12 +271,12 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         ship.remove_resource(resource, quantity)
         port.add_resource(resource, quantity)
         ship.save()
-        user.credits += cost
-        user.save()
+        user.profile.credits += cost
+        user.profile.save()
         port.save()
 
         account_signal = blinker.signal(game.apps.core.signals.account_data % user.id)
-        account_signal.send(None, data=AccountSerializer(user).data)
+        account_signal.send(None, data=AccountSerializer(user, context={'request': request}).data)
 
         messages = blinker.signal(game.apps.core.signals.messages % user.id)
         messages.send(
