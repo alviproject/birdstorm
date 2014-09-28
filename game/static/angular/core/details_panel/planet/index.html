@@ -1,6 +1,6 @@
 <div class="tab-container tile">
     <ul class="nav tab nav-tabs">
-        <li ng-repeat="tab in tabs">
+        <li ng-repeat="tab in tabs" ui-sref-active="active">
             <a ui-sref="{{tab.route}}">{{tab.heading}}</a>
         </li>
     </ul>

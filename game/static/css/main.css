@@ -85,3 +85,9 @@ body, a, input, .help-block {
     float: none;
     padding: 0;
 }
+
+/*
+.tab li.active a {
+    color: #FFD600
+}
+*/

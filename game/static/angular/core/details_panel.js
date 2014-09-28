@@ -7,6 +7,9 @@
             name: 'map.system.planet.'+params.type,
             url: "/"+params.type+"/:building_id",
             templateUrl: "/static/angular/core/details_panel/planet/"+templateFile+".html",
+            data: {
+                ncyBreadcrumbLabel: '{{building.type}}'
+            },
             resolve: {
                 building: function($http, $stateParams){
                     return $http.get("/api/core/buildings/"+$stateParams.building_id+"/").then(function(data) {
@@ -36,6 +39,9 @@
             .state('map.system', {
                 url: "/system/:system_id",
                 templateUrl: "/static/angular/core/details_panel/system.html",
+                data: {
+                    ncyBreadcrumbLabel: 'System {{system.id}}'
+                },
                 resolve: {
                     system: function($http, $stateParams){
                         return $http.get("/api/core/systems/"+$stateParams.system_id+"/").then(function(data) {
@@ -46,8 +52,9 @@
                         return account.promise
                     }
                 },
-                controller: function($stateParams, $scope, system) {
+                controller: function($stateParams, $scope, $state, system) {
                     $scope.system = system;
+                    $scope.$state = $state;
                     $scope.distance = function() {
                         return 0;
                         var ship_system = scope.map.ships[scope.controlPanel.currentShipDetails.id].system();
@@ -63,6 +70,9 @@
             .state('map.system.planet', {
                 url: "/planet/:planet_id",
                 templateUrl: "/static/angular/core/details_panel/planet/index.html",
+                data: {
+                    ncyBreadcrumbLabel: '{{planet.type}} {{planet.id}}'
+                },
                 resolve: {
                     planet: function($http, $stateParams){
                         return $http.get("/api/core/planets/"+$stateParams.planet_id+"/").then(function(data) {
@@ -85,6 +95,9 @@
             .state('map.system.planet.resources', {
                 url: "/resources",
                 templateUrl: "/static/angular/core/details_panel/planet/resources.html",
+                data: {
+                    ncyBreadcrumbLabel: 'Resources'
+                },
                 controller: function($stateParams, $scope, $http, currentShip, system) {
                     $scope.scan = function (planet_id, level) {
                         var ship_id = currentShip.id;
@@ -199,6 +212,9 @@
             .state('map.ship', {
                 url: "/ship/:ship_id",
                 templateUrl: "/static/angular/core/details_panel/ship.html",
+                data: {
+                    ncyBreadcrumbLabel: 'Ship {{ship.type}} {{ship.id}}'
+                },
                 resolve: {
                     ship: function($http, $stateParams){
                         return $http.get("/api/core/ships/"+$stateParams.ship_id+"/").then(function(data) {

@@ -14,19 +14,7 @@
                     You are currently flying to this system
                 </span>
             </span>
-            <ol class="breadcrumb">
-                <li>
-                    <a href>
-                        Map
-                    </a>
-                </li>
-                <li>
-                    <a href="#" ng-click="detailsPanel.switch('system', contextPanel.data.id)">
-                        System {{contextPanel.data.type}} {{contextPanel.data.id}}
-                    </a>
-                </li>
-                <li class="active" ng-if="detailsPanel.choice === 'planet'">{{detailsPanel.data.type}} {{detailsPanel.data.id}}</li>
-            </ol>
+            <div ncy-breadcrumb></div>
         </h2>
         <div class="panel-body">
             <ui-view>

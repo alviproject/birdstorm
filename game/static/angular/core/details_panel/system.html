@@ -1,6 +1,6 @@
 <div>
     <ul class="list-inline">
-        <li ng-repeat="planet in system.planets">
+        <li ng-repeat="planet in system.planets" ui-sref-active="active">
             <a ui-sref=".planet({planet_id:planet.id})">{{planet.type}}</a>
         </li>
     </ul>

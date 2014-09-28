@@ -1,6 +1,12 @@
 (function() {
 
-    var app = angular.module('game', ['ngCookies', 'ui.bootstrap', 'ui.router', 'game.details_panel']);
+    var app = angular.module('game', [
+        'ngCookies',
+        'ui.bootstrap',
+        'ui.router',
+        'game.details_panel',
+        'ncy-angular-breadcrumb'
+    ]);
 
     app.factory('request_id', [function() {
         var id = guid();
