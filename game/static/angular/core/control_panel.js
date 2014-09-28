@@ -1,10 +1,6 @@
 (function() {
     var app = angular.module('game');
 
-    //TODO remove
-    app.controller('ControlPanelController', ['$http', function($http) {
-    }]);
-
     app.directive('coreControlPanel', function ($http, currentShip) {
         return {
             restrict: 'E',

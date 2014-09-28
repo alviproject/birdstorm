@@ -179,9 +179,7 @@
                     });
 
                     subscription_building.subscribe(building.id+"_"+account.id);
+                    updateWarehouseResources();
                 }}))
     });
-
-    module.controller('DetailsPanelController', ['request_id', "$scope", '$state', function(request_id, $scope, $state) {
-    }]);
 })();

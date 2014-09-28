@@ -60,21 +60,19 @@
 
 {% verbatim %}
 <div ng-controller="ContextPanelController as contextPanel">
-    <div ng-controller="ControlPanelController as controlPanel">
-        <div ng-controller="DetailsPanelController as detailsPanel">
             <div ng-controller="MapController as map">
-                <core-map context-panel-switch="contextPanel.switch" map="map"  details-panel="detailsPanel"></core-map>
+                <core-map context-panel-switch="contextPanel.switch" map="map"></core-map>
                 <br />
                 <div class="container">
                     <div class="row">
                         <div class="col-md-3">
-                            <core-control-panel map="map" control-panel="controlPanel"></core-control-panel>
+                            <core-control-panel map="map"></core-control-panel>
                         </div>
                         <div class="col-md-6">
                             <ui-view></ui-view>
                         </div>
                         <div class="col-md-3">
-                            <core-context-panel context-panel="contextPanel" control-panel="controlPanel" details-panel="detailsPanel" map="map"></core-context-panel>
+                            <core-context-panel context-panel="contextPanel" map="map"></core-context-panel>
                             <core-messages-panel></core-messages-panel>
                             <core-tasks-panel></core-tasks-panel>
                         </div>
