@@ -59,29 +59,24 @@
 <div class="clearfix"></div>
 
 {% verbatim %}
-<div ng-controller="ContextPanelController as contextPanel">
-            <div ng-controller="MapController as map">
-                <core-map context-panel-switch="contextPanel.switch" map="map"></core-map>
-                <br />
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <core-control-panel map="map"></core-control-panel>
-                        </div>
-                        <div class="col-md-6">
-                            <ui-view></ui-view>
-                        </div>
-                        <div class="col-md-3">
-                            <core-context-panel context-panel="contextPanel" map="map"></core-context-panel>
-                            <core-messages-panel></core-messages-panel>
-                            <core-tasks-panel></core-tasks-panel>
-                        </div>
-                    </div>
-                </div>
-                <div id="map-placeholder">
-                </div>
+<div ng-controller="MapController as map">
+    <core-map map="map"></core-map>
+    <br />
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <core-control-panel map="map"></core-control-panel>
+            </div>
+            <div class="col-md-6">
+                <ui-view></ui-view>
+            </div>
+            <div class="col-md-3">
+                <core-messages-panel></core-messages-panel>
+                <core-tasks-panel></core-tasks-panel>
             </div>
         </div>
+    </div>
+    <div id="map-placeholder">
     </div>
 </div>
 
@@ -123,7 +118,6 @@
 <script src="/static/angular/account.js"></script>
 <script src="/static/angular/chat.js"></script>
 <script src="/static/angular/core/map.js"></script>
-<script src="/static/angular/core/context_panel.js"></script>
 <script src="/static/angular/core/control_panel.js"></script>
 <script src="/static/angular/core/tasks_panel.js"></script>
 <script src="/static/angular/core/messages_panel.js"></script>

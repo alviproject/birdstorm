@@ -48,6 +48,16 @@
                 },
                 controller: function($stateParams, $scope, system) {
                     $scope.system = system;
+                    $scope.distance = function() {
+                        return 0;
+                        var ship_system = scope.map.ships[scope.controlPanel.currentShipDetails.id].system();
+                        var system = scope.contextPanel.data;
+                        var x1 = ship_system.x;
+                        var x2 = system.x;
+                        var y1 = ship_system.y;
+                        var y2 = system.y;
+                        return Math.sqrt(Math.pow(x1-x2, 2)+Math.pow(y1-y2, 2));
+                    }
                 }
             })
             .state('map.system.planet', {
@@ -186,5 +196,19 @@
                 templateFile: "Plant",
                 controller: providerController
             }))
+            .state('map.ship', {
+                url: "/ship/:ship_id",
+                templateUrl: "/static/angular/core/details_panel/ship.html",
+                resolve: {
+                    ship: function($http, $stateParams){
+                        return $http.get("/api/core/ships/"+$stateParams.ship_id+"/").then(function(data) {
+                            return data.data;
+                        });
+                    }
+                },
+                controller: function($stateParams, $scope, ship) {
+                    $scope.ship = ship;
+                }
+            })
     });
 })();

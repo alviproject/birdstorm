@@ -98,17 +98,11 @@
             restrict: 'E',
             templateUrl: '/static/angular/core/map.html',
             scope: {
-                contextPanelSwitch: '=contextPanelSwitch',
-                map: '=map',
-                detailsPanel: '=detailsPanel'
+                map: '=map'
             },
             link: function (scope, element) {
                 var map = scope.map;
                 retrieve_data($http, map);
-
-                scope.dataSwitch = function(choice, data) {
-                    scope.contextPanelSwitch(choice, data, scope.detailsPanel);
-                };
 
                 //
                 //support for map moving (using drag & drop)

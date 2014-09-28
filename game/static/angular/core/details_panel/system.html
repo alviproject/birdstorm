@@ -6,5 +6,16 @@
     </ul>
     <ui-view>
         This is a description of a star system: {{system.type}}
+        <br />
+        <ul class="list-unstyled">
+            <li><b>Type:</b> {{ system.type }}</li>
+            <li><b>Coordinates:</b> ({{ system.x }}; {{ system.y }})</li>
+            <li><b>ID:</b> {{ system.id }}</li>
+            <li>
+                <b>Distance:</b>
+                {{distance()|number:2}}
+            </li>
+        </ul>
+
     </ui-view>
 </div>

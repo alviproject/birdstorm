@@ -34,7 +34,7 @@
                 id="ship_{{ ship.id }}"
                 data-url="{{ ship.url }}"
                 ng-attr-transform="translate({{ ship.display_x }}, {{ ship.display_y + ship.system().r }})">
-            <a xlink:href="#" ng-click="contextPanelSwitch('ship', ship)">
+            <a xlink:href="#" ui-sref="map.ship({ship_id:ship.id})">
                 <text x="0" y="0" alignment-baseline="before-edge" text-anchor="middle">
                     <tspan x="0" dy="1.2em">{{ ship.type }}</tspan>
                     <tspan x="0" dy="1.2em">({{ship.owner_username}})</tspan>
