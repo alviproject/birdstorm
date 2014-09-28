@@ -96,7 +96,7 @@
                         });
                     }
                 },
-                controller: function($stateParams, $scope, $state, planet) {
+                controller: function($stateParams, $scope, $state, request_id, planet) {
                     $scope.planet = planet;
                     $scope.tabs = [
                         {heading: "Planet", route: "."},
@@ -106,6 +106,12 @@
                     $.each(planet.buildings, function(i, building){
                         $scope.tabs.push({heading: building.type, route: "."+building.type+"({building_id:"+building.id+"})"});
                     });
+
+                    var subscription = connection.create_subscription('planetdetails', function (data) {
+                        $scope.planet = data.planet;
+                    });
+
+                    subscription.subscribe(planet.id+"_"+request_id());
                 }
             })
             .state('map.system.planet.resources', {

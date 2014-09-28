@@ -10,7 +10,6 @@
 
     app.factory('request_id', [function() {
         var id = guid();
-        console.log("request ID: ", id);
         return function() {
             return id;
         };
