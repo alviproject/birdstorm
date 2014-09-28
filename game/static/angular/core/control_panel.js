@@ -1,13 +1,12 @@
 (function() {
     var app = angular.module('game');
 
-    app.directive('coreControlPanel', function ($http, currentShip) {
+    app.directive('coreControlPanel', function ($http, currentShip, account) {
         return {
             restrict: 'E',
             templateUrl: '/static/angular/core/control_panel.html',
             scope: {
-                map: '=map',
-                accountData: '=accountData'
+                map: '=map'
             },
             link: function(scope, element) {
                 scope.changeShip = function(ship) {
@@ -22,6 +21,7 @@
 
                 scope.ship_menu_expanded = false;
                 scope.currentShip = currentShip;
+                scope.account = account;
             }
         }
     });

@@ -180,6 +180,11 @@
 
                     subscription_building.subscribe(building.id+"_"+account.id);
                     updateWarehouseResources();
-                }}))
+            }}))
+            .state(buildingState({
+                type: "Shipyard",
+                templateFile: "Plant",
+                controller: providerController
+            }))
     });
 })();

@@ -43,12 +43,15 @@ class BuildingSerializer(serializers.HyperlinkedModelSerializer):
     def to_native(self, obj):
         #TODO use isinstance
         if obj.type == "Port":
-            return PortSerializer(obj, context=self.context).to_native(obj)
-        if isinstance(obj, Provider):
-            return ProviderSerializer(obj, context=self.context).to_native(obj)
-        if obj.type == "Warehouse":
-            return WarehouseSerializer(obj, context=self.context).to_native(obj)
-        return super().to_native(obj)
+            serializer = PortSerializer
+        elif isinstance(obj, Provider):
+            serializer = ProviderSerializer
+        elif obj.type == "Warehouse":
+            serializer = WarehouseSerializer
+        else:
+            serializer = BuildingBaseSerializer
+
+        return serializer(obj, context=self.context).to_native(obj)
 
     class Meta(BuildingBaseSerializer.Meta):
         pass
