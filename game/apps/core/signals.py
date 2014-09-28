@@ -3,4 +3,5 @@ messages = 'game.apps.core.signals.messages.%s'  # user.id
 planet_details = 'game.apps.core.signals.planet_details.%s'  # planetID_userID
 own_ship_data = 'game.apps.core.signals.own_ship_data.%s'
 account_data = 'game.apps.core.signals.account_data.%s'
+building_user = 'game.apps.core.signals.building_user.%s'  # buildingID_userID
 

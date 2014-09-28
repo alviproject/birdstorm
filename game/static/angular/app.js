@@ -29,8 +29,8 @@
         ship.updateData = function(data) {
             $.each(data, function(key, value) {
                 ship[key] = value;
-                console.log("updateData", key, value);
             });
+            $rootScope.$broadcast('currentShip:updated');
         }
     }]);
 

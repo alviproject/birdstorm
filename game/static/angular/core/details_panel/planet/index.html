@@ -91,47 +91,5 @@
     </table>
     -->
 </div>
-<div when="Warehouse">
-    <br />
-    Warehouse allows you to store your resources.
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>Resource</th>
-            <th>Warehouse</th>
-            <th>Ship</th>
-            <th>Quantity</th>
-            <th>Load</th>
-            <th>Unload</th>
-        </tr>
-        </thead>
-        <tbody ng-init="resources=warehouseResources(building)"> <!-- TODO -->
-        <tr ng-repeat="(resource, details) in resources track by $index">
-            <td>{{resource}}</td>
-            <td ng-click="detailsPanel.warehouse_quantities[$index]=details.warehouse">
-                <a href="#">{{details.warehouse}}</a>
-            </td>
-            <td ng-click="detailsPanel.warehouse_quantities[$index]=details.ship">
-                <a href="#">{{details.ship}}</a>
-            </td>
-            <td><input class="form-control input-sm" style="width: 50px" type="text" ng-model="detailsPanel.warehouse_quantities[$index]"/></td>
-            <td>
-                <button class="btn btn-default btn-sm" ng-click="store(building.id, resource, detailsPanel.warehouse_quantities[$index], 'load')">
-                    Load
-                </button>
-            </td>
-            <td>
-                <button class="btn btn-default btn-sm" ng-click="store(building.id, resource, detailsPanel.warehouse_quantities[$index], 'unload')">
-                    Unload
-                </button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
 
 
-</div>
-</div>
-</tab>
-</tabset>

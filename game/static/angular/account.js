@@ -1,18 +1,23 @@
 (function() {
     var app = angular.module('game');
 
-    //TODO this should be probably a service
-    app.controller('AccountController', ['$http', function ($http) {
+    app.service('account', ['$http', '$rootScope', function($http, $rootScope) {
         var account = this;
-        account.data = {};
 
-        account.subscription_details = connection.create_subscription('account', function (data) {
-            account.data = data.data;
+        var subscription = connection.create_subscription('account', function (data) {
+            account.updateData(data.data);
+            $rootScope.$apply();
         });
 
-        $http.get("/api/account").success(function (data, status, headers, config) {
-            account.data = data;
-            account.subscription_details.subscribe(data.id);
+        account.promise = $http.get("/api/account").success(function (data) {
+            account.updateData(data);
+            subscription.subscribe(account.id);
         });
+
+        account.updateData = function(data) {
+            $.each(data, function(key, value) {
+                account[key] = value;
+            });
+        }
     }]);
 })();

@@ -37,6 +37,7 @@ class OwnShip(Channel):
         return ship.owner == user
 
 
+#TODO consider moving this to account
 class Account(Channel):
     @receiver(game.apps.core.signals.account_data)
     def account_data(self, channel_instance, data):
@@ -45,3 +46,10 @@ class Account(Channel):
     @classmethod
     def has_permissions(cls, user, name):
         return user.id == int(name)
+
+
+class BuildingUser(Channel):
+    """broadcasts building changes custom for particular user"""
+    @receiver(game.apps.core.signals.building_user)
+    def building_user(self, channel_instance, **kwargs):
+        return dict(**kwargs)

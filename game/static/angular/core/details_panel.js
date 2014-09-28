@@ -41,6 +41,9 @@
                         return $http.get("/api/core/systems/"+$stateParams.system_id+"/").then(function(data) {
                             return data.data;
                         });
+                    },
+                    accountPromise: function(account) {
+                        return account.promise
                     }
                 },
                 controller: function($stateParams, $scope, system) {
@@ -137,99 +140,48 @@
             }))
             .state(buildingState({
                 type: "Warehouse",
-                controller: function($stateParams, $scope, $http, currentShip, building) {
+                controller: function($stateParams, $scope, $http, account, currentShip, building) {
                     $scope.building = building;
-            }}))
+
+                    $scope.warehouseResources = {};
+                    function updateWarehouseResources() {
+                        $.each(building.resources, function(key, value) {
+                            $scope.warehouseResources[key] = {warehouse: value, ship: 0, quantity: 0};
+                        });
+                        if(currentShip.resources) {
+                            $.each(currentShip.resources, function(key, value) {
+                                if($scope.warehouseResources.hasOwnProperty(key)) {
+                                    $scope.warehouseResources[key].ship = value;
+                                }
+                                else {
+                                    $scope.warehouseResources[key] = {warehouse: 0, ship: value, quantity: 0};
+                                }
+                            });
+                        }
+                    }
+
+                    $scope.$on('currentShip:updated', function() {
+                        updateWarehouseResources();
+                    });
+
+                    $scope.store = function(resource, quantity, action) {
+                        $http.post('/api/core/buildings/'+building.id+'/store/', {
+                            ship_id: currentShip.id,
+                            resource: resource,
+                            quantity: quantity,
+                            action: action
+                        });
+                    };
+
+                    var subscription_building = connection.create_subscription('buildinguser', function (data) {
+                        building = data.building;
+                        updateWarehouseResources();
+                    });
+
+                    subscription_building.subscribe(building.id+"_"+account.id);
+                }}))
     });
 
     module.controller('DetailsPanelController', ['request_id', "$scope", '$state', function(request_id, $scope, $state) {
-        var detailsPanel = this;
-
-        //
-        // connect to details channel
-        //
-        detailsPanel.subscription_details = connection.create_subscription('planetdetails', function (data) {
-            detailsPanel.data = data.planet;
-            $scope.$apply();
-        });
-
-        this.switch = function (choice, data) {
-            //planet
-            //TODO once port will have it's own directive it shall be moved
-            detailsPanel.quantities = [];
-            var i;
-            for(i = 0; i < 100; i++) {
-                detailsPanel.quantities.push(1);
-            }
-            detailsPanel.warehouse_quantities = [];
-            for(i = 0; i < 100; i++) {
-                detailsPanel.warehouse_quantities.push(1);
-            }
-
-            detailsPanel.subscription_details.subscribe(data.id+"_"+request_id());//TODO change request_id to planet_id
-
-            var injector = angular.element(document).injector();
-            var $http = injector.get('$http');
-            $http.get("/api/core/"+choice+"s/"+data.id+"/")
-                .success(function (data, status, headers, config) {
-                    //set extended data
-                    detailsPanel.data = data;
-                });
-        }
     }]);
-
-    module.directive('coreDetailsPanel', function($http) {
-        return {
-            link: function(scope, element) {
-
-                scope.warehouseResources = function(building) {
-                    var result = {};
-                    $.each(building.resources, function(key, value) {
-                        result[key] = {warehouse: value, ship: 0};
-                    });
-                    $.each(scope.controlPanel.currentShipDetails.resources, function(key, value) {
-                        if(result.hasOwnProperty(key)) {
-                            result[key].ship = value;
-                        }
-                        else {
-                            result[key] = {warehouse: 0, ship: value};
-                        }
-                    });
-                    return result;
-                };
-
-                scope.store = function(building_id, resource, quantity, action) {
-                    var ship_id = this.controlPanel.currentShip.id;
-                    $http.post('/api/core/buildings/'+building_id+'/store/', {
-                        ship_id: ship_id,
-                        resource: resource,
-                        quantity: quantity,
-                        action: action
-                    });
-                };
-
-                var currentShipChanged = function() {
-                };
-
-                scope.$watch('controlPanel.currentShipDetails', function(newVal, oldVal){
-                    currentShipChanged();
-                });
-
-                scope.changeBuilding = function(building) {
-                    if(building.type==="Workshop") {
-                        currentShipChanged = function() {
-                            scope.workshopLocked = true;
-                            $http.post('/api/core/buildings/'+building.id+'/analyze/', {
-                                ship_id: scope.controlPanel.currentShipDetails.id
-                            }).success(function(data) {
-                                building.processes = data;
-                                scope.workshopLocked = false;
-                            });
-                        };
-                        currentShipChanged();
-                    }
-                };
-            }
-        }
-    });
 })();

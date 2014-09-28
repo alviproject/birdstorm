@@ -1,0 +1,35 @@
+Warehouse allows you to store your resources.
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Resource</th>
+        <th>Warehouse</th>
+        <th>Ship</th>
+        <th>Quantity</th>
+        <th>Load</th>
+        <th>Unload</th>
+    </tr>
+    </thead>
+    <tbody> <!-- TODO -->
+    <tr ng-repeat="(resource, details) in warehouseResources">
+        <td>{{resource}}</td>
+        <td ng-click="details.quantity=details.warehouse">
+            <a href>{{details.warehouse}}</a>
+        </td>
+        <td ng-click="details.quantity=details.ship">
+            <a href>{{details.ship}}</a>
+        </td>
+        <td><input class="form-control input-sm" style="width: 50px" type="text" ng-model="details.quantity"/></td>
+        <td>
+            <button class="btn btn-default btn-sm" ng-click="store(resource, details.quantity, 'load')">
+                Load
+            </button>
+        </td>
+        <td>
+            <button class="btn btn-default btn-sm" ng-click="store(resource, details.quantity, 'unload')">
+                Unload
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>
