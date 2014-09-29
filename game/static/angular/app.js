@@ -1,13 +1,42 @@
 (function() {
 
-    var app = angular.module('game', ['ngCookies', 'ui.bootstrap', 'ui.router', 'game.details_panel']);
+    var app = angular.module('game', [
+        'ngCookies',
+        'ui.bootstrap',
+        'ui.router',
+        'game.details_panel',
+        'ncy-angular-breadcrumb'
+    ]);
 
     app.factory('request_id', [function() {
         var id = guid();
-        console.log("request ID: ", id);
         return function() {
             return id;
         };
+    }]);
+
+    //TODO move to core
+    app.service('currentShip', ['$http', '$rootScope', function($http, $rootScope) {
+        var ship = this;
+
+        var subscription = connection.create_subscription('ownship', function (data) {
+            ship.updateData(data.ship);
+            $rootScope.$apply();
+        });
+
+        ship.id = undefined;
+        ship.change = function(id) {
+            $http.get("/api/core/own_ships/"+id).success(function(data){
+                ship.updateData(data);
+            });
+            subscription.subscribe(id);
+        };
+        ship.updateData = function(data) {
+            $.each(data, function(key, value) {
+                ship[key] = value;
+            });
+            $rootScope.$broadcast('currentShip:updated');
+        }
     }]);
 
     app.config(function($stateProvider, $urlRouterProvider){

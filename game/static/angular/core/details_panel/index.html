@@ -2,36 +2,12 @@
     <div class="panel panel-default" id="context_menu">
         <h2 class="tile-title">
             <span class="pull-right">
-                <span ng-hide="controlPanel.currentShipDetails.locked || controlPanel.currentShipDetails.system_id === contextPanel.data.id">
-                    <a href="#" title="Go" ng-click="contextPanel.go_to_system(contextPanel.data.id, controlPanel)">
-                        Go to this star system<span class="fa fa-plane fa-fw"></span>
-                    </a>
-                </span>
-                <span ng-show="controlPanel.currentShipDetails.system_id === contextPanel.data.id && !controlPanel.currentShipDetails.locked">
-                    You are currently in this system
-                </span>
-                <span ng-show="controlPanel.currentShipDetails.system_id === contextPanel.data.id && controlPanel.currentShipDetails.locked">
-                    You are currently flying to this system
-                </span>
+                <ui-view name="action"></ui-view>
             </span>
-            <ol class="breadcrumb">
-                <li>
-                    <a href>
-                        Map
-                    </a>
-                </li>
-                <li>
-                    <a href="#" ng-click="detailsPanel.switch('system', contextPanel.data.id)">
-                        System {{contextPanel.data.type}} {{contextPanel.data.id}}
-                    </a>
-                </li>
-                <li class="active" ng-if="detailsPanel.choice === 'planet'">{{detailsPanel.data.type}} {{detailsPanel.data.id}}</li>
-            </ol>
+            <div ncy-breadcrumb></div>
         </h2>
         <div class="panel-body">
-            <ui-view>
-                Sector description
-            </ui-view>
+            <ui-view name="content">Click any star below to see the details.</ui-view>
         </div>
     </div>
 </div>

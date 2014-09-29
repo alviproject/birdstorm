@@ -1,0 +1,31 @@
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Resource</th>
+        <th>Ship</th>
+        <th>Qty</th>
+        <th>Price</th>
+        <th>Sell</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="(type, price) in building.prices track by $index">
+        <td>{{type}}</td>
+        <td ng-click="quantities[type]=currentShipLoad(type)">
+            <a href>{{currentShipLoad(type)}}</a>
+        </td>
+        <!--TODO consider adding a popover with suggested quantities to sale and buy)-->
+        <td>
+            <input class="form-control input-sm" style="width: 50px" type="text" ng-model="quantities[type]"/>
+        </td>
+        <td>
+            {{price.purchase_price * quantities[type]}}c
+        </td>
+        <td>
+            <button class="btn btn-default btn-sm" ng-click="sell(building.id, type, $index)">
+                Sell
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>

@@ -160,9 +160,10 @@ class Warehouse(Building):
     class Container(ResourceContainer):
         def __init__(self, user):
             self.user = user
+
         @property
         def resources(self):
-            return self.user.data.setdefault('warehouse_resources', {})
+            return self.user.profile.data.setdefault('warehouse_resources', {})
 
     @staticmethod
     def get_resource_container(user):

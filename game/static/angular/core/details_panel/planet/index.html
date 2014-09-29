@@ -1,263 +1,33 @@
-<tabset>
-<tab
-        ng-repeat="tab in tabs"
-        heading="{{tab.heading}}"
-        select="go(tab.route)"
-        active="tab.active">
-    <ui-view></ui-view>
-</tab>
-<tab heading="Planet">
-    <ul class="list-unstyled">
-        <li><b>Type:</b> {{ planet.type }}</li>
-        <li><b>ID:</b> {{ planet.id }}</li>
+<div class="tab-container tile">
+    <ul class="nav tab nav-tabs">
+        <li ng-repeat="tab in tabs" ui-sref-active="active">
+            <a ui-sref="{{tab.route}}">{{tab.heading}}</a>
+        </li>
     </ul>
-    Planet description
-    Planet description
-    Planet description
-    Planet description
-    Planet description
-    Planet description
-    Planet description
-    Planet description
-    Planet description
-    Planet description
-    Planet description
-    Planet description
-    <hr />
-    Rich in various resources.<br />
-    May contain some rare earth elements.<br />
-    No solid structures are built on this planet.<br />
-    Buildings: Building1, Building2, ...
-</tab>
-<tab
-        ng-repeat="building in planet.buildings track by $index"
-        heading="{{building.type}}"
-        select="changeBuilding(building)">
-<div ng-switch="building.type">
-<!-- Port -->
-<div ng-switch-when="Port">
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>Resource</th>
-            <!--<th>Planet</th>-->
-            <th>Ship</th>
-            <th>Qty</th>
-            <!--<th>Buy</th>-->
-            <th>Sell</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="(type, price) in building.prices track by $index">
-            <td>{{type}}</td>
-            <!--<td ng-click="detailsPanel.quantities[$index]=price.available"><a href="#">{{price.available}}</a></td>-->
-            <td ng-click="detailsPanel.quantities[$index]=controlPanel.currentShipDetails.resources[type] || 0">
-                <a href="#">{{controlPanel.currentShipDetails.resources[type] || 0}}</a>
-            </td>
-            <!--TODO consider adding a popover with suggested quantities to sale and buy)-->
-            <td>
-                <input class="form-control input-sm" style="width: 50px" type="text" ng-model="detailsPanel.quantities[$index]"/>
-            </td>
-            <!-- TODO
-            <td>
-                <button class="btn btn-default btn-sm" ng-click="buy(building.id, type, $index)">
-                    Buy ({{price.sale_price * detailsPanel.quantities[$index]}}c)
-                </button>
-            </td>
-            -->
-            <td>
-                <button class="btn btn-default btn-sm" ng-click="sell(building.id, type, $index)">
-                    Sell ({{price.purchase_price * detailsPanel.quantities[$index]}}c)
-                </button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-<div ng-switch-when="Shipyard">
-    <!--<h4>Available ships</h4>-->
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>Ship</th>
-            <th>Resources</th>
-            <th>ETA</th>
-            <th>Order</th>
-        </tr>
-        </thead>
-        <tbody ng-init="ship_resources=controlPanel.currentShipDetails.resources">
-        <tr ng-repeat="(ship, details) in building.available_ships">
-            <td>{{ship}}</td>
-            <td>
-                <ul class="list-unstyled">
-                    <li
-                            ng-repeat="(resource, quantity) in details.resources"
-                            ng-class="{true:'text-success', false:'text-danger'}[ship_resources[resource] > quantity]"
-                            >
-                        {{resource}}: {{quantity}}
-                    </li>
-                </ul>
-            </td>
-            <td>{{details.time}}s</td>
-            <td><button class="btn btn-default btn-sm" ng-click="order(building.id, ship)">Order</button></td>
-        </tr>
-        </tbody>
-    </table>
-    <!--
-    <h4>Queue</h4>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>Ship</th>
-            <th>Contractor</th>
-            <th>ETA</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>Raven</td>
-            <td>test</td>
-            <td>5:30</td>
-        </tr>
-        <tr>
-            <td>Owl</td>
-            <td>test</td>
-            <td>15:23</td>
-        </tr>
-        </tbody>
-    </table>
-    -->
-</div>
-<div ng-switch-when="Warehouse">
-    <br />
-    Warehouse allows you to store your resources.
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>Resource</th>
-            <th>Warehouse</th>
-            <th>Ship</th>
-            <th>Quantity</th>
-            <th>Load</th>
-            <th>Unload</th>
-        </tr>
-        </thead>
-        <tbody ng-init="resources=warehouseResources(building)"> <!-- TODO -->
-        <tr ng-repeat="(resource, details) in resources track by $index">
-            <td>{{resource}}</td>
-            <td ng-click="detailsPanel.warehouse_quantities[$index]=details.warehouse">
-                <a href="#">{{details.warehouse}}</a>
-            </td>
-            <td ng-click="detailsPanel.warehouse_quantities[$index]=details.ship">
-                <a href="#">{{details.ship}}</a>
-            </td>
-            <td><input class="form-control input-sm" style="width: 50px" type="text" ng-model="detailsPanel.warehouse_quantities[$index]"/></td>
-            <td>
-                <button class="btn btn-default btn-sm" ng-click="store(building.id, resource, detailsPanel.warehouse_quantities[$index], 'load')">
-                    Load
-                </button>
-            </td>
-            <td>
-                <button class="btn btn-default btn-sm" ng-click="store(building.id, resource, detailsPanel.warehouse_quantities[$index], 'unload')">
-                    Unload
-                </button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-<div ng-switch-when="Workshop">
-    <br />
-    <h4>Available components</h4>
-    Workshop allows you to buy new, or upgrade existing ship components.<br />
-    Keep in mind that most ships can utilize only one component of particular type.
-    Usually there is no point to buy two engines, or drills.
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>Component</th>
-            <th>Requirements</th>
-            <th>ETA</th>
-            <th>Parameters</th>
-            <th>Order</th>
-        </tr>
-        </thead>
-        <tbody class="text-nowrap">
-        <tr ng-repeat="(component, details) in building.processes">
-            <td>{{component}} Mk {{details.mark}}</td>
-            <td>
-                <ul class="list-unstyled">
-                    <li
-                            ng-repeat="(requirement, quantity) in details.requirements"
-                            ng-class="{true:'text-success', false:'text-danger'}[controlPanel.currentShipDetails.resources[requirement] >= quantity]"
-                            >
-                        {{requirement}}: {{quantity}}
-                    </li>
-                </ul>
-            </td>
-            <td>{{details.time}}s</td>
-            <td>
-                <ul class="list-unstyled">
-                    <li ng-repeat="(parameter, value) in details.parameters">
-                        {{parameter}}: {{value|number}}
-                    </li>
-                </ul>
-            </td>
-            <td>
-                <button class="btn btn-default btn-sm" ng-click="order(building.id, component, 1)" ng-hide="workshopLocked || controlPanel.currentShipDetails.locked">
-                    {{details.mark > 1 ? "Upgrade" : "Order"}}
-                </button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <hr />
-    <h4>Cargo</h4>
-    Your cargo contains following components.<br />
-    You can attach them to current ship in Workshop, store in Warehouse, sell in the Marketplace or retrieve some materials in Recycler.
-</div>
 
-<div ng-if="building.type == 'Factory' || building.type == 'Smelter' || building.type == 'Refinery'">
-    <p ng-switch-when="Factory">
-        Factory
-    </p>
-    <p ng-switch-when="Smelter">
-        Industrial plant that allows to change raw materials into metals.
-    </p>
-    <p ng-switch-when="Refinery">
-        Industrial plant that allows to change raw materials into metals.
-    </p>
-    <hr />
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>Resource</th>
-            <th>Requirements</th>
-            <th>ETA</th>
-            <th>Qty</th>
-            <th>Order</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="(resource, details) in building.processes" ng-init="details.quantity=1">
-            <td>{{resource}}</td>
-            <td>
-                <ul class="list-unstyled">
-                    <li
-                            ng-repeat="(requirement, quantity) in details.requirements"
-                            ng-class="{true:'text-success', false:'text-danger'}[controlPanel.currentShipDetails.resources[requirement] >= quantity * (details.quantity || 1)]"
-                            >
-                        {{requirement}}: {{quantity * (details.quantity || 1)}}
-                    </li>
-                </ul>
-            </td>
-            <td>{{details.time * (details.quantity || 1)}}s</td>
-            <td><input class="form-control input-sm" style="width: 50px" type="text" ng-model="details.quantity"/></td>
-            <td><button class="btn btn-default btn-sm" ng-click="order(building.id, resource, details.quantity || 1)">Order</button></td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="tab-content">
+        <ui-view>
+            <ul class="list-unstyled">
+                <li><b>Type:</b> {{ planet.type }}</li>
+                <li><b>ID:</b> {{ planet.id }}</li>
+            </ul>
+            Planet description
+            Planet description
+            Planet description
+            Planet description
+            Planet description
+            Planet description
+            Planet description
+            Planet description
+            Planet description
+            Planet description
+            Planet description
+            Planet description
+            <hr />
+            Rich in various resources.<br />
+            May contain some rare earth elements.<br />
+            No solid structures are built on this planet.<br />
+            Buildings: Building1, Building2, ...
+        </ui-view>
+    </div>
 </div>
-</div>
-</tab>
-</tabset>

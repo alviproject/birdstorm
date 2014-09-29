@@ -22,6 +22,10 @@ li.active, li.active a{
     max-width: 250px;
 }
 
+hr {
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
 /* PYBBM */
 .post-content {
 }
@@ -85,3 +89,9 @@ body, a, input, .help-block {
     float: none;
     padding: 0;
 }
+
+/*
+.tab li.active a {
+    color: #FFD600
+}
+*/

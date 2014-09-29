@@ -8,6 +8,7 @@ from game.apps.account.models import AccountSerializer
 from game.apps.core import models
 from game.apps.core import serializers
 from game.apps.core.models.planet.models import TerrestrialPlanet
+from game.apps.core.serializers.buildings import BuildingSerializer
 from game.apps.core.serializers.planet import PlanetDetailsSerializer
 from game.apps.core.models.ships import Ship
 from rest_framework import viewsets
@@ -271,12 +272,12 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         ship.remove_resource(resource, quantity)
         port.add_resource(resource, quantity)
         ship.save()
-        user.credits += cost
-        user.save()
+        user.profile.credits += cost
+        user.profile.save()
         port.save()
 
         account_signal = blinker.signal(game.apps.core.signals.account_data % user.id)
-        account_signal.send(None, data=AccountSerializer(user).data)
+        account_signal.send(None, data=AccountSerializer(user, context={'request': request}).data)
 
         messages = blinker.signal(game.apps.core.signals.messages % user.id)
         messages.send(
@@ -308,16 +309,16 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         for delay in building.order(order, quantity, ship, user, request_id):
             yield delay
 
-    #TODO this shall be Workshop method
-    @action()
-    def analyze(self, request, pk=None):
-        #TODO check if ship is at the right system
-        user = request.user
-        building = self.get_queryset().get(pk=pk)
-        ship_id = request.DATA['ship_id']
-        ship = user.ship_set.get(pk=ship_id)
-        result = building.processes(ship)
-        return Response(result)
+#    #TODO this shall be Workshop method
+#    @action()
+#    def analyze(self, request, pk=None):
+#        #TODO check if ship is at the right system
+#        user = request.user
+#        building = self.get_queryset().get(pk=pk)
+#        ship_id = request.DATA['ship_id']
+#        ship = user.ship_set.get(pk=ship_id)
+#        result = building.processes(ship)
+#        return Response(result)
 
     #TODO this shall be Warehouse method
     @action()
@@ -344,6 +345,12 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
             container.remove_resource(resource, quantity)
         ship.save()
         user.save()
+        user.profile.save()
+
+        signal_id = "%d_%d" % (warehouse.id, user.id)
+        signal = blinker.signal(game.apps.core.signals.building_user % signal_id)
+        signal.send(self, building=BuildingSerializer(warehouse, context=dict(request=request)).data)
+
         return Response()
 
 

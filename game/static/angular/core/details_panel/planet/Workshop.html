@@ -1,0 +1,47 @@
+<h4>Available components</h4>
+Workshop allows you to buy new, or upgrade existing ship components.<br />
+Keep in mind that most ships can utilize only one component of particular type.
+Usually there is no point to buy two engines, or drills.
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Component</th>
+        <th>Requirements</th>
+        <th>ETA</th>
+        <th>Parameters</th>
+        <th>Order</th>
+    </tr>
+    </thead>
+    <tbody class="text-nowrap">
+    <tr ng-repeat="(component, details) in building.processes">
+        <td>{{component}} Mk {{details.mark}}</td>
+        <td>
+            <ul class="list-unstyled">
+                <li
+                        ng-repeat="(requirement, quantity) in details.requirements"
+                        ng-class="{true:'text-success', false:'text-danger'}[currentShip.resources[requirement] >= quantity]"
+                        >
+                    {{requirement}}: {{quantity}}
+                </li>
+            </ul>
+        </td>
+        <td>{{details.time}}s</td>
+        <td>
+            <ul class="list-unstyled">
+                <li ng-repeat="(parameter, value) in details.parameters">
+                    {{parameter}}: {{value|number}}
+                </li>
+            </ul>
+        </td>
+        <td>
+            <button class="btn btn-default btn-sm" ng-click="order(building.id, component, 1)" ng-hide="workshopLocked || currentShip.locked">
+                {{details.mark > 1 ? "Upgrade" : "Order"}}
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<hr />
+<h4>Cargo</h4>
+Your cargo contains following components.<br />
+You can attach them to current ship in Workshop, store in Warehouse, sell in the Marketplace or retrieve some materials in Recycler.
