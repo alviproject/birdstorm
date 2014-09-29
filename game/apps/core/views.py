@@ -198,7 +198,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
                 self,
                 message=dict(
                     type="success",
-                    text="Extraction successful",
+                    text="Extraction successful, resources were added to your's ship cargo.",
                 ),
             )
             user.profile.add_drilled_planet(planet_id)

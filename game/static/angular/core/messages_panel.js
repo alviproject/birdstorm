@@ -17,7 +17,9 @@
                 //account may be not available at this stage, so let's wait until it is
                 $scope.account = account;
                 $scope.$watch('account.id', function(){
-                    $scope.subscription_actions.subscribe(account.id);
+                    if(account.id !== undefined) {
+                        $scope.subscription_actions.subscribe(account.id);
+                    }
                 });
             }
         }

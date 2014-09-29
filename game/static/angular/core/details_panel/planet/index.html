@@ -11,23 +11,17 @@
                 <li><b>Type:</b> {{ planet.type }}</li>
                 <li><b>ID:</b> {{ planet.id }}</li>
             </ul>
-            Planet description
-            Planet description
-            Planet description
-            Planet description
-            Planet description
-            Planet description
-            Planet description
-            Planet description
-            Planet description
-            Planet description
-            Planet description
-            Planet description
-            <hr />
-            Rich in various resources.<br />
-            May contain some rare earth elements.<br />
-            No solid structures are built on this planet.<br />
-            Buildings: Building1, Building2, ...
+            <div ng-switch="planet.type">
+                <div ng-switch-when="TerrestrialPlanet">
+                    Very common planet composed mostly of silicate rocks or metals.<br />
+                    Can be scanned and drilled using standard components. Usually contains easly extractable basic resources like Coal or Iron.
+                </div>
+                <div ng-switch-when="GasGiant">
+                    Gaseous planet consisting mostly of hydrogen and helium. Some heavier elements may occur as well, but they are extremely hard to extract.
+                    <br />
+                    Core of the planet is surrounded by metallic hydrogen which makes this place perfect for performing sophisticated experiments and producing rare materials. 
+                </div>
+            </div>
         </ui-view>
     </div>
 </div>
