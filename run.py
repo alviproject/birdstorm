@@ -27,7 +27,7 @@ import django.core.management
 link = sys.platform != 'win32'
 django.core.management.call_command('collectstatic', link=link, interactive=False)
 django.core.management.call_command('migrate', interactive=False)
-django.core.management.call_command('loaddata', 'game/apps/core/fixtures/initial_data.json',  interactive=False)
+django.core.management.call_command('loaddata', os.path.join('game', 'apps', 'core', 'fixtures', 'initial_data.json'),  interactive=False)
 
 game.server.main()
 
