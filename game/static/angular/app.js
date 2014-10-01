@@ -4,8 +4,9 @@
         'ngCookies',
         'ui.bootstrap',
         'ui.router',
+        'ncy-angular-breadcrumb',
         'game.details_panel',
-        'ncy-angular-breadcrumb'
+        'game.account'
     ]);
 
     app.factory('request_id', [function() {
@@ -46,7 +47,17 @@
         $stateProvider
             .state('map', {
                 url: "/map",
-                templateUrl: "/static/angular/core/details_panel/index.html"
+                templateUrl: "/static/angular/core/details_panel/index.html",
+                resolve: {
+                    accountPromise: function(account) {
+                        return account.promise;
+                    }
+                },
+                controller: function($state, account) {
+                    if(!account.is_authenticated) {
+                        $state.go('account.signup');
+                    }
+                }
             })
     });
 

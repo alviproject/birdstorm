@@ -1,7 +1,37 @@
 (function() {
-    var app = angular.module('game');
+    var module = angular.module('game.account', []);
 
-    app.service('account', ['$http', '$rootScope', function($http, $rootScope) {
+    module.config(function($stateProvider) {
+        $stateProvider
+            .state('account', {
+            })
+            .state('account.signup', {
+                url: "/account/signup",
+                onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
+                    $modal.open({
+                        templateUrl: "/static/angular/account/signup.html",
+                        keyboard: false,
+                        backdrop: false,
+                        controller: ['$scope', function($scope) {
+                            $scope.dismiss = function() {
+                                $scope.$dismiss();
+                            };
+
+                            $scope.save = function() {
+                            };
+                        }]
+                    }).result.then(function(result) {
+                            console.log("");
+                            console.log(result);
+                            if (result) {
+                                return $state.transitionTo("map");
+                            }
+                        });
+                }]
+            });
+    });
+
+    module.service('account', ['$http', '$rootScope', function($http, $rootScope) {
         var account = this;
 
         var subscription = connection.create_subscription('account', function (data) {

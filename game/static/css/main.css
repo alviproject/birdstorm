@@ -90,8 +90,15 @@ body, a, input, .help-block {
     padding: 0;
 }
 
-/*
-.tab li.active a {
-    color: #FFD600
+.modal-title {
+    text-transform: none;
+    font-size: 18px;
 }
-*/
+
+.modal-body {
+    font-size: 14px;
+}
+
+.modal-footer .btn {
+    font-size: 14px;
+}

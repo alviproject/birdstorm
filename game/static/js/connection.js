@@ -65,6 +65,9 @@ function make_connection(delay, channels) {
         var subscription = {};
 
         subscription.subscribe = function(channel_instance) {
+            if(!channel_instance) {
+                return;
+            }
             //unsubscribe from previous channel instance
             console.log(this.channel, this);
             if(this.channel !== undefined) {

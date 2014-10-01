@@ -233,7 +233,6 @@
             }))
             .state('map.ship', {
                 url: "/ship/:ship_id",
-                templateUrl: "/static/angular/core/details_panel/ship.html",
                 data: {
                     ncyBreadcrumbLabel: 'Ship {{ship.type}} {{ship.id}}'
                 },
@@ -244,8 +243,13 @@
                         });
                     }
                 },
-                controller: function($stateParams, $scope, ship) {
-                    $scope.ship = ship;
+                views: {
+                    content: {
+                        templateUrl: "/static/angular/core/details_panel/ship.html",
+                        controller: function($stateParams, $scope, ship) {
+                            $scope.ship = ship;
+                        }
+                    }
                 }
             })
     });
