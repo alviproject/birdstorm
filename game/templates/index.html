@@ -39,19 +39,13 @@
         <div class="media" id="top-menu">
                 <ul class="nav navbar-nav">
                 <li><a href="/forum" target="_blank">Forum</a></li>
-                <li>
+                <li ng-if="account.is_superuser">
                     <form class="navbar-form navbar-right" role="form" action="/test/" method="post">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-success">Test</button>
                     </form>
                 </li>
-                <li>
-                    <form class="navbar-form navbar-right" role="form" action="/api/account/register" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-success">One Click Register</button>
-                    </form>
-                </li>
-                    </ul>
+                </ul>
         </div>
     </div>
 </header>

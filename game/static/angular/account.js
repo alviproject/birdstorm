@@ -12,13 +12,15 @@
                         templateUrl: "/static/angular/account/signup.html",
                         keyboard: false,
                         backdrop: false,
-                        controller: ['$scope', function($scope) {
+                        controller: ['$scope', '$cookies', function($scope, $cookies) {
                             $scope.dismiss = function() {
                                 $scope.$dismiss();
                             };
 
                             $scope.save = function() {
                             };
+
+                            $scope.csrf_token = $cookies['csrftoken'];
                         }]
                     }).result.then(function(result) {
                             console.log("");
