@@ -23,6 +23,12 @@
 
     function providerController($scope, $http, currentShip, building) {
         $scope.building = building;
+        $scope.currentShip = currentShip;
+
+        $scope.quantities = {};
+        $.each(building.processes, function(resource, details) {
+            $scope.quantities[resource] = 1;
+        });
 
         $scope.order = function (building_id, order, quantity) {
             var ship_id = currentShip.id;

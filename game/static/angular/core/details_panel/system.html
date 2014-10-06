@@ -3,6 +3,9 @@
         <li ng-repeat="planet in system.planets" ui-sref-active="active">
             <a ui-sref=".planet({planet_id:planet.id})">{{planet.type}}</a>
         </li>
+        <li class="pull-right">
+            <a ui-sref="map">Map</a>
+        </li>
     </ul>
     <hr />
     <br />
