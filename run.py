@@ -16,6 +16,9 @@ with open(env_input) as env:
         print(var)
         os.environ.setdefault(*var)
 
+import logging
+logging.basicConfig(level=logging.WARNING)
+
 import game.utils.patch
 import django
 django.setup()

@@ -63,7 +63,12 @@ class BroadcastConnection(SockJSConnection):
     def handle_subscribe(self, params):
         logger.debug("Subscribing, params: ", params)
         channel_class, channel_name = params['channel'].split('.')
-        channel = game.channels.Channel.channels[channel_class]
+        try:
+            channel = game.channels.Channel.channels[channel_class]
+        except KeyError:
+            #TODO report error to the client
+            logger.error("Channel class not found: %s" % channel_class)
+            return
         channel.subscribe(self.user, self, channel_name)
 
     def handle_unsubscribe(self, params):

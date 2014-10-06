@@ -78,6 +78,7 @@
             for(var i in systems) {
                 prepare_system(systems[i], map);
             }
+
             //TODO possibly could be done asynchronously and utilize AngularJS two-way binding
             //that would require that ship coordinates (x, y) are dynamically calculated basing on ship.system
             //coordinates
@@ -88,7 +89,9 @@
                 for(var i in ships) {
                     prepare_ship(ships[i], map);
                 }
+                map.new_ship_subscription.subscribe('main');
             });
+
             $("#map-placeholder").css("height", $("svg").height());
         });
     }
@@ -102,6 +105,14 @@
             },
             link: function (scope, element) {
                 var map = scope.map;
+
+                //
+                //receive new ship updates
+                //
+                map.new_ship_subscription = connection.create_subscription('newship', function(data) {
+                    prepare_ship(data.ship, map);
+                });
+
                 retrieve_data($http, map);
 
                 //

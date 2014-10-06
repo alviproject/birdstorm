@@ -13,6 +13,7 @@
                         keyboard: false,
                         backdrop: false,
                         controller: ['$scope', '$cookies', function($scope, $cookies) {
+                            //TODO
                             $scope.dismiss = function() {
                                 $scope.$dismiss();
                             };

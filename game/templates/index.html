@@ -39,12 +39,12 @@
         <div class="media" id="top-menu">
                 <ul class="nav navbar-nav">
                 <li><a href="/forum" target="_blank">Forum</a></li>
-                <li ng-if="account.is_superuser">
-                    <form class="navbar-form navbar-right" role="form" action="/test/" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-success">Test</button>
-                    </form>
-                </li>
+                    <li ng-if="account.is_superuser">
+                        <form class="navbar-form navbar-right" role="form" action="/test/" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success">Test</button>
+                        </form>
+                    </li>
                 </ul>
         </div>
     </div>

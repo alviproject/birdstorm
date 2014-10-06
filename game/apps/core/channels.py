@@ -1,4 +1,5 @@
 import logging
+from game.apps.core.serializers.ship import OwnShipSerializer
 import game.apps.core.signals
 from game.channels import receiver
 from game.channels import Channel
@@ -28,13 +29,37 @@ class Messages(Channel):
 
 class OwnShip(Channel):
     @receiver(game.apps.core.signals.own_ship_data)
-    def own_ships_data(self, channel_instance, ship):
+    def own_ship_data(self, channel_instance, ship):
         return dict(ship=ship)
 
     @classmethod
     def has_permissions(cls, user, name):
         ship = Ship.objects.get(pk=name)
         return ship.owner == user
+
+
+class OwnShips(Channel):
+    @receiver(game.apps.core.signals.own_ship_list)
+    def own_ship_list(self, channel_instance, new_ship_id):
+        ships = Ship.objects.filter(owner=self.name)
+        result = dict(
+            ships=OwnShipSerializer(ships, many=True, context={'request': 0}).data,
+            current_ship_id=new_ship_id,
+        )
+        return result
+
+    @classmethod
+    def has_permissions(cls, user, name):
+        return user.id == int(name)
+
+
+class NewShip(Channel):
+    @receiver(game.apps.core.signals.new_ship)
+    def new_ship(self, channel_instance, ship):
+        result = dict(
+            ship=OwnShipSerializer(ship, context={'request': 0}).data,
+        )
+        return result
 
 
 #TODO consider moving this to account
@@ -53,3 +78,5 @@ class BuildingUser(Channel):
     @receiver(game.apps.core.signals.building_user)
     def building_user(self, channel_instance, **kwargs):
         return dict(**kwargs)
+
+    #TODO permissions
