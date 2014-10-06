@@ -16,6 +16,7 @@
     </p>
 </div>
 <div class="modal-footer">
+    <!--TODO don't reload the page-->
     <form class="navbar-form navbar-right" role="form" action="/api/account/register" method="post">
         <input type="hidden" name="csrf_token" value="{{ csrf_tonen }}" />
         <button type="submit" class="btn btn-success">Start</button>

@@ -100,9 +100,14 @@
                     $scope.planet = planet;
                     $scope.tabs = [
                         {heading: "Planet", route: "."},
-                        {heading: "Resources", route: ".resources"}
                     ];
-                    //add tabs for buildings
+
+                    //resources tab
+                    if(planet.buildings.length === 0) {
+                        $scope.tabs.push({heading: "Resources", route: ".resources"});
+                    }
+
+                    //buildings tabs
                     $.each(planet.buildings, function(i, building){
                         $scope.tabs.push({heading: building.type, route: "."+building.type+"({building_id:"+building.id+"})"});
                     });
