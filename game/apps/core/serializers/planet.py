@@ -9,6 +9,7 @@ class PlanetSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Planet
         fields = ['id', 'url', 'type', 'system']
+        ordering = ('id', )
 
 
 class PlanetDetailsSerializer(serializers.HyperlinkedModelSerializer):

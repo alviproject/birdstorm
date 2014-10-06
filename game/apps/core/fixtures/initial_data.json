@@ -5,27 +5,26 @@
     {"model": "core.system", "pk": 3, "fields": {"x": "0.2", "y": "-0.2", "type": "BrownDraft"}},
 
 
-
-    {"model": "core.planet", "pk": 1, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {}}},
-    {"model": "core.planet", "pk": 2, "fields": {"system": 1, "type": "GasGiant", "data": {}}},
-    {"model": "core.planet", "pk": 3, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {
+    {"model": "core.planet", "pk": 1, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {
         "resources": [
             {"Coal": 10, "Oil": 10},
             {"Coal": 10, "Oil": 10}
         ]
     }}},
-    {"model": "core.planet", "pk": 4, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {
+    {"model": "core.planet", "pk": 2, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {
         "resources": [
             {"Coal": 10, "Iron": 10},
             {"Coal": 10, "Iron": 10}
         ]
     }}},
-    {"model": "core.planet", "pk": 5, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {
+    {"model": "core.planet", "pk": 3, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {
         "resources": [
             {"Oil": 10, "Iron": 10},
             {"Oil": 10, "Iron": 10}
         ]
     }}},
+    {"model": "core.planet", "pk": 4, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {}}},
+    {"model": "core.planet", "pk": 5, "fields": {"system": 1, "type": "GasGiant", "data": {}}},
 
     {"model": "core.planet", "pk": 6, "fields": {"system": 2, "type": "TerrestrialPlanet", "data": {}}},
     {"model": "core.planet", "pk": 7, "fields": {"system": 2, "type": "TerrestrialPlanet", "data": {
@@ -45,16 +44,16 @@
     {"model": "core.planet", "pk": 10, "fields": {"system": 3, "type": "TerrestrialPlanet", "data": {}}},
     {"model": "core.planet", "pk": 11, "fields": {"system": 3, "type": "TerrestrialPlanet", "data": {}}},
 
-    {"model": "core.building", "pk": 1, "fields": {"planet": 1, "type": "Port", "data": {
+    {"model": "core.building", "pk": 1, "fields": {"planet": 4, "type": "Port", "data": {
         "prices": {"Iron": 10, "Steel": 15, "Oil": 10, "Coal": 5}
     }}},
-    {"model": "core.building", "pk": 2, "fields": {"planet": 1, "type": "Smelter", "data": {
+    {"model": "core.building", "pk": 2, "fields": {"planet": 4, "type": "Smelter", "data": {
         "processes": ["Steel"]
     }}},
-    {"model": "core.building", "pk": 3, "fields": {"planet": 2, "type": "Port", "data": {
+    {"model": "core.building", "pk": 3, "fields": {"planet": 5, "type": "Port", "data": {
         "prices": {"ComponentStructures": 113}
     }}},
-    {"model": "core.building", "pk": 4, "fields": {"planet": 2, "type": "Workshop", "data": {
+    {"model": "core.building", "pk": 4, "fields": {"planet": 5, "type": "Workshop", "data": {
         "processes": {
             "JetEngine": {
                 "component": "Engine",

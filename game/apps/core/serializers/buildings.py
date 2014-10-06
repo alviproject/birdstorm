@@ -8,6 +8,7 @@ class BuildingBaseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Building
         exclude = ['data']
+        order = ('id', )
 
 
 class PortSerializer(BuildingBaseSerializer):
@@ -33,7 +34,6 @@ class WarehouseSerializer(BuildingBaseSerializer):
 
     def get_resources(self, obj):
         user = self.context['request'].user
-        print(user.is_authenticated(), "sample")
         if not user.is_authenticated():
             return {}
         return obj.Container(user).resources
