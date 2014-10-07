@@ -52,6 +52,19 @@
         };
     }
 
+    function workshopController($scope, $http, currentShip, building) {
+        providerController($scope, $http, currentShip, building);
+        $scope.$watch('currentShip.components', function() {
+           if(currentShip.id) {
+               $http.post('/api/core/buildings/'+building.id+'/analyze/', {
+                   ship_id: currentShip.id
+               }).success(function(data) {
+                   building.processes = data;
+               });
+           }
+        });
+    }
+
     module.config(function($stateProvider) {
         $stateProvider
             .state('map.system', {
@@ -195,7 +208,7 @@
             }))
             .state(buildingState({
                 type: "Workshop",
-                controller: providerController
+                controller: workshopController
             }))
             .state(buildingState({
                 type: "Refinery",
