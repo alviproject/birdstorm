@@ -27,11 +27,23 @@
 
         $scope.quantities = {};
         $.each(building.processes, function(resource, details) {
-            $scope.quantities[resource] = 1;
+            if(!currentShip.resources) {
+                //currentShips may not be ready yet
+                // this happens when this state is evaluated before currentShip is retrieved
+                $scope.quantities[resource] = 1;
+            }
+            else {
+                $scope.quantities[resource] = 100;
+                $.each(details.requirements, function(requirement, quantity) {
+                    var max = Math.floor((currentShip.resources[requirement] || 0) / quantity);
+                    $scope.quantities[resource] = Math.min($scope.quantities[resource], max);
+                });
+            }
         });
 
         $scope.order = function (building_id, order, quantity) {
             var ship_id = currentShip.id;
+            $scope.quantities[order] = 1;
             $http.post('/api/core/buildings/'+building_id+'/order/', {
                 ship_id: ship_id,
                 order: order,
@@ -132,6 +144,7 @@
                     ncyBreadcrumbLabel: 'Resources'
                 },
                 controller: function($stateParams, $scope, $http, currentShip, system) {
+                    $scope.currentShip = currentShip;
                     $scope.scan = function (planet_id, level) {
                         var ship_id = currentShip.id;
                         $http.post('/api/core/own_ships/'+ship_id+'/scan/', {

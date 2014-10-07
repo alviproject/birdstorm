@@ -1,6 +1,4 @@
 import blinker
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.template.context import RequestContext
@@ -18,6 +16,16 @@ from rest_framework.response import Response
 from game.utils.async_action import async_action
 import game.apps.core.signals
 from django.conf import settings
+
+
+def check_system(ship, system_id):
+    if ship.system_id != system_id:
+        messages = blinker.signal(game.apps.core.signals.messages % ship.owner_id)
+        messages.send(None, message=dict(
+            type="error",
+            text='Your ship is not located in this system.',
+        ))
+        raise RuntimeError
 
 
 class Ships(viewsets.ReadOnlyModelViewSet):
@@ -97,12 +105,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
                 text="Scanning level %d, please stand by..." % level,
             ))
 
-            if ship.system != planet.system:
-                messages.send(self, message=dict(
-                    type="error",
-                    text="Current ship is not located next to the scanned planet.",
-                ))
-                return
+            check_system(ship, planet.system_id)
 
             yield pow(settings.FACTOR, level)
 
@@ -168,12 +171,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
                 text="Extracting %s, please stand by..." % resource_type,
             ))
 
-            if ship.system != planet.system:
-                messages.send(self, message=dict(
-                    type="error",
-                    text="Current ship is not located next to the scanned planet.",
-                ))
-                return
+            check_system(ship, planet.system_id)
 
             yield pow(settings.FACTOR, level*2)
 
@@ -216,7 +214,6 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
     #TODO this shall be Port method
     @action()
     def buy(self, request, pk=None):
-        #TODO check if ship is at the right system
         user = request.user
         ship_id = request.DATA['ship_id']
         resource = request.DATA['resource']
@@ -225,6 +222,8 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         port = self.get_queryset().get(pk=pk)
         price = port.prices[resource]['sale_price']
         ship = request.user.ship_set.get(pk=ship_id)
+
+        check_system(ship, port.planet.system_id)
 
         quantity = min(quantity, port.resources.get(resource, 0))
         quantity = min(quantity, user.credits//price)
@@ -257,7 +256,6 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
     #TODO this shall be Port method
     @action()
     def sell(self, request, pk=None):
-        #TODO check if ship is at the right system
         user = request.user
         ship_id = request.DATA['ship_id']
         resource = request.DATA['resource']
@@ -266,6 +264,8 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         port = self.get_queryset().get(pk=pk)
         price = port.prices[resource]['purchase_price']
         ship = request.user.ship_set.get(pk=ship_id)
+
+        check_system(ship, port.planet.system_id)
 
         quantity = min(quantity, ship.resources.get(resource, 0))
         cost = price * quantity
@@ -297,7 +297,6 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
     #TODO this shall be Provider method
     @async_action
     def order(self, request, pk=None):
-        #TODO check if ship is at the right system
         user = request.user
         ship_id = request.DATA['ship_id']
         order = request.DATA['order']
@@ -305,6 +304,8 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         request_id = request.META['HTTP_X_REQUESTID']
         building = self.get_queryset().get(pk=pk)
         ship = user.ship_set.get(pk=ship_id)
+
+        check_system(ship, building.planet.system_id)
 
         for delay in building.order(order, quantity, ship, user, request_id):
             yield delay
@@ -323,7 +324,6 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
     #TODO this shall be Warehouse method
     @action()
     def store(self, request, pk=None):
-        #TODO check if ship is at the right system
         user = request.user
         ship_id = request.DATA['ship_id']
         resource = request.DATA['resource']
@@ -333,6 +333,7 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         warehouse = self.get_queryset().get(pk=pk)
         ship = request.user.ship_set.get(pk=ship_id)
 
+        check_system(ship, warehouse.planet.system_id)
         container = warehouse.get_resource_container(user)
 
         if action == "unload":

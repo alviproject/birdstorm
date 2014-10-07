@@ -32,6 +32,7 @@
             });
             subscription.subscribe(id);
         };
+
         ship.updateData = function(data) {
             $.each(data, function(key, value) {
                 ship[key] = value;

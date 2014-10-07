@@ -11,6 +11,9 @@
                 $scope.messages = [];
                 $scope.subscription_actions = connection.create_subscription('messages', function (data) {
                     $scope.messages.push(data.message);
+                    if($scope.messages.length > 10) {
+                        $scope.messages.shift();
+                    }
                     $scope.$apply();
                 });
 

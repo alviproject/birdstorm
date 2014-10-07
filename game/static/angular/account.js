@@ -24,8 +24,6 @@
                             $scope.csrf_token = $cookies['csrftoken'];
                         }]
                     }).result.then(function(result) {
-                            console.log("");
-                            console.log(result);
                             if (result) {
                                 return $state.transitionTo("map");
                             }

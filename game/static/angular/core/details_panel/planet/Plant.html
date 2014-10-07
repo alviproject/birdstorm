@@ -35,7 +35,9 @@
             </ul>
         </td>
         <td>{{details.time * quantities[resource]}}s</td>
-        <td><button class="btn btn-default btn-sm" ng-click="order(building.id, resource, quantities[resource])">Order</button></td>
+        <td>
+            <button ng-hide="currentShip.locked" class="btn btn-default btn-sm" ng-click="order(building.id, resource, quantities[resource])">Order</button>
+        </td>
     </tr>
     </tbody>
 </table>

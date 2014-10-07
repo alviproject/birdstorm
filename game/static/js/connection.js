@@ -42,7 +42,7 @@ function make_connection(delay, channels) {
     };
 
     connection.onmessage = function (e) {
-        console.log('reveiving message', e.data);
+        console.log('receiving message', e.data);
         var channel = e.data['channel'];
         //var channel_class = channel.split('.')[0];
         this.channels[channel](e.data);
@@ -69,7 +69,6 @@ function make_connection(delay, channels) {
                 return;
             }
             //unsubscribe from previous channel instance
-            console.log(this.channel, this);
             if(this.channel !== undefined) {
                 connection.unsubscribe(this.channel);
                 delete connection.channels[this.channel];
@@ -81,7 +80,6 @@ function make_connection(delay, channels) {
             if (connection.is_connected) {
                 connection.subscribe(this.channel);
             }
-            console.log(this.channel, this);
         };
         return subscription;
     };
