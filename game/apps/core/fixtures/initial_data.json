@@ -90,11 +90,11 @@
         "processes": ["ComponentStructures", "ShipStructures"]
     }}},
 
-    {"model": "core.building", "pk": 11, "fields": {"planet": 11, "type": "Warehouse", "data": {
-    }}},
-    {"model": "core.building", "pk": 12, "fields": {"planet": 11, "type": "Shipyard", "data": {
-    }}},
-    {"model": "core.building", "pk": 13, "fields": {"planet": 11, "type": "Port", "data": {
+    {"model": "core.building", "pk": 11, "fields": {"planet": 11, "type": "Port", "data": {
         "prices": {"ComponentStructures": 113, "ShipStructures": 137}
+    }}},
+    {"model": "core.building", "pk": 12, "fields": {"planet": 11, "type": "Warehouse", "data": {
+    }}},
+    {"model": "core.building", "pk": 13, "fields": {"planet": 11, "type": "Shipyard", "data": {
     }}}
 ]

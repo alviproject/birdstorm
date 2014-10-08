@@ -265,7 +265,7 @@
             }}))
             .state(buildingState({
                 type: "Shipyard",
-                templateFile: "Plant",
+                templateFile: "Shipyard",
                 controller: providerController
             }))
             .state('map.ship', {

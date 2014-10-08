@@ -1,10 +1,6 @@
-import abc
 import blinker
 from django.db import models
 from game.apps.core.models import components
-from game.apps.core.models.components.drills import Drill
-from game.apps.core.models.components.engines import Engine
-from game.apps.core.models.components.scanners import Scanner
 from game.apps.core.models.planet.models import Planet
 from game.apps.core.models.ships import Ship
 from game.utils.models import ResourceContainer
@@ -121,32 +117,33 @@ class Mine(Building):
         proxy = True
 
 
-class Shipyard(Building):
+class Shipyard(Provider):
     @staticmethod
-    def available_ships():
-        return dict(
-            Raven=dict(
-                requirements=dict(
-                    Coal=5,
-                    Iron=3,
-                ),
-                time=5,
-            ),
-            Owl=dict(
-                resources=dict(
-                    Coal=15,
-                    Iron=10,
-                ),
-                time=10,
-            ),
-            Swallow=dict(
-                resources=dict(
-                    Coal=20,
-                    Iron=20,
-                ),
-                time=15,
-            ),
-        )
+    def processes(_):
+        #TODO this data shall be defined in ships module
+        return {
+            "Raven": {
+                "time": 20,
+                "requirements": {
+                    "ShipStructures": 10,
+                    "ComponentStructures": 10,
+                },
+            },
+            "Owl": {
+                "time": 25,
+                "requirements": {
+                    "ShipStructures": 20,
+                    "ComponentStructures": 10,
+                },
+            },
+            "Swallow": {
+                "time": 20,
+                "requirements": {
+                    "ShipStructures": 15,
+                    "ComponentStructures": 10,
+                },
+            },
+        }
 
     def fulfill_order(self, order, ship, user, order_details=None):
         new_ship = Ship(type=order, owner=user, system=self.planet.system)

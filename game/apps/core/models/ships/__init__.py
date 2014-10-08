@@ -108,3 +108,14 @@ class Ship(PolymorphicBase, ResourceContainer):
 class Raven(Ship):
     class Meta:
         proxy = True
+
+
+class Swallow(Ship):
+    class Meta:
+        proxy = True
+
+
+class Owl(Ship):
+    class Meta:
+        proxy = True
+
