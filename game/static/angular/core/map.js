@@ -96,7 +96,7 @@
         });
     }
 
-    app.directive('coreMap', function ($http, $document) {
+    app.directive('coreMap', function ($http, $document, $state) {
         return {
             restrict: 'E',
             templateUrl: '/static/angular/core/map.html',
@@ -165,6 +165,10 @@
                         });
                 });
                 this.subscription.subscribe('main');
+
+                scope.goto = function(state, params) {
+                    $state.go(state, params);
+                }
             }
         }
     });
