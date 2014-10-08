@@ -118,8 +118,7 @@ class Mine(Building):
 
 
 class Shipyard(Provider):
-    @staticmethod
-    def processes(_):
+    def processes(self):
         #TODO this data shall be defined in ships module
         return {
             "Raven": {
