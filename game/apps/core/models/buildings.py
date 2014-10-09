@@ -118,7 +118,7 @@ class Mine(Building):
 
 
 class Shipyard(Provider):
-    def processes(self, _):
+    def processes(self, _=None):
         #TODO this data shall be defined in ships module
         return {
             "Raven": {
