@@ -4,7 +4,7 @@ svg {
 }
 
 .system .system-image {
-    opacity: 0.7;
+    opacity: 0.8;
 }
 
 .system:hover .system-image {
@@ -16,7 +16,7 @@ svg {
 }
 
 .planet image {
-    opacity: 0.5;
+    opacity: 0.8;
 }
 
 .planet image.selected  {
@@ -28,7 +28,7 @@ svg {
 }
 
 .planet:hover image.selected  {
-    opacity: 0.85;
+    opacity: 0.9;
 }
 
 .ship text {
