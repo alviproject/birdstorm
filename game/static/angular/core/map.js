@@ -19,7 +19,10 @@
 
     var planet_radiuses = {
         "TerrestrialPlanet": 10,
-        "GasGiant": 50
+        "GasGiant": 50,
+        "WaterPlanet": 10,
+        "IcePlanet": 8,
+        "RedPlanet": 10
     };
 
     app.controller('MapController', [function() {

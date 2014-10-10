@@ -22,3 +22,18 @@ class TerrestrialPlanet(Planet):
 class GasGiant(Planet):
     class Meta:
         proxy = True
+
+
+class RedPlanet(Planet):
+    class Meta:
+        proxy = True
+
+
+class WaterPlanet(Planet):
+    class Meta:
+        proxy = True
+
+
+class IcePlanet(Planet):
+    class Meta:
+        proxy = True
