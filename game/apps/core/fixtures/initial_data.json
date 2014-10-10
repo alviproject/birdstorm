@@ -1,48 +1,103 @@
 [
-    {"model": "core.system", "pk": 1, "fields": {"x": "0", "y": "0", "type": "RedGiant"}},
+    {"model": "core.system", "pk": 1, "fields": {"x": "0", "y": "0.4", "type": "RedGiant"}},
 
-    {"model": "core.system", "pk": 2, "fields": {"x": "0.1", "y": "-0.2", "type": "Draft"}},
-    {"model": "core.system", "pk": 3, "fields": {"x": "0.2", "y": "-0.2", "type": "BrownDraft"}},
+    {"model": "core.system", "pk": 2, "fields": {"x": "0.2", "y": "-0.1", "type": "Dwarf"}},
+    {"model": "core.system", "pk": 3, "fields": {"x": "-0.2", "y": "-0.3", "type": "BrownDwarf"}},
 
 
-    {"model": "core.planet", "pk": 1, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {
-        "resources": [
-            {"Coal": 10, "Oil": 10},
-            {"Coal": 15, "Oil": 15}
-        ]
+    {"model": "core.planet", "pk": 1, "fields": {
+        "system": 1,
+        "type": "TerrestrialPlanet",
+        "x": "0.03",
+        "y": "0.03",
+        "data": {
+            "resources": [
+                {"Coal": 10, "Oil": 10},
+                {"Coal": 15, "Oil": 15}
+            ]
     }}},
-    {"model": "core.planet", "pk": 2, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {
-        "resources": [
-            {"Coal": 10, "Iron": 10},
-            {"Coal": 15, "Iron": 15}
-        ]
+    {"model": "core.planet", "pk": 2, "fields": {
+        "system": 1,
+        "type": "TerrestrialPlanet",
+        "x": "-0.045",
+        "y": "-0.045",
+        "data": {
+            "resources": [
+                {"Coal": 10, "Iron": 10},
+                {"Coal": 15, "Iron": 15}
+            ]
     }}},
-    {"model": "core.planet", "pk": 3, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {
-        "resources": [
-            {"Oil": 10, "Iron": 10},
-            {"Oil": 15, "Iron": 15}
-        ]
+    {"model": "core.planet", "pk": 3, "fields": {
+        "system": 1,
+        "type": "TerrestrialPlanet",
+        "x": "0.0",
+        "y": "0.1",
+        "data": {
+            "resources": [
+                {"Oil": 10, "Iron": 10},
+                {"Oil": 15, "Iron": 15}
+            ]
     }}},
-    {"model": "core.planet", "pk": 4, "fields": {"system": 1, "type": "TerrestrialPlanet", "data": {}}},
-    {"model": "core.planet", "pk": 5, "fields": {"system": 1, "type": "GasGiant", "data": {}}},
+    {"model": "core.planet", "pk": 4, "fields": {
+        "system": 1,
+        "type": "TerrestrialPlanet",
+        "x": "-0.05",
+        "y": "0.06",
+        "data": {}}},
+    {"model": "core.planet", "pk": 5, "fields": {
+        "system": 1,
+        "x": "0.07",
+        "y": "-0.07",
+        "type": "GasGiant",
+        "data": {}}},
 
-    {"model": "core.planet", "pk": 6, "fields": {"system": 2, "type": "TerrestrialPlanet", "data": {}}},
-    {"model": "core.planet", "pk": 7, "fields": {"system": 2, "type": "TerrestrialPlanet", "data": {
-        "resources": [
-            {"Oil": 10, "Bauxite": 10},
-            {"Oil": 15, "Bauxite": 15}
-        ]
+    {"model": "core.planet", "pk": 6, "fields": {
+        "system": 2,
+        "type": "TerrestrialPlanet",
+        "x": "0.05",
+        "y": "0.01",
+        "data": {}}},
+    {"model": "core.planet", "pk": 7, "fields": {
+        "system": 2,
+        "type": "TerrestrialPlanet",
+        "x": "-0.03",
+        "y": "0.04",
+        "data": {
+            "resources": [
+                {"Oil": 10, "Bauxite": 10},
+                {"Oil": 15, "Bauxite": 15}
+            ]
     }}},
-    {"model": "core.planet", "pk": 8, "fields": {"system": 2, "type": "TerrestrialPlanet", "data": {
-        "resources": [
-            {"Coal": 10, "Iron": 10},
-            {"Coal": 15, "Iron": 15}
-        ]
+    {"model": "core.planet", "pk": 8, "fields": {
+        "system": 2,
+        "type": "TerrestrialPlanet",
+        "x": "0.02",
+        "y": "-0.03",
+        "data": {
+            "resources": [
+                {"Coal": 10, "Iron": 10},
+                {"Coal": 15, "Iron": 15}
+            ]
     }}},
-    {"model": "core.planet", "pk": 9, "fields": {"system": 2, "type": "TerrestrialPlanet", "data": {}}},
+    {"model": "core.planet", "pk": 9, "fields": {
+        "system": 2,
+        "type": "TerrestrialPlanet",
+        "x": "-0.02",
+        "y": "-0.02",
+        "data": {}}},
 
-    {"model": "core.planet", "pk": 10, "fields": {"system": 3, "type": "TerrestrialPlanet", "data": {}}},
-    {"model": "core.planet", "pk": 11, "fields": {"system": 3, "type": "TerrestrialPlanet", "data": {}}},
+    {"model": "core.planet", "pk": 10, "fields": {
+        "system": 3,
+        "type": "TerrestrialPlanet",
+        "x": "0.02",
+        "y": "-0.02",
+        "data": {}}},
+    {"model": "core.planet", "pk": 11, "fields": {
+        "system": 3,
+        "type": "TerrestrialPlanet",
+        "x": "-0.03",
+        "y": "-0.03",
+        "data": {}}},
 
     {"model": "core.building", "pk": 1, "fields": {"planet": 4, "type": "Port", "data": {
         "prices": {"Iron": 10, "Steel": 15, "Oil": 10, "Coal": 5}

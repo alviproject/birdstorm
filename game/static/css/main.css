@@ -1,6 +1,6 @@
 body {
     padding-bottom: 20px;
-    background-color: #000000;
+    background: #000000;
 }
 
 .broadcast-connection {
@@ -44,10 +44,18 @@ a{
     padding-left: 0;
 }
 
+header {
+    background-image: url("/static/images/background.png");
+}
+
 .panel {
     border: 1px solid rgba(255,255,255,0.15);
-    background-color: rgba(255,255,255,0.15);
-    /*background-color: rgba(167, 255, 162,0.15);*/
+    /*background-color: rgba(255,255,255,0.15);*/
+    background-image: url("/static/images/background.png");
+}
+
+.panel h2 {
+    background-image: url("/static/images/background.png");
 }
 
 .chat-footer {

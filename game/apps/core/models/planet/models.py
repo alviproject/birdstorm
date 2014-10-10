@@ -7,6 +7,8 @@ from jsonfield.fields import JSONField
 class Planet(PolymorphicBase):
     system = models.ForeignKey(System)
     data = JSONField()
+    x = models.FloatField(default=0)
+    y = models.FloatField(default=0)
 
     class Meta:
         app_label = 'core'

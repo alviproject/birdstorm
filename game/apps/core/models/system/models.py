@@ -13,27 +13,27 @@ class System(PolymorphicBase):
         return self.planet_set.order_by('id')
 
 
-class WhiteDraft(System):
+class WhiteDwarf(System):
     class Meta: proxy = True
 
 
-class BrownDraft(System):
+class BrownDwarf(System):
     class Meta: proxy = True
 
 
-class BlueDraft(System):
+class BlueDwarf(System):
     class Meta: proxy = True
 
 
-class BlackDraft(System):
+class BlackDwarf(System):
     class Meta: proxy = True
 
 
-class RedDraft(System):
+class RedDwarf(System):
     class Meta: proxy = True
 
 
-class Draft(System):
+class Dwarf(System):
     class Meta: proxy = True
 
 

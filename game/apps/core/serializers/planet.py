@@ -8,7 +8,7 @@ class PlanetSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Planet
-        fields = ['id', 'url', 'type', 'system']
+        fields = ['id', 'url', 'type', 'system', 'x', 'y']
         ordering = ('id', )
 
 

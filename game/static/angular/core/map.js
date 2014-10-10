@@ -1,20 +1,25 @@
 (function() {
     var app = angular.module('game');
 
-    var system_types = {
-        "WhiteDraft": {color: "white", stroke: "grey", r: 5},
-        "BrownDraft": {color: "brown", stroke: "white", r: 5},
-        "BlueDraft": {color: "blue", stroke: "white", r: 5},
-        "BlackDraft": {color: "black", stroke: "white", r: 5},
-        "RedDraft": {color: "red", stroke: "white", r: 5},
-        "Draft": {color: "yellow", stroke: "white", r: 10},
-        "RedGiant": {color: "red", stroke: "white", r: 20},
-        "BlueSuperGiant": {color: "blue", stroke: "white", r: 30},
-        "HyperGiant": {color: "blue", stroke: "white", r: 40},
-        "NeutronStar": {color: "#66FFFF", stroke: "white", r: 3},
-        "BlackHole": {color: "black", stroke: "white", r: 10},
-        "Nebula": {color: "grey", stroke: "white", r: 20},
-        "Protostar": {color: "grey", stroke: "white", r: 20}
+    var system_radiuses = {
+        "WhiteDwarf": 15,
+        "BrownDwarf": 15,
+        "BlueDwarf": 15,
+        "BlackDwarf": 15,
+        "RedDwarf": 15,
+        "Dwarf": 30,
+        "RedGiant": 40,
+        "BlueSuperGiant": 45,
+        "HyperGiant": 50,
+        "NeutronStar": 6,
+        "BlackHole": 20,
+        "Nebula": 40,
+        "Protostar": 40
+    };
+
+    var planet_radiuses = {
+        "TerrestrialPlanet": 10,
+        "GasGiant": 50
     };
 
     app.controller('MapController', [function() {
@@ -37,24 +42,36 @@
         };
     }]);
 
+    function screen_size_x() {
+        return $("svg").width();
+    }
+
+    function screen_size_y() {
+        return $("svg").height();
+    }
+
     //following two function rescale elements from cartesian coordinates (scale -1.0 to +1.0) to current size of the window
     //TODO support changing size of a browser window
     function rescale_x(c) {
-        var CONTAINER_SIZE = $("body").find("div.container").width();
-        var SCREEN_SIZE = $("svg").width();
-        return (c * CONTAINER_SIZE/2) + SCREEN_SIZE/2;
+        return (c + 1) * screen_size_x()/2;
     }
 
     function rescale_y(c) {
-        var SCREEN_SIZE = $("svg").height();
-        return (-c+1) * SCREEN_SIZE/2;
+        return (-c+1) * screen_size_y()/2;
     }
 
     function prepare_system(system, map) {
-        jQuery.extend(system, system_types[system.type]);
+        system.r = system_radiuses[system.type];
         system.display_x = rescale_x(system.x);
-        system.display_y = rescale_y(system.y)
+        system.display_y = rescale_y(system.y);
+        system.size = 0.12 * screen_size_y();
         map.systems[system.id] = system;
+
+        $.each(system.planets, function(i, planet){
+            planet.display_x = planet.x*screen_size_x();
+            planet.display_y = planet.y*screen_size_y();
+            planet.r = planet_radiuses[planet.type];
+        });
     }
 
     function prepare_ship(ship, map) {
@@ -169,6 +186,8 @@
                 scope.goto = function(state, params) {
                     $state.go(state, params);
                 }
+
+                scope.$state = $state;
             }
         }
     });

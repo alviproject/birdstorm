@@ -1,29 +1,59 @@
 <svg style="position:fixed;top:0;left:0">
     <g id="map_container" ng-attr-transform="translate({{ map.x }}, {{ map.y }}) scale({{ map.scale }})">
-        <g ng-init="bg_h=1080;bg_w=1778" ng-attr-transform="translate({{bg_h/2}}, {{bg_w/2}})">
+        <g ng-init="bg_h=1312;bg_w=2000" ng-attr-transform="translate({{bg_h/2}}, {{bg_w/2}})">
             <g transform="scale(1, 1)">
-                <image ng-attr-height="{{bg_h}}" ng-attr-width="{{bg_w}}" xlink:href="/static/images/background.jpg" />
+                <image ng-attr-height="{{bg_h}}" ng-attr-width="{{bg_w}}" xlink:href="/static/images/map/background.jpg" />
             </g>
             <g transform="scale(1, -1)">
-                <image ng-attr-height="{{bg_h}}" ng-attr-width="{{bg_w}}" xlink:href="/static/images/background.jpg" />
+                <image ng-attr-height="{{bg_h}}" ng-attr-width="{{bg_w}}" xlink:href="/static/images/map/background.jpg" />
             </g>
             <g transform="scale(-1, 1)">
-                <image ng-attr-height="{{bg_h}}" ng-attr-width="{{bg_w}}" xlink:href="/static/images/background.jpg" />
+                <image ng-attr-height="{{bg_h}}" ng-attr-width="{{bg_w}}" xlink:href="/static/images/map/background.jpg" />
             </g>
             <g transform="scale(-1, -1)">
-                <image ng-attr-height="{{bg_h}}" ng-attr-width="{{bg_w}}" xlink:href="/static/images/background.jpg" />
+                <image ng-attr-height="{{bg_h}}" ng-attr-width="{{bg_w}}" xlink:href="/static/images/map/background.jpg" />
             </g>
         </g>
         <!-- Systems -->
         <g
                 ng-repeat="system in map.systems"
                 class="system"
+                ng-class="{'system-selected':$state.includes('map.system', {system_id:system.id})}"
                 id="system_{{ system.id }}"
                 data-url="{{ system.url }}"
                 ng-attr-transform="translate({{ system.display_x }}, {{ system.display_y }})">
+
+            <!--STAR-->
             <a ng-click="goto('map.system', {system_id:system.id})">
-                <circle ng-attr-r="{{ system.r }}" ng-attr-fill="{{ system.color }}" ng-attr-stroke="{{ system.stroke }}"></circle>
+                <image
+                        ng-href="/static/images/map/stars/{{system.type}}.png"
+                        xlink:href=""
+                        ng-attr-height="{{system.r*2}}"
+                        ng-attr-width="{{system.r*2}}"
+                        ng-attr-x="{{-system.r}}"
+                        ng-attr-y="{{-system.r}}"
+                        class="system-image"
+                        >
+                </image>
             </a>
+
+            <--PLANET-->
+            <g ng-repeat="planet in system.planets" class="planet">
+                <g ng-attr-transform="translate({{planet.display_x}}, {{planet.display_y}})">
+                    <a ng-click="goto('map.system.planet', {planet_id:planet.id, system_id: system.id})">
+                        <image
+                                ng-href="/static/images/map/planets/{{planet.type}}.png"
+                                xlink:href=""
+                                ng-attr-height="{{planet.r*2}}"
+                                ng-attr-width="{{planet.r*2}}"
+                                ng-attr-x="{{-planet.r}}"
+                                ng-attr-y="{{-planet.r}}"
+                                ng-class="{selected:$state.includes('map.system.planet', {planet_id:planet.id})}"
+                                >
+                        </image>
+                    </a>
+                </g>
+            </g>
 
         </g>
 
