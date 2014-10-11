@@ -144,11 +144,13 @@
                 map.y = 0;
 
                 element.on('mousedown', function(event) {
-                    event.preventDefault();
-                    startX = event.pageX - map.x;
-                    startY = event.pageY - map.y;
-                    $document.on('mousemove', mousemove);
-                    $document.on('mouseup', mouseup);
+                    if(event.button === 0) {
+                        event.preventDefault();
+                        startX = event.pageX - map.x;
+                        startY = event.pageY - map.y;
+                        $document.on('mousemove', mousemove);
+                        $document.on('mouseup', mouseup);
+                    }
                 });
 
                 function mousemove(event) {
