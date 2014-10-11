@@ -46,11 +46,11 @@
     }]);
 
     function screen_size_x() {
-        return $("svg").width();
+        return $("svg#map").width();
     }
 
     function screen_size_y() {
-        return $("svg").height();
+        return $("svg#map").height();
     }
 
     //following two function rescale elements from cartesian coordinates (scale -1.0 to +1.0) to current size of the window
@@ -112,7 +112,7 @@
                 map.new_ship_subscription.subscribe('main');
             });
 
-            $("#map-placeholder").css("height", $("svg").height());
+            $("#map-placeholder").css("height", $("svg#map").height());
         });
     }
 
@@ -188,7 +188,7 @@
 
                 scope.goto = function(state, params) {
                     $state.go(state, params);
-                }
+                };
 
                 scope.$state = $state;
             }

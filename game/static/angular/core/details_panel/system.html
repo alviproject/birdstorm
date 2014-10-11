@@ -1,9 +1,31 @@
 <div>
     <ul class="list-inline">
-        <li ng-repeat="planet in system.planets" ui-sref-active="active">
-            <a ui-sref=".planet({planet_id:planet.id})">{{planet.type}}</a>
-        </li>
-    </ul>
+        <svg height="100">
+            <a  ng-click="goto('map.system', {system_id: system.id})">
+                <image
+                        ng-href="/static/images/map/stars/{{system.type}}.png"
+                        xlink:href=""
+                        height="100"
+                        width="100"
+                        class="system-image"
+                        >
+                </image>
+            </a>
+            <a ng-repeat="planet in system.planets track by $index" ng-click="goto('map.system.planet', {planet_id:planet.id, system_id: system.id})" class="planet">
+                <image
+
+                        ng-href="/static/images/map/planets/{{planet.type}}.png"
+                        xlink:href=""
+                        height="40"
+                        width="40"
+                        ng-attr-x="{{120+$index*70}}"
+                        ng-class="{selected:$state.includes('map.system.planet', {planet_id:planet.id})}"
+                        >
+                </image>
+            </a>
+        </svg>
+        <!--<li  ui-sref-active="active">
+        </li>-->
     <hr />
     <br />
     <ui-view>

@@ -98,6 +98,12 @@
                     content: {
                         templateUrl: "/static/angular/core/details_panel/system.html",
                         controller: function($stateParams, $scope, $state, system) {
+
+                            //TODO duplicated with goto from map.js
+                            $scope.goto = function(state, params) {
+                                $state.go(state, params);
+                            };
+
                             $scope.system = system;
                             $scope.$state = $state;
                             $scope.distance = function() {

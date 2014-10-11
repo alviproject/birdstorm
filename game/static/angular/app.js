@@ -62,8 +62,17 @@
             })
     });
 
-    app.run(function ($http, $cookies, request_id) {
+    app.run(function ($http, $cookies, $rootScope, request_id) {
         $http.defaults.headers.common['X-CSRFToken'] = $cookies['csrftoken'];
         $http.defaults.headers.common['X-RequestID'] = request_id();
+    });
+
+    app.directive("sref", function ($http, $document, $state) {
+        return {
+            restrict: 'A',
+            link: function (scope, element) {
+                console.log(element)
+            }
+        }
     })
 })();
