@@ -74,5 +74,14 @@
                 console.log(element)
             }
         }
-    })
+    });
+
+    //setup Google Analytics
+    app.run(['$rootScope', '$location', '$window', function($rootScope, $location, $window){
+        $rootScope.$on('$stateChangeSuccess', function() {
+            if($window.ga) {
+                $window.ga('send', 'pageview', {page: $location.path()});
+            }
+        });
+    }]);
 })();
