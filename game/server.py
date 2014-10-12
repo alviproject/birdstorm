@@ -96,7 +96,10 @@ def main():
     app = tornado.web.Application(
         broadcast_router.urls +
         [
-            (r"/static/(.*)", NoCacheStaticFileHandler, {"path": os.path.join(settings.PROJECT_DIR, 'static_generated')}),
+            (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": os.path.join(settings.PROJECT_DIR, 'static_generated')}),
+            (r"/static/angular/(.*)", NoCacheStaticFileHandler, {"path": os.path.join(settings.PROJECT_DIR, 'static_generated', "angular")}),
+            (r"/static/js/(.*)", NoCacheStaticFileHandler, {"path": os.path.join(settings.PROJECT_DIR, 'static_generated', "js")}),
+            (r"/static/css/(.*)", NoCacheStaticFileHandler, {"path": os.path.join(settings.PROJECT_DIR, 'static_generated', "css")}),
             #(r"/()$", tornado.web.StaticFileHandler, {"path": os.path.join(settings.PROJECT_DIR, 'static_generated', "angular", "index.html")}),
             ('.*', tornado.web.FallbackHandler, dict(fallback=wsgi_app)),
         ],

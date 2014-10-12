@@ -18,9 +18,6 @@ class Task(PolymorphicBase):
     state = models.CharField(max_length=256, default="started")
     archived = models.BooleanField(default=False)
 
-    def reward(self):
-        return self.REWARD
-
     def finish(self):
         self.state = "finished"
         self.save()
@@ -34,7 +31,6 @@ class Task(PolymorphicBase):
 class FirstScan(Task):
     STORY = UpgradeShip
     DESCRIPTION = "Task description"
-    REWARD = ["foo", "bar"]
 
     def receive(self, sender):
         self.finish()
