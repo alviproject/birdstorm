@@ -61,6 +61,7 @@ class Channel(metaclass=ChannelMeta):
             logger.error("Cannot subscribe %s, %s, %s, %s" % (cls, user, connection, name))
         instance = cls.instances.get(name, None) or cls(name)
         instance.instance_subscribe(connection)
+        return instance
 
     @classmethod
     def unsubscribe(cls, user, connection, name):

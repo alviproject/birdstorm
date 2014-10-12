@@ -5,7 +5,7 @@ from django.template.context import RequestContext
 from game.apps.account.models import AccountSerializer
 from game.apps.core import models
 from game.apps.core import serializers
-from game.apps.core.models.planet.models import TerrestrialPlanet
+from game.apps.core.models.planet.models import TerrestrialPlanet, GasGiant
 from game.apps.core.serializers.buildings import BuildingSerializer
 from game.apps.core.serializers.planet import PlanetDetailsSerializer
 from game.apps.core.models.ships import Ship
@@ -109,7 +109,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
 
             yield pow(settings.FACTOR, level)
 
-            if not isinstance(planet, TerrestrialPlanet):
+            if isinstance(planet, GasGiant):
                 messages.send(self, message=dict(
                     type="error",
                     text="This planet type is not supported by equipped scanner.",
@@ -149,6 +149,8 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
             signal_id = "%d_%s" % (planet_id, request_id)
             planet_details_signal = blinker.signal(game.apps.core.signals.planet_details % signal_id)
             planet_details_signal.send(self, planet=PlanetDetailsSerializer(planet, context=dict(request=request)).data)
+
+            blinker.signal(game.apps.core.signals.planet_scan % user.id).send()
 
     @async_action
     def extract(self, request, pk=None):
@@ -355,6 +357,27 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         return Response()
 
 
+class Tasks(viewsets.ReadOnlyModelViewSet):
+    model = models.Task
+    serializer_class = serializers.TaskSerializer
+
+    def get_queryset(self, request):
+        return models.Task.objects.filter(user=request.user)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset(request)
+        object_list = self.filter_queryset(queryset)
+        page = self.paginate_queryset(object_list)
+        serializer = self.get_pagination_serializer(page)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        task = get_object_or_404(self.get_queryset(request), pk=pk)
+        serializer = serializers.TaskSerializer(task, context=dict(request=request))
+        return Response(serializer.data)
+
+
+#TODO remove
 def test_view(request):
     ship = Ship.objects.get(pk=1)
     ship.system_id = 1

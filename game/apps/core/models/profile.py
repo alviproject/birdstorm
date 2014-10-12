@@ -64,7 +64,9 @@ class Profile(models.Model):
         scan_results = self.data.setdefault('scan_results', OrderedDict())
         if len(scan_results) >= 5:
             #keep only latest 5 scan results
-            scan_results.popitem(0)
+            #FIXME popitem() takes no arguments (1 given)
+            #scan_results.popitem(0)
+            pass
         levels = scan_results.setdefault(str(planet_id), [])
         try:
             levels[level] = resources

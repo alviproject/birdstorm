@@ -26,8 +26,12 @@ hr {
     border-color: rgba(255, 255, 255, 0.4);
 }
 
-a{
+a {
     cursor: pointer;
+}
+
+.strong {
+    font-weight: bold;
 }
 
 /* PYBBM */

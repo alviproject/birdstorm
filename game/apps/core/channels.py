@@ -1,5 +1,7 @@
 import logging
+from game.apps.core.models.tasks import Task
 from game.apps.core.serializers.ship import OwnShipSerializer
+from game.apps.core.serializers.tasks import TaskSerializer
 import game.apps.core.signals
 from game.channels import receiver
 from game.channels import Channel
@@ -79,4 +81,23 @@ class BuildingUser(Channel):
     def building_user(self, channel_instance, **kwargs):
         return dict(**kwargs)
 
-    #TODO permissions
+    #FIXME permissions
+
+
+class Tasks(Channel):
+    @classmethod
+    def subscribe(cls, user, connection, name):
+        instance = super().subscribe(user, connection, name)
+        instance.tasks = user.task_set.all()
+        for task in instance.tasks:
+            task.connect()
+
+    @receiver(game.apps.core.signals.task_updated)
+    def task_updated(self, channel_instance, **kwargs):
+        tasks = Task.objects.filter(user=self.name)
+        return dict(
+            tasks=TaskSerializer(tasks, many=True, context={'request': 0}).data,
+            updated=kwargs['task_id'],
+        )
+
+    #FIXME permissions
