@@ -35,11 +35,16 @@ a {
 }
 
 /* PYBBM */
+
 .post-content {
 }
 
 .form-control {
     height: auto;
+}
+
+.category h1 {
+    font-size: 30px;
 }
 
 

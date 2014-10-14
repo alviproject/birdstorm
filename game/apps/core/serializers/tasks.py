@@ -4,9 +4,7 @@ from rest_framework import serializers
 
 class TaskSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.Field(source='id')
-    story = serializers.Field(source='STORY.__name__')
-    story_description = serializers.Field(source='STORY.DESCRIPTION')
-    description = serializers.Field(source='DESCRIPTION')
+    mission = serializers.Field(source='mission')
 
     class Meta:
         model = Task

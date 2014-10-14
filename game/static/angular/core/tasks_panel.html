@@ -1,10 +1,10 @@
-<div class="panel side-panel" id="context_menu">
+<div class="panel side-panel panel-tasks" id="context_menu">
     <h2 class="tile-title">Active Tasks</h2>
     <div class="panel-body">
         <ul class="list-unstyled">
             <li ng-class="{active:currentTaskIndex === $index}" ng-repeat="task in tasks track by $index">
                 <a href ng-click="setCurrentTask($index)">
-                    {{task.story}}
+                    {{task.mission}} / {{task.type}}
                     <span ng-if="isUpdated(task.id)">*</span>
                 </a>
             </li>
@@ -12,12 +12,17 @@
         <hr />
         <div>
             <br />
-            <strong>{{currentTask.type}}</strong>
+            <strong>Mission description:</strong>
             <div>
-                {{currentTask.story_description}}
-                <br />
-                {{currentTask.description}}
-                {{currentTask.state}}
+                <ng-include ng-if="currentTask" src="'/static/angular/core/tasks/missions/'+currentTask.mission+'/mission.html'"></ng-include>
+            </div>
+            <br />
+            <strong>Task description:</strong>
+            <div>
+                <ng-include
+                        ng-if="currentTask"
+                        src="'/static/angular/core/tasks/missions/'+currentTask.mission+'/'+currentTask.type+'.html'">
+                </ng-include>
             </div>
         </div>
     </div>

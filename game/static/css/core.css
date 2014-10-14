@@ -41,3 +41,7 @@ svg {
     font: 12px sans-serif;
     fill: blue;
 }
+
+.panel-tasks a {
+    font-weight: bold;
+}

@@ -1,0 +1,68 @@
+<div ng-switch="currentTask.state">
+    <div ng-switch-when="started">
+        <p>
+            This is your mission panel. We will start with one task at a time, but soon you will have to deal with several of them and setup priorities basing on your own judgement.
+            Press "OK" to confirm that you acknowledge the message.
+        </p>
+        <a href ng-click="task_action('acknowledge')" class="pull-right">OK</a>
+    </div>
+    <div ng-switch-when="click_any_system">
+        <p>Most of the screen is covered by map of current sector.</p>
+        <p>Click on any star or planet to see its description.</p>
+    </div>
+    <div ng-switch-when="planet_not_star">
+        <p>Well, this is actually a planet, not a star...</p>
+        <p>Don't worry to much, first of all both stars and planets open the same panel, secondly you are expected to
+        become a pilot and not an astronomer...</p>
+        <p>
+            Anyway feel free to click through different planets that you can see in this new panel. After choosing a planet
+            you can see tabs with buildings located on the planet, we will get to more detailed building descriptions a bit later.
+        </p>
+        <a href ng-click="task_action('acknowledge')" class="pull-right">OK</a>
+    </div>
+    <div ng-switch-when="star_system">
+        <p>Great! Anytime you click on star or planet the details panel will popup and show you object description.</p>
+        <p>
+            Feel free to click through different planets that you can see in this new panel. After choosing a planet
+            you can see tabs with buildings located on the planet, we will get to more detailed building descriptions a bit later.
+        </p>
+        <a href ng-click="task_action('acknowledge')" class="pull-right">OK</a>
+    </div>
+    <div ng-switch-when="left_panels">
+        <p>Panels on the left that just showed up display your account and ship details.</p>
+        <p>
+            Move mouse pointer over one of these panels to show that you actually notice them.
+        </p>
+    </div>
+    <div ng-switch-when="close_details">
+        <p>
+            Let's back to the map. As you may already noticed part of the map is currently covered by details panel.
+        </p>
+        <p>
+            To show hidden area again you can just close details panel using cross (<i class="fa-lg fa fa-times"></i>)
+            in the right top corner of the panel. Please do it now to show that we are on the same page.
+        </p>
+    </div>
+    <div ng-switch-when="map">
+        <p>
+            You can also click any free space on the map, hold the button and move your mouse to move the map.
+        </p>
+        <p>
+            Besides being moved, sector map can be also zoomed out and in, just use relevant magnifier icons at the bottom
+            of the user panel (you still remember which panel was that, don't you?).
+        </p>
+        <p>
+            Your optical instruments are very precise, so you can zoom in really close, to actually appreciate beauty of stars and planets in this sector.
+        </p>
+        <p>Once you are done with that please reset your map view using rightmost icon at that the bottom of user panel (<span class="fa fa-refresh fa-fw"></span>).</p>
+    </div>
+    <div ng-switch-when="finish">
+        <p>
+            Great! You know some basics of the interface. That wasn't too hard, was it?
+        </p>
+        <p>
+            Press "OK" as soon as you are ready to start the real mission.
+        </p>
+        <a href ng-click="task_action('acknowledge')" class="pull-right">OK</a>
+    </div>
+</div>

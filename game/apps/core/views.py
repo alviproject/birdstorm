@@ -376,6 +376,13 @@ class Tasks(viewsets.ReadOnlyModelViewSet):
         serializer = serializers.TaskSerializer(task, context=dict(request=request))
         return Response(serializer.data)
 
+    @action()
+    def action(self, request, pk=None):
+        _type = request.DATA['type']
+        task = models.Task.objects.get(pk=pk)
+        task.action(_type)
+        return Response()
+
 
 #TODO remove
 def test_view(request):
