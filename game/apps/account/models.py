@@ -14,12 +14,18 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 #TODO move this class to core.profile
 class AccountSerializer(serializers.HyperlinkedModelSerializer):
     credits = serializers.SerializerMethodField('get_credits')
+    email = serializers.SerializerMethodField('get_email')
     is_authenticated = serializers.Field('is_authenticated')
 
     def get_credits(self, obj):
         if not obj.is_authenticated():
             return
         return obj.profile.credits
+
+    def get_email(self, obj):
+        if not obj.is_authenticated():
+            return ""
+        return obj.email
 
     class Meta:
         model = User
