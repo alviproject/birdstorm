@@ -1,0 +1,141 @@
+<div ng-switch="currentTask.state">
+    <div ng-switch-when="contact">
+        <p>
+            You already know how to find me (otherwise we wouldn't have this conversation would we?).
+        </p>
+        <p>
+            Now we have to make sure that I can contact you in case of an urgent situation (for example when you loose access to your account).
+        </p>
+        <p>
+            Please type your email address in the box below:
+        <form name="form" class="css-form" novalidate>
+            <div class="form-group" ng-class="{'has-error': form.email.$invalid}">
+                <input
+                        class="form-control m-b-10 form-control input-focused"
+                        type="email"
+                        name="email"
+                        placeholder="yourname@example.com"
+                        ng-model="account.email"
+                        required
+                        />
+                <div ng-show="form.email.$dirty && form.email.$invalid" class="text-danger">
+                    Invalid email address
+                </div>
+                <button
+                        class="btn btn-sm btn-alt pull-right"
+                        ng-click="task_action('email', {email: account.email})"
+                        ng-hide="form.$invalid">
+                    OK
+                </button>
+            </div>
+        </form>
+        </p>
+    </div>
+    <div ng-switch-when="username">
+        <p>
+            Currently my database records show you as {{account.id}}.
+        </p>
+        <p>
+            Personally I interpret this as a bunch of bytes, so it's as good as any other name, but other pilots may
+            have some problems with remembering such a name.
+        </p>
+        <p>
+            Please state your new username in the box below.
+        </p>
+        <!--TODO check if tasks contain some more elements and they are not blocked at the moment -->
+        <p>
+            BTW do you still remember that it's up to you to setup task priorities? If you are already tired with this
+            quasi-courtesy chit chat, feel free to switch to other active tasks, and get back later to this one.
+        </p>
+        <form name="form" class="css-form" novalidate>
+            <div class="form-group" ng-class="{'has-error': form.username.$invalid}">
+                <input
+                        class="form-control m-b-10 form-control input-focused"
+                        type="text"
+                        name="username"
+                        placeholder="Your username"
+                        ng-model="account.username"
+                        required
+                        />
+                <div ng-show="form.username.$dirty && form.username.$invalid" class="text-danger">
+                    Invalid username
+                </div>
+                <button
+                        class="btn btn-sm btn-alt pull-right"
+                        ng-click="task_action('username', {username: account.username})"
+                        ng-hide="form.$invalid">
+                    OK
+                </button>
+            </div>
+        </form>
+    </div>
+    <div ng-switch-when="password">
+        <p>OK, we already know each other, but to make sure that I can recognize you net time we need a kind of secret code.</p>
+        <p>Please state a password in box below.</p>
+        <form name="form" class="css-form" novalidate>
+            <div class="form-group" ng-class="{'has-error': form.password.$invalid}">
+                <input
+                        class="form-control m-b-10 form-control input-focused"
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        ng-model="password"
+                        required
+                        />
+                <div ng-show="form.password.$dirty && form.password.$invalid" class="text-danger">
+                    Invalid password
+                </div>
+                <button
+                        class="btn btn-sm btn-alt pull-right"
+                        ng-click="task_action('password', {password: password})"
+                        ng-hide="form.$invalid">
+                    OK
+                </button>
+            </div>
+        </form>
+    </div>
+    <div ng-switch-when="confirm">
+        <p>
+            We have all the data. Let's double check if everything is correct.
+        </p>
+        <p>
+            <strong>Your username:</strong> {{account.username}}
+            <a href ng-click="task_action('change_username')" class="pull-right">change</a>
+        </p>
+        <p>
+            <strong>Your email:</strong> {{account.email}}
+            <a href ng-click="task_action('change_email')" class="pull-right">change</a>
+        </p>
+        <p>
+            <a href ng-click="task_action('change_password')" class="pull-right">change</a>
+            <strong>Your password:</strong>
+        <form name="form" class="css-form" novalidate>
+            <div class="form-group" ng-class="{'has-error': form.password.$invalid}">
+                <input
+                        class="form-control m-b-10 form-control input-focused"
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        ng-model="password"
+                        required
+                        />
+                <div ng-show="form.password.$dirty && form.password.$invalid" class="text-danger">
+                    Invalid password
+                </div>
+                <button
+                        class="btn btn-sm btn-alt pull-right"
+                        ng-click="task_action('verify', {password: password})"
+                        ng-disabled="form.$invalid">
+                    Confirm
+                </button>
+            </div>
+        </form>
+        </p>
+    </div>
+    <div ng-switch-when="summary">
+        <p>
+            This mission is over. Just press "OK" and start some more interesting activities.
+        </p>
+        <a href ng-click="task_action('acknowledge')" class="pull-right">OK</a>
+    </div>
+</div>

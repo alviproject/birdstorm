@@ -94,7 +94,9 @@ class Tasks(Channel):
 
     @receiver(game.apps.core.signals.task_updated)
     def task_updated(self, channel_instance, **kwargs):
-        tasks = Task.objects.filter(user=self.name)
+        #TODO this should utilize same functionality as implemented in views
+        # same for other Channels
+        tasks = Task.objects.filter(user=self.name, archived=False)
         return dict(
             tasks=TaskSerializer(tasks, many=True, context={'request': 0}).data,
             updated=kwargs['task_id'],

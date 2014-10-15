@@ -1,0 +1,16 @@
+<div ng-switch="currentTask.state">
+    <div ng-switch-when="started">
+        <p>
+            I'm a Advanced Specialized Artificial Intelligence (aka ASAI) that's built in into your ship .
+            Probably not the best name you ever heard, but it wasn't up to me to choose it.
+        </p>
+        <a href ng-click="task_action('acknowledge')" class="pull-right">OK</a>
+    </div>
+    <div ng-switch-when="database">
+        <p>
+            My implementation consist of distributed and decentralized database, which means that you always have access
+            to the same instance of ASAI regardless how often you change your ship.
+        </p>
+        <a href ng-click="task_action('acknowledge')" class="pull-right">OK</a>
+    </div>
+</div>

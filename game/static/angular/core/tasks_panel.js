@@ -5,6 +5,7 @@
         LearnTheInterface: {
             Panels: function(task, $rootScope, $state, $scope) {
                 var left_panels = $("#user-panel").add("#ship-panel");
+                var panels = this;
 
                 if(task.state === "started"
                     || task.state === "click_any_system"
@@ -20,9 +21,9 @@
                     $("#details-panel").hide();
                 }
 
-                if(this.listener_system_click === undefined && task.state === "click_any_system") {
-                    this.listener_system_click = $rootScope.$on('$stateChangeSuccess', function(event, toState) {
-                        if(task.state === "click_any_system" && $state.includes('map.system')) {
+                if(panels.listener_system_click === undefined && task.state === "click_any_system") {
+                    panels.listener_system_click = $rootScope.$on('$stateChangeSuccess', function(event, toState) {
+                        if($state.includes('map.system')) {
                             if($state.includes('map.system.planet')) {
                                 $scope.task_action('planet');
                             }
@@ -30,28 +31,27 @@
                                 $scope.task_action('star');
                             }
                             $("#details-panel").show();
+                            panels.listener_system_click();
                         }
                     });
                 }
 
-                var acknowledge_handler = function (){
-                    $scope.task_action('acknowledge');
-                };
+                function handle(task, state, elements, event) {
+                    var handler = function (){
+                        $scope.task_action('acknowledge');
+                        //TODO this turnoffs the event only if task was updated in this session
+                        //won't work if task will be updated externally
+                        elements.off(event, handler);
+                    };
 
-                if(this.left_panels_mouser_over_set === undefined && task.state === "left_panels") {
-                    this.left_panels_mouser_over_set = true;
-                    left_panels.one('mouseenter', acknowledge_handler);
+                    if(task.state === state) {
+                        elements.one(event, handler);
+                    }
                 }
 
-                if(this.details_panel_close_set === undefined && task.state === "close_details") {
-                    this.details_panel_close_set = true;
-                    $("a#details-panel-close").one('click', acknowledge_handler);
-                }
-
-                if(this.refresh_map_set === undefined && task.state === "map") {
-                    this.refresh_map_set = true;
-                    $("a#map-reset").one('click', acknowledge_handler);
-                }
+                handle(task, "left_panels", left_panels, 'mouseenter');
+                handle(task, "close_details", $("a#details-panel-close"), 'click');
+                handle(task, "map", $("a#map-reset"), 'click');
             }
         }
     };
@@ -63,20 +63,48 @@
             scope: {
             },
             controller: function($rootScope, $state, $scope, $http, account) {
-                $scope.currentTaskIndex = 0;
                 $scope.updatedTasks = {};
+                $scope.account = account;
 
                 function activateTasks(tasks) {
                     $.each(tasks, function (index, task) {
-                        missions[task.mission][task.type](task, $rootScope, $state, $scope ); //TODO to many parameters...
+                        if(missions[task.mission] !== undefined && missions[task.mission][task.type] !== undefined) {
+                            missions[task.mission][task.type](task, $rootScope, $state, $scope ); //TODO to many parameters...
+                        }
                     });
                 }
 
                 $scope.setCurrentTask = function(i) {
-                    $scope.currentTaskIndex = i < $scope.tasks.length ? i : 0;
-                    $scope.currentTask = $scope.tasks[$scope.currentTaskIndex];
+                    $scope.currentTask = $scope.tasks[i];
                     delete $scope.updatedTasks[$scope.currentTask.id];
+                    $scope.status = {};
                 };
+
+                function updateCurrentTask() {
+                    var updated = false;
+                    //search same task (by id)
+                    $.each($scope.tasks, function(i, task){
+                        if(task.id == $scope.currentTask.id) {
+                            $scope.currentTask = task;
+                            updated = true;
+                        }
+                    });
+                    if(updated) {
+                        return;
+                    }
+                    //if not found, then find another task from the same mission
+                    $.each($scope.tasks, function(i, task){
+                        if(task.mission == $scope.currentTask.mission) {
+                            $scope.currentTask = task;
+                            updated = true;
+                        }
+                    });
+                    if(updated) {
+                        return;
+                    }
+                    //fallback to first task on the list
+                    $scope.setCurrentTask(0);
+                }
 
                 $scope.isUpdated = function(task_id) {
                     return $scope.updatedTasks[task_id];
@@ -86,7 +114,7 @@
                     $scope.tasks = data.tasks;
                     $scope.updatedTasks[data.updated] = true;
                     $scope.updatedTasks[10] = true;
-                    $scope.setCurrentTask($scope.currentTaskIndex);
+                    updateCurrentTask();
                     activateTasks($scope.tasks);
                     $scope.$digest();
                 });
@@ -98,9 +126,21 @@
                     subscription.subscribe(account.id);
                 });
 
-                $scope.task_action = function(type) {
-                    $http.post("/api/core/tasks/"+$scope.currentTask.id+"/action/", {
-                        type: type
+                $scope.task_action = function(type, params) {
+                    if(params !== undefined) {
+                        params['type'] = type;
+                    }
+                    else {
+                        params = {type: type}
+                    }
+                    $scope.status.message = "validating response...";
+                    $scope.status.error = false;
+                    $http.post("/api/core/tasks/"+$scope.currentTask.id+"/action/", params).success(function() {
+                        $scope.status.message = "";
+                        $scope.error = false;
+                    }).error(function(data) {
+                        $scope.status.message = data;
+                        $scope.status.error = true;
                     });
                 }
             }

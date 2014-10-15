@@ -2,7 +2,7 @@
     <h2 class="tile-title">Active Tasks</h2>
     <div class="panel-body">
         <ul class="list-unstyled">
-            <li ng-class="{active:currentTaskIndex === $index}" ng-repeat="task in tasks track by $index">
+            <li ng-class="{active:currentTask.id === task.id}" ng-repeat="task in tasks track by $index">
                 <a href ng-click="setCurrentTask($index)">
                     {{task.mission}} / {{task.type}}
                     <span ng-if="isUpdated(task.id)">*</span>
@@ -23,6 +23,9 @@
                         ng-if="currentTask"
                         src="'/static/angular/core/tasks/missions/'+currentTask.mission+'/'+currentTask.type+'.html'">
                 </ng-include>
+                <span ng-class="{'text-danger': status.error, 'text-info': !status.error}">
+                    {{status.message}}
+                </span>
             </div>
         </div>
     </div>

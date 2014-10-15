@@ -1,5 +1,6 @@
 import blinker
-from django.http.response import HttpResponse
+from django.core.exceptions import ValidationError
+from django.http.response import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.template.context import RequestContext
 from game.apps.account.models import AccountSerializer
@@ -362,7 +363,7 @@ class Tasks(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.TaskSerializer
 
     def get_queryset(self, request):
-        return models.Task.objects.filter(user=request.user)
+        return models.Task.objects.filter(user=request.user, archived=False)
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset(request)
@@ -378,9 +379,12 @@ class Tasks(viewsets.ReadOnlyModelViewSet):
 
     @action()
     def action(self, request, pk=None):
-        _type = request.DATA['type']
         task = models.Task.objects.get(pk=pk)
-        task.action(_type)
+        try:
+            task.action(request.DATA)
+        except ValidationError as x:
+            return Response(x.message, status=HttpResponseBadRequest.status_code)
+
         return Response()
 
 
