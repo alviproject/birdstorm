@@ -1,6 +1,8 @@
 <div ng-switch="currentTask.state">
     <div ng-switch-when="started">
         <p>
+            <!--TODO don't hardcode system and planets ids, use task.details property instead and calculate these values
+             on server-side -->
             Go to <a ui-sref="map.system({system_id:1})">System 1</a> and select one of terrestrial planets, for example
             <a ui-sref="map.system.planet({system_id:1, planet_id:2})">this one</a>.
         </p>

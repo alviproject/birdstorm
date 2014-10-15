@@ -92,6 +92,8 @@ class Tasks(Channel):
         for task in instance.tasks:
             task.connect()
 
+        #FIXME disconnect (or possibly just delete tasks after unsubscribe)
+
     @receiver(game.apps.core.signals.task_updated)
     def task_updated(self, channel_instance, **kwargs):
         #TODO this should utilize same functionality as implemented in views

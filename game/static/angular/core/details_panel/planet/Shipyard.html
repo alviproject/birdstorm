@@ -17,7 +17,7 @@ Once you get some advanced schematics you will be also able to upgrade your ship
             <ul class="list-unstyled">
                 <li
                         ng-repeat="(requirement, quantity) in details.requirements"
-                        ng-class="{true:'text-success', false:'text-danger'}[currentShip.resources[requirement] > quantity]"
+                        ng-class="{true:'text-success', false:'text-danger'}[currentShip.resources[requirement] >= quantity]"
                         >
                     {{requirement}}: {{quantity}}
                 </li>

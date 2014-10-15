@@ -8,4 +8,6 @@ account_data = 'game.apps.core.signals.account_data.%s'
 building_user = 'game.apps.core.signals.building_user.%s'  # buildingID_userID
 task_updated = 'game.apps.core.signals.task_updated.%s'  # user.id
 planet_scan = 'game.apps.core.signals.planet_scan.%s'  # user.id
+planet_extract = 'game.apps.core.signals.planet_extract.%s'  # user.id
+order = 'game.apps.core.signals.order.%s'  # user.id
 

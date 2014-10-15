@@ -79,9 +79,10 @@
             templateUrl: '/static/angular/core/tasks_panel.html',
             scope: {
             },
-            controller: function($rootScope, $state, $scope, $http, account) {
+            controller: function($rootScope, $state, $scope, $http, account, currentShip) {
                 $scope.updatedTasks = {};
                 $scope.account = account;
+                $scope.currentShip = currentShip;
 
                 function activateTasks(tasks) {
                     $.each(tasks, function (index, task) {

@@ -1,0 +1,42 @@
+<div ng-switch="currentTask.state">
+    <div ng-switch-when="started">
+        <p>
+            Following planets contain Smelter building:
+            <ul class="list-unstyled">
+                <li ng-repeat="building in currentTask.details.marked_buildings">
+                    <a ui-sref="map.system({system_id:building.system_id)">
+                        System {{building.system_id}}
+                    </a>
+                    /
+                    <a ui-sref="map.system.planet({system_id:building.system_id, planet_id: building.planet_id})">
+                        {{building.planet_type}} {{building.planet_id}}
+                    </a>
+                    /
+                    <a ui-sref="map.system.planet.Smelter({system_id:building.system_id, planet_id: building.planet_id, building_id: building.id})">
+                        Smelter
+                    </a>
+                </li>
+            </ul>
+        </p>
+        <p>
+            One of this buildings allows you to produce Steel, the other one allows to produce Aluminium.
+        </p>
+        <p>
+            You need both of this resources to get closer to your ship upgrade. Please take a note that to produce
+            Aluminium you will need to find and extract Bauxite.
+        </p>
+        <p>
+            <ul class="list-unstyled">
+                <li
+                        ng-repeat="(resource, quantity) in currentTask.details.resources"
+                        ng-class="{true:'text-success', false:'text-danger'}[currentShip.resources[resource] >= quantity]"
+                        >
+                    {{resource}}: {{currentShip.resources[resource] || 0}} / {{quantity}}
+                </li>
+            </ul>
+        </p>
+    </div>
+    <div ng-switch-when="summary">
+        To be continued...
+    </div>
+</div>

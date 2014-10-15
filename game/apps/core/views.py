@@ -202,7 +202,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
                 self,
                 message=dict(
                     type="success",
-                    text="Extraction successful, resources were added to your's ship cargo.",
+                    text="Extraction successful, resources were added to your ship cargo.",
                 ),
             )
             user.profile.add_drilled_planet(planet_id)
@@ -211,6 +211,8 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
             signal_id = "%d_%s" % (planet_id, request_id)
             planet_details_signal = blinker.signal(game.apps.core.signals.planet_details % signal_id)
             planet_details_signal.send(self, planet=PlanetDetailsSerializer(planet, context=dict(request=request)).data)
+
+            blinker.signal(game.apps.core.signals.planet_extract % user.id).send(ship=ship)
 
 
 class Buildings(viewsets.ReadOnlyModelViewSet):
@@ -315,6 +317,8 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
 
         for delay in building.order(order, quantity, ship, user, request_id):
             yield delay
+            #TODO consider sending this signal after all units are produced
+            blinker.signal(game.apps.core.signals.order % user.id).send(ship=ship)
 
     #TODO this shall be Workshop method
     @action()

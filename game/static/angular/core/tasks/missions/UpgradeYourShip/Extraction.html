@@ -4,7 +4,33 @@
             As you can see, next to each resource that was found during scanning process there is an "Extract" link.
         </p>
         <p>
-            Press any of this links to start the process.
+            Press any of these links to start the process.
         </p>
+    </div>
+    <div ng-switch-when="some_more">
+        <p>
+            That was a good start, but we need much more resources to upgrade your ship.
+        </p>
+        <p>
+            Let's start with these:
+        </p>
+        <p>
+            <ul class="list-unstyled">
+                <li
+                        ng-repeat="(resource, quantity) in currentTask.details.resources"
+                        ng-class="{true:'text-success', false:'text-danger'}[currentShip.resources[resource] >= quantity]"
+                    >
+                    {{resource}}: {{currentShip.resources[resource] || 0}} / {{quantity}}
+                </li>
+            </ul>
+        </p>
+        <p>For now focus on finding planets with resources tab, we will get to the other tabs a bit later.</p>
+    </div>
+    <div ng-switch-when="summary">
+        <p>
+            Extraction allows you to gather some basic resources (aka raw materials), let's see how to use them to
+            produce some more advanced materials.
+        </p>
+        <a href ng-click="task_action('acknowledge')" class="pull-right">OK</a>
     </div>
 </div>

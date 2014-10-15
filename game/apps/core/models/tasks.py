@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator, validate_email, RegexValidator
 from django.db import models
 from django.db.models.signals import post_save
+from game.apps.core.models.buildings import Building, Smelter
 from game.utils.polymorph import PolymorphicBase
 from jsonfield.fields import JSONField
 import game.apps.core.signals
@@ -18,6 +19,9 @@ class Task(PolymorphicBase):
     def connect(self):
         pass
 
+    def details(self):
+        return {}
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         signal = blinker.signal(game.apps.core.signals.task_updated % self.user_id)
@@ -29,9 +33,6 @@ class Panels(Task):
 
     def action(self, data):
         _type = data["type"]
-        #TODO this probably should utilize state pattern, although it's yet to be decided how to refactor this,
-        # once there are some more complicated tasks
-        # same for other tasks
         if self.state == "started" and _type == 'acknowledge':
             self.state = "click_any_system"
         elif self.state == "click_any_system" and _type == 'planet':
@@ -155,13 +156,21 @@ class FirstScan(Task):
 
 
 class Extraction(Task):
+    #TODO all of Task subclasses should probably utilize state pattern
+    # this seems like a good candidate for analysis
     mission = "UpgradeYourShip"
 
     def connect(self):
-        blinker.signal(game.apps.core.signals.planet_scan % self.user_id).connect(self.receive_signal)
+        blinker.signal(game.apps.core.signals.planet_extract % self.user_id).connect(self.receive_signal)
 
-    def receive_signal(self, sender):
-        self.state = "summary"
+    def receive_signal(self, sender, ship):
+        if self.state == "started":
+            self.state = "some_more"
+        if self.state == "some_more":
+            for resource, quantity in self.details()["resources"].items():
+                if ship.get(resource, 0) < quantity:
+                    return
+            self.state = "summary"
         self.save()
 
     def action(self, data):
@@ -171,10 +180,68 @@ class Extraction(Task):
         if self.state == "summary" and _type == 'acknowledge':
             self.archived = True
             self.state = "finished"
-            Extraction.objects.create(user=self.user)
+            Alloys.objects.create(user=self.user)
         else:
             raise ValidationError("Wrong state or type: %s, %s" % (self.state, _type))
         self.save()
+
+    def details(self):
+        return {
+            "resources": {
+                "Coal": 20,
+                "Iron": 20,
+            }
+        }
+
+    class Meta:
+        proxy = True
+
+
+class Alloys(Task):
+    mission = "UpgradeYourShip"
+
+    def connect(self):
+        blinker.signal(game.apps.core.signals.order % self.user_id).connect(self.receive_signal)
+
+    def receive_signal(self, sender, ship):
+        if self.state == "started":
+            for resource, quantity in self.details()["resources"].items():
+                if ship.resources.get(resource, 0) < quantity:
+                    return
+            self.state = "summary"
+        self.save()
+
+    def action(self, data):
+        _type = data["type"]
+        if self.state == "started" and _type == 'acknowledge':
+            self.state = "scan"
+        if self.state == "summary" and _type == 'acknowledge':
+            self.archived = True
+            self.state = "finished"
+            Alloys.objects.create(user=self.user)
+        else:
+            raise ValidationError("Wrong state or type: %s, %s" % (self.state, _type))
+        self.save()
+
+    def details(self):
+        #TODO cache
+        marked_buildings = [
+            dict(
+                planet_type=building.planet.type,
+                planet_id=building.planet.id,
+                system_id=building.planet.system_id,
+                id=building.id,
+            )
+            for building in Building.objects.filter(type=Smelter.__name__)
+        ]
+
+        return {
+            "resources": {
+                "Steel": 10,
+                "Aluminium": 10,
+            },
+            "marked_buildings": marked_buildings
+        }
 
     class Meta:
         proxy = True
