@@ -164,11 +164,10 @@
                 },
                 controller: function($stateParams, $scope, $http, currentShip, system) {
                     $scope.currentShip = currentShip;
-                    $scope.scan = function (planet_id, level) {
+                    $scope.scan = function (planet_id) {
                         var ship_id = currentShip.id;
                         $http.post('/api/core/own_ships/'+ship_id+'/scan/', {
-                            planet_id: planet_id,
-                            level: level
+                            planet_id: planet_id
                         });
                     };
 

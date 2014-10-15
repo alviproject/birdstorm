@@ -89,67 +89,70 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
     @async_action
     def scan(self, request, pk=None):
         planet_id = request.DATA['planet_id']
-        level = int(request.DATA['level'])
         request_id = request.META['HTTP_X_REQUESTID']
         planet = models.Planet.objects.get(pk=planet_id)
         ship = self.get_queryset(request).get(pk=pk)
         user = request.user
         messages = blinker.signal(game.apps.core.signals.messages % user.id)
 
+        check_system(ship, planet.system_id)
+
+        if isinstance(planet, GasGiant):
+            messages.send(self, message=dict(
+                type="error",
+                text="This planet type is not supported by equipped scanner.",
+            ))
+            return
+
+        if user.profile.is_drilled(planet_id):
+            messages.send(self, message=dict(
+                type="error",
+                text="Planet was already drilled, you have to wait some time before next scan.",
+            ))
+            return
+
         with ship.lock():
             results = user.profile.get_scan_results(planet_id)
-            if level < 0 or level >= len(results):
-                level = len(results)
-            #TODO check why we have to pass self as a first argument
-            messages.send(self, message=dict(
-                type="info",
-                text="Scanning level %d, please stand by..." % level,
-            ))
+            level = len(results)
 
-            check_system(ship, planet.system_id)
-
-            yield pow(settings.FACTOR, level)
-
-            if isinstance(planet, GasGiant):
+            while True:
+                #TODO check why we have to pass self as a first argument
                 messages.send(self, message=dict(
-                    type="error",
-                    text="This planet type is not supported by equipped scanner.",
+                    type="info",
+                    text="Scanning level %d, please stand by..." % level,
                 ))
-                return
 
-            if user.profile.is_drilled(planet_id):
-                messages.send(self, message=dict(
-                    type="error",
-                    text="Planet was already drilled, you have to wait some time before next scan.",
-                ))
-                return
+                if level >= 2:
+                    messages.send(self, message=dict(
+                        type="error",
+                        text="Equipped scanner cannot scan any deeper.",
+                    ))
+                    break
 
-            if level >= 2:
-                messages.send(self, message=dict(
-                    type="error",
-                    text="Equipped scanner cannot scan any deeper.",
-                ))
-                return
+                yield pow(settings.FACTOR, level)
 
-            try:
-                level_resources = planet.data['resources'][level]
-            except (IndexError, KeyError):
-                messages.send(self, message=dict(
-                    type="error",
-                    text="Some solid structures below surface of this planet block deeper scans.",
-                ))
-                return
-            current_level_result = {}
-            for type, quantity in level_resources.items():
-                current_level_result[type] = quantity
-            messages.send(self, level=level, message=dict(type="success", text="Scan successful", ), )
+                try:
+                    level_resources = planet.data['resources'][level]
+                except (IndexError, KeyError):
+                    messages.send(self, message=dict(
+                        type="error",
+                        text="Some solid structures below surface of this planet block deeper scans.",
+                    ))
+                    break
+                current_level_result = {}
+                for type, quantity in level_resources.items():
+                    current_level_result[type] = quantity
 
-            user.profile.set_scan_result(planet_id, level, current_level_result)
+                user.profile.set_scan_result(planet_id, level, current_level_result)
+                messages.send(self, level=level, message=dict(type="success", text="Scan successful", ), )
+
+                signal_id = "%d_%s" % (planet_id, request_id)
+                planet_details_signal = blinker.signal(game.apps.core.signals.planet_details % signal_id)
+                planet_details_signal.send(self, planet=PlanetDetailsSerializer(planet, context=dict(request=request)).data)
+
+                level += 1
+
             user.profile.save()
-
-            signal_id = "%d_%s" % (planet_id, request_id)
-            planet_details_signal = blinker.signal(game.apps.core.signals.planet_details % signal_id)
-            planet_details_signal.send(self, planet=PlanetDetailsSerializer(planet, context=dict(request=request)).data)
 
             blinker.signal(game.apps.core.signals.planet_scan % user.id).send()
 
