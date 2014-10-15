@@ -1,0 +1,32 @@
+<div ng-switch="currentTask.state">
+    <div ng-switch-when="started">
+        <p>
+            Go to <a ui-sref="map.system({system_id:1})">System 1</a> and select one of terrestrial planets, for example
+            <a ui-sref="map.system.planet({system_id:1, planet_id:2})">this one</a>.
+        </p>
+        <p>
+            Then choose "Resources" tab in the details panel (it's next to "Planet" tab which is select by default).
+        </p>
+    </div>
+    <div ng-switch-when="scan">
+        <p>
+            Great! Now click "Scan" at the right of "Resources" tab.
+        </p>
+        <p>
+            This operation will allow you to find out what kind of resources are located on the planet.
+        </p>
+    </div>
+    <div ng-switch-when="summary">
+        <p>Well done!</p>
+        <p>
+            Scanning operation takes some time, depending on planet type, deepness and your equipped scanner.
+        </p>
+        <p>
+            Having a better scanner will also allow you to scan deeper and find more valuable resources, but we will get to this later.
+        </p>
+        <p>
+            Now it's time to actually extract some resources.
+        </p>
+        <a href ng-click="task_action('acknowledge')" class="pull-right">OK</a>
+    </div>
+</div>

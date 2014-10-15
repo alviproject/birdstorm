@@ -18,10 +18,6 @@ class Task(PolymorphicBase):
     def connect(self):
         pass
 
-    def finish(self):
-        self.state = "finished"
-        self.save()
-
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         signal = blinker.signal(game.apps.core.signals.task_updated % self.user_id)
@@ -30,9 +26,6 @@ class Task(PolymorphicBase):
 
 class Panels(Task):
     mission = "LearnTheInterface"
-
-    def receive(self, sender):
-        self.finish()
 
     def action(self, data):
         _type = data["type"]
@@ -138,11 +131,50 @@ class WhoAreYou(Task):
 class FirstScan(Task):
     mission = "UpgradeYourShip"
 
-    def receive(self, sender):
-        self.finish()
+    def connect(self):
+        blinker.signal(game.apps.core.signals.planet_scan % self.user_id).connect(self.receive_signal)
+
+    def receive_signal(self, sender):
+        self.state = "summary"
+        self.save()
+
+    def action(self, data):
+        _type = data["type"]
+        if self.state == "started" and _type == 'acknowledge':
+            self.state = "scan"
+        elif self.state == "summary" and _type == 'acknowledge':
+            self.archived = True
+            self.state = "finished"
+            Extraction.objects.create(user=self.user)
+        else:
+            raise ValidationError("Wrong state or type: %s, %s" % (self.state, _type))
+        self.save()
+
+    class Meta:
+        proxy = True
+
+
+class Extraction(Task):
+    mission = "UpgradeYourShip"
 
     def connect(self):
-        blinker.signal(game.apps.core.signals.planet_scan % self.user_id).connect(self.receive)
+        blinker.signal(game.apps.core.signals.planet_scan % self.user_id).connect(self.receive_signal)
+
+    def receive_signal(self, sender):
+        self.state = "summary"
+        self.save()
+
+    def action(self, data):
+        _type = data["type"]
+        if self.state == "started" and _type == 'acknowledge':
+            self.state = "scan"
+        if self.state == "summary" and _type == 'acknowledge':
+            self.archived = True
+            self.state = "finished"
+            Extraction.objects.create(user=self.user)
+        else:
+            raise ValidationError("Wrong state or type: %s, %s" % (self.state, _type))
+        self.save()
 
     class Meta:
         proxy = True

@@ -53,6 +53,23 @@
                 handle(task, "close_details", $("a#details-panel-close"), 'click');
                 handle(task, "map", $("a#map-reset"), 'click');
             }
+        },
+        UpgradeYourShip: {
+            FirstScan: function (task, $rootScope, $state, $scope) {
+                var firstScan = this;
+                $(".extract-resources").hide();
+                if(firstScan.listener_resources_click === undefined && task.state === "started") {
+                    firstScan.listener_resources_click = $rootScope.$on('$stateChangeSuccess', function(event, toState) {
+                        if($state.includes('map.system.planet.resources')) {
+                            $scope.task_action('acknowledge');
+                            firstScan.listener_resources_click();
+                        }
+                    });
+                }
+            },
+            Extraction: function (task, $rootScope, $state, $scope) {
+                $(".extract-resources").show();
+            }
         }
     };
 
