@@ -1,5 +1,6 @@
 (function() {
     var module = angular.module('game.details_panel', []);
+    var show_wrong_system_alert = false;
 
     function buildingState(params) {
         var templateFile = params.templateFile || params.type;
@@ -65,6 +66,30 @@
         });
     }
 
+    function create_go_to_system($http, currentShip) {
+        return function(system_id) {
+            $http.post('/api/core/own_ships/'+currentShip.id+'/move/', {
+                system_id: system_id
+            });
+            wrong_system_alert(false);
+        }
+    }
+
+    function check_system(currentShip, system) {
+        if(currentShip.system_id !== system.id) {
+            wrong_system_alert(true);
+            return false;
+        }
+        return true;
+    }
+
+    function wrong_system_alert(show) {
+        if(show === undefined) {
+            return show_wrong_system_alert;
+        }
+        show_wrong_system_alert = show;
+    }
+
     module.config(function($stateProvider) {
         $stateProvider
             .state('map.system', {
@@ -85,19 +110,15 @@
                 views: {
                     action: {
                         templateUrl: "/static/angular/core/details_panel/system_action.html",
-                        controller: function($scope, $http, currentShip, system) {
+                        controller: function($scope, $http, $state, currentShip, system) {
                             $scope.currentShip = currentShip;
                             $scope.system = system;
-                            $scope.go_to_system = function (system_id) {
-                                $http.post('/api/core/own_ships/'+currentShip.id+'/move/', {
-                                    system_id: system_id
-                                });
-                            };
+                            $scope.go_to_system = create_go_to_system($http, currentShip);
                         }
                     },
                     content: {
                         templateUrl: "/static/angular/core/details_panel/system.html",
-                        controller: function($stateParams, $scope, $state, system) {
+                        controller: function($stateParams, $scope, $state, $http, system, currentShip) {
 
                             //TODO duplicated with goto from map.js
                             $scope.goto = function(state, params) {
@@ -115,7 +136,9 @@
                                 var y1 = ship_system.y;
                                 var y2 = system.y;
                                 return Math.sqrt(Math.pow(x1-x2, 2)+Math.pow(y1-y2, 2));
-                            }
+                            };
+                            $scope.go_to_system = create_go_to_system($http, currentShip);
+                            $scope.wrong_system_alert = wrong_system_alert;
                         }
                     }
                 }
@@ -164,7 +187,11 @@
                 },
                 controller: function($stateParams, $scope, $http, currentShip, system) {
                     $scope.currentShip = currentShip;
+                    $scope.wrong_system_alert = wrong_system_alert;
                     $scope.scan = function (planet_id) {
+                        if(!check_system(currentShip, system, $scope)) {
+                            return
+                        }
                         var ship_id = currentShip.id;
                         $http.post('/api/core/own_ships/'+ship_id+'/scan/', {
                             planet_id: planet_id
