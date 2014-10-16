@@ -140,7 +140,9 @@
 
                 $http.get("/api/core/tasks/").success(function(data) {
                     $scope.tasks = data.results;
-                    $scope.setCurrentTask(0);
+                    if($scope.tasks.length > 0) {
+                        $scope.setCurrentTask(0);
+                    }
                     activateTasks($scope.tasks);
                     subscription.subscribe(account.id);
                 });

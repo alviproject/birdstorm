@@ -370,7 +370,10 @@ class Tasks(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.TaskSerializer
 
     def get_queryset(self, request):
-        return models.Task.objects.filter(user=request.user, archived=False)
+        if request.user.is_authenticated():
+            return models.Task.objects.filter(user=request.user, archived=False)
+        else:
+            return models.Task.objects.none()
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset(request)
