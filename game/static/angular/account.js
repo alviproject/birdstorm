@@ -12,7 +12,7 @@
                         templateUrl: "/static/angular/account/signup.html",
                         keyboard: false,
                         backdrop: false,
-                        controller: ['$scope', '$cookies', function($scope, $cookies) {
+                        controller: ['$scope', '$cookies', '$http', '$state', function($scope, $cookies, $http, $state) {
                             //TODO
                             $scope.dismiss = function() {
                                 $scope.$dismiss();
@@ -22,6 +22,18 @@
                             };
 
                             $scope.csrf_token = $cookies['csrftoken'];
+
+                            $scope.login = function(username, password) {
+                                $http.post('/api/account/login', {
+                                    username: username,
+                                    password: password
+                                }).success(function() {
+                                    //$state.go('map');
+                                    window.location.replace("/");
+                                }).error(function() {
+                                    $scope.message = "Invalid username or password";
+                                });
+                            }
                         }]
                     }).result.then(function(result) {
                             if (result) {

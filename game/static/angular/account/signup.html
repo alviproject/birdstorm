@@ -17,9 +17,27 @@
 </div>
 <div class="modal-footer">
     <!--TODO don't reload the page-->
+    <div ng-show="showLoginForm">
+        <form class="navbar-form navbar-right" name="login_form" role="form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_tonen }}" />
+
+            <div class="form-group">
+                <label class="sr-only" for="username">Email address</label>
+                <input type="text" class="form-control input-sm input-focused" id="username" name="username" placeholder="Enter email or login" ng-model="username" required>
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="password">Password</label>
+                <input type="password" class="form-control input-sm input-focused" id="password" name="password" placeholder="Password" ng-model="password" required>
+            </div>
+            <button type="submit" class="btn btn-sm" ng-click="login(username, password)">Sign in</button>
+            <div class="text-danger">
+                {{message}}
+            </div>
+        </form>
+    </div>
     <form class="navbar-form navbar-right" role="form" action="/api/account/register" method="post">
         <input type="hidden" name="csrf_token" value="{{ csrf_tonen }}" />
-        <button type="submit" class="btn btn-success">Start</button>
+        <button type="button" class="btn btn-success" ng-click="showLoginForm=true">Login to existing account</button>
+        <button type="submit" class="btn btn-success">Start new game</button>
     </form>
-
 </div>
