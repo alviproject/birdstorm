@@ -1,4 +1,5 @@
 import blinker
+from concurrency.fields import IntegerVersionField
 from django.contrib.auth.models import User, AbstractUser
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator, validate_email, RegexValidator
@@ -15,6 +16,7 @@ class Task(PolymorphicBase):
     data = JSONField(default={})  # TODO schema validation
     state = models.CharField(max_length=256, default="started")
     archived = models.BooleanField(default=False)
+    version = IntegerVersionField()
 
     def connect(self):
         pass

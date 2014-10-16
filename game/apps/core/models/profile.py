@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from concurrency.fields import IntegerVersionField
 from django.contrib.auth.models import User
 from django.db.models.fields import PositiveIntegerField
 from django.db.models.signals import post_save
@@ -52,6 +53,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User)
     data = JSONField(default={})
     credits = PositiveIntegerField(default=0)
+    version = IntegerVersionField()
 
     def is_drilled(self, planet_id):
         return self.data.get('drilled_planets', []).count(planet_id) > 0

@@ -1,4 +1,5 @@
 import blinker
+from concurrency.fields import IntegerVersionField
 from django.db import models
 from game.apps.core.models import components
 from game.apps.core.models.planet.models import Planet
@@ -13,6 +14,7 @@ class Building(PolymorphicBase):
     level = models.IntegerField(default=1)
     data = JSONField()
     planet = models.ForeignKey(Planet, related_name="buildings")
+    version = IntegerVersionField()
 
     class Meta:
         app_label = 'core'

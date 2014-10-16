@@ -1,3 +1,4 @@
+from concurrency.fields import IntegerVersionField
 from django.db import models
 from game.apps.core.models.system.models import System
 from game.utils.polymorph import PolymorphicBase
@@ -9,6 +10,7 @@ class Planet(PolymorphicBase):
     data = JSONField()
     x = models.FloatField()
     y = models.FloatField()
+    version = IntegerVersionField()
 
     class Meta:
         app_label = 'core'
