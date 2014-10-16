@@ -9,5 +9,4 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Task
-        ordering = ("id", )
         fields = ("id", "mission", "url", "type", "details", "state")

@@ -27,6 +27,9 @@ class Task(PolymorphicBase):
         signal = blinker.signal(game.apps.core.signals.task_updated % self.user_id)
         signal.send(None, task_id=self.id)
 
+    class Meta:
+        ordering = ('-id',)
+
 
 class Panels(Task):
     mission = "LearnTheInterface"
@@ -166,9 +169,9 @@ class Extraction(Task):
     def receive_signal(self, sender, ship):
         if self.state == "started":
             self.state = "some_more"
-        if self.state == "some_more":
+        elif self.state == "some_more":
             for resource, quantity in self.details()["resources"].items():
-                if ship.get(resource, 0) < quantity:
+                if ship.resources.get(resource, 0) < quantity:
                     return
             self.state = "summary"
         self.save()

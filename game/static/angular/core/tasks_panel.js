@@ -18,6 +18,7 @@
                 }
 
                 if(task.state === "started" || task.state === "click_any_system") {
+                    $state.go("map");
                     $("#details-panel").hide();
                 }
 

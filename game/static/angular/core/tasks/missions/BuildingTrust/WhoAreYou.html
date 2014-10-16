@@ -54,7 +54,8 @@
                         type="text"
                         name="username"
                         placeholder="Your username"
-                        ng-model="account.username"
+                        ng-init="username = account.username == account.id ? '' : account.username"
+                        ng-model="username"
                         required
                         />
                 <div ng-show="form.username.$dirty && form.username.$invalid" class="text-danger">
@@ -62,7 +63,7 @@
                 </div>
                 <button
                         class="btn btn-sm btn-alt pull-right"
-                        ng-click="task_action('username', {username: account.username})"
+                        ng-click="task_action('username', {username: username})"
                         ng-hide="form.$invalid">
                     OK
                 </button>
