@@ -90,20 +90,23 @@ class Tasks(Channel):
         instance = super().subscribe(user, connection, name)
         instance.init_tasks()
 
-    def init_tasks(self):
+    def tasks(self):
         #TODO this should utilize same functionality as implemented in views
         # same for other Channels
-        self.tasks = Task.objects.filter(user=self.name, archived=False)
+        return Task.objects.filter(user=self.name, archived=False)
+
+    def init_tasks(self):
+        self.receivers = []
 
         #FIXME disconnect (or possibly just delete tasks after unsubscribe)
-        for task in self.tasks:
-            task.connect()
+        for task in self.tasks():
+            self.receivers.append(task.connect())
 
     @receiver(game.apps.core.signals.task_updated)
     def task_updated(self, channel_instance, **kwargs):
         self.init_tasks()
         return dict(
-            tasks=TaskSerializer(self.tasks, many=True, context={'request': 0}).data,
+            tasks=TaskSerializer(self.tasks(), many=True, context={'request': 0}).data,
             updated=kwargs['task_id'],
         )
 

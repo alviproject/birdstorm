@@ -7,7 +7,6 @@ from django.db import models
 from django.db.models.signals import post_save
 from game.apps.core.models.buildings import Building, Smelter
 from game.utils.polymorph import PolymorphicBase
-from jsonfield.fields import JSONField
 import game.apps.core.signals
 
 
@@ -18,6 +17,16 @@ class Task(PolymorphicBase):
     version = IntegerVersionField()
 
     def connect(self):
+        if not self.signal_name():
+            return
+
+        def receiver(*args, **kwargs):
+            task = Task.objects.get(id=self.id)
+            task.receive_signal(*args, **kwargs)
+
+        return blinker.signal(self.signal_name()).connect(receiver)
+
+    def signal_name(self):
         pass
 
     def details(self):
@@ -136,8 +145,8 @@ class WhoAreYou(Task):
 class FirstScan(Task):
     mission = "UpgradeYourShip"
 
-    def connect(self):
-        blinker.signal(game.apps.core.signals.planet_scan % self.user_id).connect(self.receive_signal)
+    def signal_name(self):
+        return game.apps.core.signals.planet_scan % self.user_id
 
     def receive_signal(self, sender):
         self.state = "summary"
@@ -164,8 +173,8 @@ class Extraction(Task):
     # this seems like a good candidate for analysis
     mission = "UpgradeYourShip"
 
-    def connect(self):
-        blinker.signal(game.apps.core.signals.planet_extract % self.user_id).connect(self.receive_signal)
+    def signal_name(self):
+        return game.apps.core.signals.planet_extract % self.user_id
 
     def receive_signal(self, sender, ship):
         if self.state == "started":
@@ -204,8 +213,8 @@ class Extraction(Task):
 class Alloys(Task):
     mission = "UpgradeYourShip"
 
-    def connect(self):
-        blinker.signal(game.apps.core.signals.order % self.user_id).connect(self.receive_signal)
+    def signal_name(self):
+        return game.apps.core.signals.order % self.user_id
 
     def receive_signal(self, sender, ship):
         if self.state == "started":
