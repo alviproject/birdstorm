@@ -402,9 +402,9 @@ class Tasks(viewsets.ReadOnlyModelViewSet):
 
 #TODO remove
 def test_view(request):
-    ship = Ship.objects.get(pk=1)
-    ship.system_id = 1
-    ship.save()
+    #ship = Ship.objects.get(pk=1)
+    #ship.system_id = 1
+    #ship.save()
     return HttpResponse("ok")
 
 
