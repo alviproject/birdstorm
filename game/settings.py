@@ -26,7 +26,7 @@ DEBUG = config.debug
 
 TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = ['*']  #FIXME
+ALLOWED_HOSTS = ['birdstorm.herokuapp.com', 'www.birdstorm.net', 'www.birdstorm.pl']
 
 
 # Application definition
