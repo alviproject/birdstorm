@@ -51,25 +51,36 @@ data_schema = {
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
-    data = JSONField(default={})
+    data = JSONField(default={}, load_kwargs={'object_pairs_hook': OrderedDict})
     credits = PositiveIntegerField(default=0)
     version = IntegerVersionField()
 
-    def is_drilled(self, planet_id):
-        return self.data.get('drilled_planets', []).count(planet_id) > 0
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.drilled_planets = [int(planet_id) for planet_id in self.data.get('drilled_planets', [])]
+        self.scan_results = OrderedDict()
 
-    def get_scan_results(self, planet_id):
-        results = self.data.get('scan_results', OrderedDict())
-        return results.get(str(planet_id), [])
+        #dict comprehension would not allow to keep order, hence for loop
+        for planet_id, details in self.data.get('scan_results', OrderedDict()).items():
+            #planet.id is an int value while JSON does not allow to use integers for dict keys, hence conversion
+            self.scan_results[int(planet_id)] = details
+
+    def save(self, *args, **kwargs):
+        #TODO this causes problems in admin panel
+        self.data = {
+            'drilled_planets': self.drilled_planets,
+            'scan_results': self.scan_results,
+        }
+        super().save(*args, **kwargs)
+
+    def is_drilled(self, planet_id):
+        return self.drilled_planets.count(planet_id) > 0
 
     def set_scan_result(self, planet_id, level, resources):
-        scan_results = self.data.setdefault('scan_results', OrderedDict())
-        if len(scan_results) >= 5:
+        if len(self.scan_results) >= 5:
             #keep only latest 5 scan results
-            #FIXME popitem() takes no arguments (1 given)
-            #scan_results.popitem(0)
-            pass
-        levels = scan_results.setdefault(str(planet_id), [])
+            self.scan_results.popitem(0)
+        levels = self.scan_results.setdefault(planet_id, [])
         try:
             levels[level] = resources
         except IndexError:
@@ -79,13 +90,12 @@ class Profile(models.Model):
             levels.append(resources)
 
     def add_drilled_planet(self, planet_id):
-        planets = self.data.setdefault('drilled_planets', [])
-        if planets.count(planet_id) > 0:
+        if self.drilled_planets.count(planet_id) > 0:
             return
-        if len(planets) >= 2:
-            planets.pop(0)
-        planets.append(planet_id)
-        del self.data['scan_results']
+        if len(self.drilled_planets) >= 2:
+            self.drilled_planets.pop(0)
+        self.drilled_planets.append(planet_id)
+        del self.scan_results[planet_id]
 
 
 def create_profile(sender, instance, created, **kwargs):

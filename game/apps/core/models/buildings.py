@@ -78,7 +78,6 @@ class Port(Building, ResourceContainer):
             result[type] = dict(
                 sale_price=int(price*Port.OFFER_FACTOR),
                 purchase_price=int(price/Port.OFFER_FACTOR),
-                available=self.resources.get(type, 0),
             )
         return result
 
@@ -161,7 +160,7 @@ class Warehouse(Building):
 
         @property
         def resources(self):
-            return self.user.profile.data.setdefault('warehouse_resources', {})
+            return self.user.profile.warehouse_resources
 
     @staticmethod
     def get_resource_container(user):
@@ -198,8 +197,8 @@ class Workshop(Provider):
         for name, details in self.data['processes'].items():
             component_kind = components.create_kind(details['component'])
             parameters = {"type": name}
-            if ship and ship.get_component(details['component']).type == name:
-                mark = ship.get_component(details['component']).mark + 1
+            if ship and ship.components[details['component']].type == name:
+                mark = ship.components[details['component']].mark + 1
                 if mark > details['max_level']:
                     continue
                 parameters["mark"] = mark
@@ -208,10 +207,9 @@ class Workshop(Provider):
 
     def fulfill_order(self, order, ship, user, order_details=None):
         component_kind = order_details['kind']
-        current_component = ship.get_component(component_kind)
+        current_component = ship.components[component_kind]
         if current_component.type == order:
             current_component.mark += 1
-            ship.set_component(current_component)
         else:
             component = components.create_kind(component_kind).create({type: order})
             ship.add_item(component)

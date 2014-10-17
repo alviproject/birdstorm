@@ -13,7 +13,6 @@ import game.apps.core.signals
 
 class Task(PolymorphicBase):
     user = models.ForeignKey(User)
-    data = JSONField(default={})  # TODO schema validation
     state = models.CharField(max_length=256, default="started")
     archived = models.BooleanField(default=False)
     version = IntegerVersionField()

@@ -112,7 +112,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
             return
 
         with ship.lock():
-            results = user.profile.get_scan_results(planet_id)
+            results = user.profile.scan_results.get(planet_id, [])
             level = len(results)
 
             while True:
@@ -122,7 +122,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
                     text="Scanning level %d, please stand by..." % level,
                 ))
 
-                if level > ship.get_component('Scanner').deepness():
+                if level >= ship.scanner.deepness():
                     messages.send(self, message=dict(
                         type="error",
                         text="Equipped scanner cannot scan any deeper.",
@@ -168,7 +168,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
         messages = blinker.signal(game.apps.core.signals.messages % user.id)
 
         with ship.lock():
-            results = user.profile.get_scan_results(planet_id)
+            results = user.profile.scan_results.get(planet_id, [])
             if level < 0 or level >= len(results):
                 raise RuntimeError("Wrong level")
 
@@ -186,7 +186,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
                 ))
                 return
 
-            if level >= ship.get_component('Drill').deepness():
+            if level >= ship.drill.deepness():
                 messages.send(self, message=dict(
                     type="error",
                     text="Equipped drill cannot drill so deep.",
@@ -278,11 +278,11 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         quantity = min(quantity, ship.resources.get(resource, 0))
         cost = price * quantity
         ship.remove_resource(resource, quantity)
-        port.add_resource(resource, quantity)
+        #port.add_resource(resource, quantity)
         ship.save()
         user.profile.credits += cost
         user.profile.save()
-        port.save()
+        #port.save()
 
         account_signal = blinker.signal(game.apps.core.signals.account_data % user.id)
         account_signal.send(None, data=AccountSerializer(user, context={'request': request}).data)
@@ -321,6 +321,8 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
             blinker.signal(game.apps.core.signals.order % user.id).send(ship=ship)
 
     #TODO this shall be Workshop method
+    # alternatively this can be a separate resource aligned with ship like /core/own_ships/2/workshop_storage
+    # same for other similar cases like planet.scan_results
     @action()
     def analyze(self, request, pk=None):
         #TODO check if ship is at the right system
@@ -373,7 +375,7 @@ class Tasks(viewsets.ReadOnlyModelViewSet):
         if request.user.is_authenticated():
             return models.Task.objects.filter(user=request.user, archived=False)
         else:
-            return models.Task.objects.filter(user=request.user, archived=False)
+            return models.Task.objects.none()
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset(request)

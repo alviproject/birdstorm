@@ -34,37 +34,23 @@ class Ship(PolymorphicBase, ResourceContainer):
             Armor(),
         ]
 
-    @property
-    def components(self):
-        #TODO cache
-        result = {}
-        for kind, details in self.data.get('components', {}).items():
-            result[kind] = create_kind(kind).create(details)
-        return result
-
-    def get_component(self, kind):
-        try:
-            parameters = self.data['components'][kind]
-            component = create_kind(kind).create(parameters)
-        except KeyError:
-            component = create_kind(kind).create({})
-            self.set_component(component)
-        return component
-
-    def set_component(self, component):
-        self.data.setdefault('components', {})[component.kind()] = component.serialize()
+        self.components = {
+            'Drill': create_kind('Drill').create(self.data.get('components', {}).get('Drill', {})),
+            'Engine': create_kind('Engine').create(self.data.get('components', {}).get('Engine', {})),
+            'Scanner': create_kind('Scanner').create(self.data.get('components', {}).get('Scanner', {})),
+        }
 
     @property
     def engine(self):
-        return self.get_component("Engine")
+        return self.components["Engine"]
 
     @property
     def drill(self):
-        return self.get_component("Drill")
+        return self.components["Drill"]
 
     @property
     def scanner(self):
-        return self.get_component("Scanner")
+        return self.components["Scanner"]
 
     @contextmanager
     def lock(self):
@@ -87,6 +73,11 @@ class Ship(PolymorphicBase, ResourceContainer):
 
     def save(self, *args, **kwargs):
         created = self.pk is None
+
+        self.data = {
+            'components': {name: component.serialize() for name, component in self.components.items()}
+        }
+        ResourceContainer.save(self, *args, **kwargs)
         super().save(*args, **kwargs)
         ship_signal = blinker.signal(game.apps.core.signals.own_ship_data % self.id)
 

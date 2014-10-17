@@ -22,7 +22,7 @@ class PlanetDetailsSerializer(serializers.HyperlinkedModelSerializer):
         user = self.context['request'].user
         if not user.is_authenticated():
             return []
-        return user.profile.get_scan_results(obj.id)
+        return user.profile.scan_results.get(obj.id, [])
 
     def get_is_drilled(self, obj):
         user = self.context['request'].user
