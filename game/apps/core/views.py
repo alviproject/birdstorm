@@ -373,7 +373,7 @@ class Tasks(viewsets.ReadOnlyModelViewSet):
         if request.user.is_authenticated():
             return models.Task.objects.filter(user=request.user, archived=False)
         else:
-            return models.Task.objects.none()
+            return models.Task.objects.filter(user=request.user, archived=False)
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset(request)

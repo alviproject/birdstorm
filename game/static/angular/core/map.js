@@ -188,10 +188,6 @@
                 });
                 this.subscription.subscribe('main');
 
-                scope.goto = function(state, params) {
-                    $state.go(state, params);
-                };
-
                 scope.$state = $state;
             }
         }
