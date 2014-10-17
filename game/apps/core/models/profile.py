@@ -58,6 +58,7 @@ class Profile(models.Model):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.drilled_planets = [int(planet_id) for planet_id in self.data.get('drilled_planets', [])]
+        self.warehouse_resources = self.data.get("warehouse_resources", {})
         self.scan_results = OrderedDict()
 
         #dict comprehension would not allow to keep order, hence for loop

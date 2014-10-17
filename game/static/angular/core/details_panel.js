@@ -22,7 +22,7 @@
         }
     }
 
-    function providerController($scope, $http, currentShip, building) {
+    function providerController($scope, $http, system, currentShip, building) {
         $scope.building = building;
         $scope.currentShip = currentShip;
 
@@ -44,6 +44,9 @@
 
         $scope.order = function (building_id, order, quantity) {
             var ship_id = currentShip.id;
+            if(!check_system(currentShip, system, $scope)) {
+                return
+            }
             $scope.quantities[order] = 1;
             $http.post('/api/core/buildings/'+building_id+'/order/', {
                 ship_id: ship_id,
@@ -210,7 +213,7 @@
             })
             .state(buildingState({
                 type: "Port",
-                controller: function($stateParams, $scope, $http, currentShip, building) {
+                controller: function($stateParams, $scope, $http, system, currentShip, building) {
                     $scope.building = building;
                     $scope.quantities = {};
                     $.each(building.prices, function(type, price) {
@@ -223,6 +226,9 @@
                         return 0;
                     };
                     $scope.sell = function (building_id, resource) {
+                        if(!check_system(currentShip, system, $scope)) {
+                            return
+                        }
                         var quantity = $scope.quantities[resource];
                         $scope.quantities[resource] = 0;
                         var ship_id = currentShip.id;
@@ -254,7 +260,7 @@
             }))
             .state(buildingState({
                 type: "Warehouse",
-                controller: function($stateParams, $scope, $http, account, currentShip, building) {
+                controller: function($stateParams, $scope, $http, system, account, currentShip, building) {
                     $scope.building = building;
 
                     $scope.warehouseResources = {};
@@ -279,6 +285,9 @@
                     });
 
                     $scope.store = function(resource, quantity, action) {
+                        if(!check_system(currentShip, system, $scope)) {
+                            return
+                        }
                         $http.post('/api/core/buildings/'+building.id+'/store/', {
                             ship_id: currentShip.id,
                             resource: resource,
