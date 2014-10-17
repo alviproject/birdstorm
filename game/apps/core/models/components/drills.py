@@ -29,10 +29,10 @@ class Drill(Component):
 
 class SteelDrill(Drill):
     def deepness(self):
-        return int((1.2**self.mark) * 10)
+        return self.mark
 
     def speed(self):
-        return int((1.2**self.mark) * 0.2)
+        return self.mark
 
     def process_cost(self):
         if self.mark == 1:

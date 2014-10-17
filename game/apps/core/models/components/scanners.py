@@ -24,7 +24,7 @@ class Scanner(Component):
 
 class BaseScanner(Scanner):
     def deepness(self):
-        return int((1.2**self.mark) * 10)
+        return self.mark
 
     def process_cost(self):
         if self.mark == 1:

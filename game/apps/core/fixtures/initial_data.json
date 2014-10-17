@@ -13,7 +13,10 @@
         "data": {
             "resources": [
                 {"Coal": 10, "Oil": 10},
-                {"Coal": 15, "Oil": 15}
+                {"Coal": 15, "Oil": 15},
+                {"Coal": 20, "Oil": 20},
+                {"Coal": 25, "Oil": 25},
+                {"Coal": 30, "Oil": 30}
             ]
     }}},
     {"model": "core.planet", "pk": 2, "fields": {
@@ -24,7 +27,12 @@
         "data": {
             "resources": [
                 {"Coal": 10, "Iron": 10},
-                {"Coal": 15, "Iron": 15}
+                {"Coal": 15, "Iron": 15},
+                {"Coal": 20, "Iron": 20},
+                {"Coal": 25, "Iron": 25},
+                {"Coal": 30, "Iron": 30},
+                {"Coal": 35, "Iron": 35},
+                {"Coal": 40, "Iron": 40}
             ]
     }}},
     {"model": "core.planet", "pk": 3, "fields": {
@@ -35,7 +43,11 @@
         "data": {
             "resources": [
                 {"Oil": 10, "Iron": 10},
-                {"Oil": 15, "Iron": 15}
+                {"Oil": 15, "Iron": 15},
+                {"Oil": 20, "Iron": 20},
+                {"Oil": 25, "Iron": 25},
+                {"Oil": 30, "Iron": 30},
+                {"Oil": 35, "Iron": 35}
             ]
     }}},
     {"model": "core.planet", "pk": 4, "fields": {
@@ -65,7 +77,11 @@
         "data": {
             "resources": [
                 {"Oil": 10, "Bauxite": 10},
-                {"Oil": 15, "Bauxite": 15}
+                {"Oil": 15, "Bauxite": 15},
+                {"Oil": 20, "Bauxite": 20},
+                {"Oil": 25, "Bauxite": 25},
+                {"Oil": 30, "Bauxite": 30},
+                {"Oil": 35, "Bauxite": 35}
             ]
     }}},
     {"model": "core.planet", "pk": 8, "fields": {
@@ -76,7 +92,10 @@
         "data": {
             "resources": [
                 {"Coal": 10, "Iron": 10},
-                {"Coal": 15, "Iron": 15}
+                {"Coal": 15, "Iron": 15},
+                {"Coal": 20, "Iron": 20},
+                {"Coal": 25, "Iron": 25},
+                {"Coal": 30, "Iron": 30}
             ]
     }}},
     {"model": "core.planet", "pk": 9, "fields": {

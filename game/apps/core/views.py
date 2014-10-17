@@ -122,7 +122,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
                     text="Scanning level %d, please stand by..." % level,
                 ))
 
-                if level >= 2:
+                if level > ship.get_component('Scanner').deepness():
                     messages.send(self, message=dict(
                         type="error",
                         text="Equipped scanner cannot scan any deeper.",
@@ -179,8 +179,6 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
 
             check_system(ship, planet.system_id)
 
-            yield pow(settings.FACTOR, level*2)
-
             if user.profile.is_drilled(planet_id):
                 messages.send(self, message=dict(
                     type="error",
@@ -188,12 +186,14 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
                 ))
                 return
 
-            if level >= 2:
+            if level >= ship.get_component('Drill').deepness():
                 messages.send(self, message=dict(
                     type="error",
-                    text="Equipped drill cannot scan any deeper.",
+                    text="Equipped drill cannot drill so deep.",
                 ))
                 return
+
+            yield pow(settings.FACTOR, level*2)
 
             resources = results[level]
             ship.add_resource(resource_type, resources[resource_type])
