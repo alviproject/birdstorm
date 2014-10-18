@@ -1,12 +1,21 @@
 (function() {
 
+    angular.module('ErrorHandler', [])
+        .factory('$exceptionHandler', function () {
+            return function errorCatcherHandler(x) {
+                console.error(x.stack);
+                Raven.captureException(x);
+            };
+        });
+
     var app = angular.module('game', [
         'ngCookies',
         'ui.bootstrap',
         'ui.router',
         'ncy-angular-breadcrumb',
         'game.details_panel',
-        'game.account'
+        'game.account',
+        'ErrorHandler'
     ]);
 
     app.factory('request_id', [function() {
