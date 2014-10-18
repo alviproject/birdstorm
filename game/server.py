@@ -53,6 +53,9 @@ class BroadcastConnection(SockJSConnection):
         self.user = django.contrib.auth.get_user(request)
 
     def on_message(self, msg):
+        if msg == "ping":
+            self.send("pong")
+            return
         data = json.loads(msg)
         command = data['command']
         if command == "subscribe":

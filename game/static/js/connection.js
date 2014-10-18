@@ -1,9 +1,16 @@
 var interval = undefined;
+var hbInterval = undefined;
 
 function make_connection(delay, channels) {
     if(interval!==undefined) {
         window.clearInterval(interval);
     }
+
+    window.setInterval(function () {
+        if(connection.is_connected) {
+            connection.send("ping");
+        }
+    }, 30 * 1000);
 
     connection = new SockJS('/broadcast');
 
@@ -42,6 +49,9 @@ function make_connection(delay, channels) {
     };
 
     connection.onmessage = function (e) {
+        if(e.data === "pong") {
+            return;
+        }
         console.log('receiving message', e.data);
         var channel = e.data['channel'];
         //var channel_class = channel.split('.')[0];
