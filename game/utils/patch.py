@@ -1,5 +1,5 @@
 import rest_framework.fields
-
+from sockjs.tornado.basehandler import BaseHandler
 
 #TODO add a comment
 from sockjs.tornado.transports.websocket import WebSocketTransport
@@ -18,3 +18,15 @@ def abort_connection(*args, **kwargs):
 
 
 WebSocketTransport.abort_connection = abort_connection
+
+
+#TODO send pull request to sockjs-tornado
+def finish(self, *args, **kwargs):
+    """Tornado `finish` handler"""
+    self._log_disconnect()
+
+    super(BaseHandler, self).finish(*args, **kwargs)
+
+BaseHandler.finish = finish
+
+
