@@ -3,7 +3,7 @@ from game.apps.core.models import Ship
 
 
 class ShipSerializer(serializers.HyperlinkedModelSerializer):
-    system_id = serializers.CharField(source='system_id', read_only=True)
+    planet_id = serializers.CharField(source='planet_id', read_only=True)
     id = serializers.IntegerField(source='id', read_only=True)
     components = serializers.SerializerMethodField('get_components')
     owner_username = serializers.SerializerMethodField('get_owner_username')
@@ -35,7 +35,7 @@ class ShipSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Ship
-        fields = ['id', 'url', 'type', 'system_id', 'owner', 'system', 'components', 'owner_username']
+        fields = ['id', 'url', 'type', 'planet_id', 'owner', 'planet', 'components', 'owner_username']
 
 
 class OwnShipSerializer(ShipSerializer):
@@ -43,7 +43,7 @@ class OwnShipSerializer(ShipSerializer):
 
 
 class OwnShipDetailsSerializer(OwnShipSerializer):
-    system_id = serializers.CharField(source='system_id', read_only=True)
+    planet_id = serializers.CharField(source='planet_id', read_only=True)
     resources = serializers.Field(source='resources')
 
     class Meta:

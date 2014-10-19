@@ -22,7 +22,7 @@
         }
     }
 
-    function providerController($scope, $http, system, currentShip, building) {
+    function providerController($scope, $http, planet, currentShip, building) {
         $scope.building = building;
         $scope.currentShip = currentShip;
 
@@ -44,7 +44,7 @@
 
         $scope.order = function (building_id, order, quantity) {
             var ship_id = currentShip.id;
-            if(!check_system(currentShip, system, $scope)) {
+            if(!check_planet(currentShip, planet, $scope)) {
                 return
             }
             $scope.quantities[order] = 1;
@@ -69,17 +69,17 @@
         });
     }
 
-    function create_go_to_system($http, currentShip) {
-        return function(system_id) {
+    function create_move_ship($http, $state, currentShip) {
+        return function() {
             $http.post('/api/core/own_ships/'+currentShip.id+'/move/', {
-                system_id: system_id
+                planet_id: $state.params.planet_id
             });
             wrong_system_alert(false);
         }
     }
 
-    function check_system(currentShip, system) {
-        if(currentShip.system_id !== system.id) {
+    function check_planet(currentShip, planet) {
+        if(currentShip.planet_id !== planet.id) {
             wrong_system_alert(true);
             return false;
         }
@@ -116,7 +116,7 @@
                         controller: function($scope, $http, $state, currentShip, system) {
                             $scope.currentShip = currentShip;
                             $scope.system = system;
-                            $scope.go_to_system = create_go_to_system($http, currentShip);
+                            $scope.move_ship = create_move_ship($http, $state, currentShip);
                         }
                     },
                     content: {
@@ -140,7 +140,7 @@
                                 var y2 = system.y;
                                 return Math.sqrt(Math.pow(x1-x2, 2)+Math.pow(y1-y2, 2));
                             };
-                            $scope.go_to_system = create_go_to_system($http, currentShip);
+                            $scope.move_ship = create_move_ship($http, $state, currentShip);
                             $scope.wrong_system_alert = wrong_system_alert;
                         }
                     }
@@ -188,11 +188,11 @@
                 data: {
                     ncyBreadcrumbLabel: 'Resources'
                 },
-                controller: function($stateParams, $scope, $http, currentShip, system) {
+                controller: function($stateParams, $scope, $http, currentShip, planet) {
                     $scope.currentShip = currentShip;
                     $scope.wrong_system_alert = wrong_system_alert;
                     $scope.scan = function (planet_id) {
-                        if(!check_system(currentShip, system, $scope)) {
+                        if(!check_planet(currentShip, planet, $scope)) {
                             return
                         }
                         var ship_id = currentShip.id;
@@ -213,7 +213,7 @@
             })
             .state(buildingState({
                 type: "Port",
-                controller: function($stateParams, $scope, $http, system, currentShip, building) {
+                controller: function($stateParams, $scope, $http, planet, currentShip, building) {
                     $scope.building = building;
                     $scope.quantities = {};
                     $.each(building.prices, function(type, price) {
@@ -226,7 +226,7 @@
                         return 0;
                     };
                     $scope.sell = function (building_id, resource) {
-                        if(!check_system(currentShip, system, $scope)) {
+                        if(!check_planet(currentShip, planet, $scope)) {
                             return
                         }
                         var quantity = $scope.quantities[resource];
@@ -260,7 +260,7 @@
             }))
             .state(buildingState({
                 type: "Warehouse",
-                controller: function($stateParams, $scope, $http, system, account, currentShip, building) {
+                controller: function($stateParams, $scope, $http, planet, account, currentShip, building) {
                     $scope.building = building;
 
                     $scope.warehouseResources = {};
@@ -285,7 +285,7 @@
                     });
 
                     $scope.store = function(resource, quantity, action) {
-                        if(!check_system(currentShip, system, $scope)) {
+                        if(!check_planet(currentShip, planet, $scope)) {
                             return
                         }
                         $http.post('/api/core/buildings/'+building.id+'/store/', {

@@ -9,7 +9,6 @@ from game.apps.core import serializers
 from game.apps.core.models.planet.models import TerrestrialPlanet, GasGiant
 from game.apps.core.serializers.buildings import BuildingSerializer
 from game.apps.core.serializers.planet import PlanetDetailsSerializer
-from game.apps.core.models.ships import Ship
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
@@ -19,12 +18,12 @@ import game.apps.core.signals
 from django.conf import settings
 
 
-def check_system(ship, system_id):
-    if ship.system_id != system_id:
+def check_planet(ship, planet_id):
+    if ship.planet_id != planet_id:
         messages = blinker.signal(game.apps.core.signals.messages % ship.owner_id)
         messages.send(None, message=dict(
             type="error",
-            text='Your ship is not located in this system.',
+            text='Your ship is not located at this planet.',
         ))
         raise RuntimeError
 
@@ -74,12 +73,12 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
 
     @async_action
     def move(self, request, pk=None):
-        system_id = request.DATA['system_id']
-        system = models.System.objects.get(pk=system_id)
+        planet_id = request.DATA['planet_id']
+        planet = models.Planet.objects.get(pk=planet_id)
         ship = self.get_queryset(request).get(pk=pk)
         time = 5  # seconds
         with ship.lock():
-            ship.system = system
+            ship.planet = planet
             ship.save()
             signal_name = game.apps.core.signals.ship_move
             blinker.signal(signal_name % 'main').send(ship, time=time)
@@ -95,7 +94,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
         user = request.user
         messages = blinker.signal(game.apps.core.signals.messages % user.id)
 
-        check_system(ship, planet.system_id)
+        check_planet(ship, planet.id)
 
         if isinstance(planet, GasGiant):
             messages.send(self, message=dict(
@@ -177,7 +176,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
                 text="Extracting %s, please stand by..." % resource_type,
             ))
 
-            check_system(ship, planet.system_id)
+            check_planet(ship, planet.id)
 
             if user.profile.is_drilled(planet_id):
                 messages.send(self, message=dict(
@@ -231,7 +230,7 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         price = port.prices[resource]['sale_price']
         ship = request.user.ship_set.get(pk=ship_id)
 
-        check_system(ship, port.planet.system_id)
+        check_planet(ship, port.planet_id)
 
         quantity = min(quantity, port.resources.get(resource, 0))
         quantity = min(quantity, user.credits//price)
@@ -273,7 +272,7 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         price = port.prices[resource]['purchase_price']
         ship = request.user.ship_set.get(pk=ship_id)
 
-        check_system(ship, port.planet.system_id)
+        check_planet(ship, port.planet_id)
 
         quantity = min(quantity, ship.resources.get(resource, 0))
         cost = price * quantity
@@ -313,7 +312,7 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         building = self.get_queryset().get(pk=pk)
         ship = user.ship_set.get(pk=ship_id)
 
-        check_system(ship, building.planet.system_id)
+        check_planet(ship, building.planet_id)
 
         for delay in building.order(order, quantity, ship, user, request_id):
             yield delay
@@ -345,7 +344,7 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         warehouse = self.get_queryset().get(pk=pk)
         ship = request.user.ship_set.get(pk=ship_id)
 
-        check_system(ship, warehouse.planet.system_id)
+        check_planet(ship, warehouse.planet_id)
         container = warehouse.get_resource_container(user)
 
         if action == "unload":

@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 class Sector(Channel):
     @receiver(game.apps.core.signals.ship_move)
     def ship_move(self, ship, time):
-        return dict(ship=ship.id, target_system=ship.system.id, time=time)
+        return dict(ship=ship.id, target_planet=ship.planet.id, time=time)
 
 
 class PlanetDetails(Channel):

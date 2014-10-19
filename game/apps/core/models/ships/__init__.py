@@ -17,7 +17,7 @@ from concurrency.fields import IntegerVersionField
 
 class Ship(PolymorphicBase, ResourceContainer):
     owner = models.ForeignKey(User)
-    system = models.ForeignKey('System')  # TODO change it to planet
+    planet = models.ForeignKey('Planet', default=1)  # TODO don't hard-code this const here
     data = JSONField(default={})  # TODO schema validation
     locked = models.BooleanField(default=False)
     version = IntegerVersionField()

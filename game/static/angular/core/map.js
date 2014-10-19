@@ -74,19 +74,21 @@
             planet.display_x = planet.x*screen_size_x();
             planet.display_y = planet.y*screen_size_y();
             planet.r = planet_radiuses[planet.type];
+            planet.system = system;
+            map.planets[planet.id] = planet;
         });
     }
 
     function prepare_ship(ship, map) {
-        var system = map.systems[ship.system_id];
-        ship.system = function() {
-            return system;
+        var planet = map.planets[ship.planet_id];
+        ship.planet = function() {
+            return planet;
         };
-        ship.set_system = function(new_system) {
-            system = new_system;
+        ship.set_planet = function(new_planet) {
+            planet = new_planet;
         };
-        ship.display_x = ship.system().display_x;
-        ship.display_y = ship.system().display_y;
+        ship.display_x = ship.planet().display_x + ship.planet().system.display_x;
+        ship.display_y = ship.planet().display_y + ship.planet().system.display_y;
 
         map.ships[ship.id] = ship;
     }
@@ -95,6 +97,7 @@
         $http.get("/api/core/systems").success(function(data, status, headers, config){
             var systems = data.results;
             map.systems = {};
+            map.planets = {};
             for(var i in systems) {
                 prepare_system(systems[i], map);
             }
@@ -170,15 +173,15 @@
                 this.subscription = connection.create_subscription('sector', function(data) {
                     var ship = map.ships[data.ship];
                     var time = data.time;
-                    var target_system = map.systems[data.target_system];
-                    ship.set_system(target_system);
+                    var target_planet = map.planets[data.target_planet];
+                    ship.set_planet(target_planet);
 
                     var element = d3.select("#ship_"+data.ship);
                     element.transition()
                         .duration(time*1000)
                         .tween("position", function() {
-                            var x = d3.interpolateRound(ship.display_x, target_system.display_x);
-                            var y = d3.interpolateRound(ship.display_y, target_system.display_y + target_system.r);
+                            var x = d3.interpolateRound(ship.display_x, target_planet.display_x + target_planet.system.display_x);
+                            var y = d3.interpolateRound(ship.display_y, target_planet.display_y + target_planet.system.display_y);
                             return function(t) {
                                 ship.display_x = x(t);
                                 ship.display_y = y(t);
