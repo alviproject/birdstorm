@@ -1,12 +1,12 @@
-<span ng-hide="currentShip.locked || currentShip.system_id === system.id">
+<span ng-show="!currentShip.locked && currentShip.system_id !== system.id">
     <a href title="Go" ng-click="move_ship()">
         Go to this star system<span class="fa fa-plane fa-fw"></span>
     </a>
 </span>
-<span ng-show="currentShip.system_id === system.id && !currentShip.locked">
+<span ng-show="!currentShip.locked && currentShip.system_id === system.id">
     You are currently in this system
 </span>
-<span ng-show="currentShip.system_id === system.id && currentShip.locked">
+<span ng-show="currentShip.locked">
     Your ship is busy
 </span>
 

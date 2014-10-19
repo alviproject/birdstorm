@@ -76,7 +76,8 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
         planet_id = request.DATA['planet_id']
         planet = models.Planet.objects.get(pk=planet_id)
         ship = self.get_queryset(request).get(pk=pk)
-        time = 5  # seconds
+        old_system_id = ship.planet.system_id
+        time = 0 if old_system_id == planet.system_id else 5  # seconds
         with ship.lock():
             ship.planet = planet
             ship.save()

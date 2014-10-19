@@ -69,13 +69,11 @@
         });
     }
 
-    function create_move_ship($http, $state, currentShip) {
-        return function() {
-            $http.post('/api/core/own_ships/'+currentShip.id+'/move/', {
-                planet_id: $state.params.planet_id
-            });
-            wrong_system_alert(false);
-        }
+    function move_ship($http, currentShip, planet_id) {
+        $http.post('/api/core/own_ships/'+currentShip.id+'/move/', {
+            planet_id: planet_id
+        });
+        wrong_system_alert(false);
     }
 
     function check_planet(currentShip, planet) {
@@ -116,7 +114,11 @@
                         controller: function($scope, $http, $state, currentShip, system) {
                             $scope.currentShip = currentShip;
                             $scope.system = system;
-                            $scope.move_ship = create_move_ship($http, $state, currentShip);
+                            $scope.$state = $state;
+
+                            $scope.move_ship = function() {
+                                move_ship($http, currentShip, $state.params.planet_id);
+                            }
                         }
                     },
                     content: {
@@ -140,7 +142,9 @@
                                 var y2 = system.y;
                                 return Math.sqrt(Math.pow(x1-x2, 2)+Math.pow(y1-y2, 2));
                             };
-                            $scope.move_ship = create_move_ship($http, $state, currentShip);
+                            $scope.move_ship = function() {
+                                move_ship($http, currentShip, $state.params.planet_id);
+                            };
                             $scope.wrong_system_alert = wrong_system_alert;
                         }
                     }
@@ -159,7 +163,7 @@
                         });
                     }
                 },
-                controller: function($stateParams, $scope, $state, request_id, planet) {
+                controller: function($stateParams, $scope, $state, $http, request_id, planet, system, currentShip) {
                     $scope.planet = planet;
                     $scope.tabs = [
                         {heading: "Planet", route: "."},
@@ -180,6 +184,10 @@
                     });
 
                     subscription.subscribe(planet.id+"_"+request_id());
+
+                    if(currentShip.system_id === system.id && planet.id !== currentShip.planet_id) {
+                        move_ship($http, currentShip, planet.id);
+                    }
                 }
             })
             .state('map.system.planet.resources', {

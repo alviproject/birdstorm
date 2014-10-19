@@ -172,7 +172,7 @@
                 //
                 this.subscription = connection.create_subscription('sector', function(data) {
                     var ship = map.ships[data.ship];
-                    var time = data.time;
+                    var time = data.time ? data.time : 1;
                     var target_planet = map.planets[data.target_planet];
                     ship.set_planet(target_planet);
 

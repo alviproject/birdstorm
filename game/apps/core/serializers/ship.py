@@ -6,8 +6,13 @@ class ShipSerializer(serializers.HyperlinkedModelSerializer):
     planet_id = serializers.CharField(source='planet_id', read_only=True)
     id = serializers.IntegerField(source='id', read_only=True)
     components = serializers.SerializerMethodField('get_components')
+    system_id = serializers.SerializerMethodField('get_system_id')
     owner_username = serializers.SerializerMethodField('get_owner_username')
     speed = serializers.Field('speed')
+
+    #TODO could be calculated on client side
+    def get_system_id(self, obj):
+        return obj.planet.system_id
 
     def get_components(self, obj):
         return {
@@ -35,7 +40,7 @@ class ShipSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Ship
-        fields = ['id', 'url', 'type', 'planet_id', 'owner', 'planet', 'components', 'owner_username']
+        fields = ['id', 'url', 'type', 'planet_id', 'owner', 'planet', 'system_id', 'components', 'owner_username']
 
 
 class OwnShipSerializer(ShipSerializer):
