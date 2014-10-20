@@ -9,6 +9,7 @@ from game.tasks.base import register
 logger = logging.getLogger(__name__)
 
 
+#TODO remove whole module
 @register
 class Register(Task):
     @classmethod
@@ -20,4 +21,4 @@ class Register(Task):
         if not created:
             return
         user = kwargs['instance']
-        Raven.objects.create(owner=user, system_id=1)  # TODO don't hardcode data here
+        Raven.objects.create(owner=user)  # TODO don't hardcode data here

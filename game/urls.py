@@ -32,5 +32,5 @@ urlpatterns = patterns(
     url(r'^api/account/register', 'game.apps.account.views.register'),  # TODO
     url(r'^api/account/login', 'game.apps.account.views.login'),  # TODO
     url(r'^forum/', include('pybb.urls', namespace='pybb')),
-    url(r'^.*', 'game.apps.core.views.index'),
+    url(r'^map/*', 'game.apps.core.views.index'),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
