@@ -26,7 +26,7 @@ DEBUG = config.debug
 
 TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = ['birdstorm.herokuapp.com', 'www.birdstorm.net', 'www.birdstorm.pl']
+ALLOWED_HOSTS = ['birdstorm.herokuapp.com', '.birdstorm.net', '.birdstorm.pl']
 
 
 # Application definition
@@ -145,3 +145,11 @@ RAVEN_CONFIG = {
 }
 
 PYBB_AUTO_USER_PERMISSIONS = False
+
+SUBDOMAINS = {
+    'www': 'x-default',
+    'uk': 'en-GB',
+    'in': 'en-IN',
+}
+
+DOMAIN_NAME = 'birdstorm.net'
