@@ -412,3 +412,8 @@ def index(request):
     context = RequestContext(request, {
     })
     return render(request, 'index.html', context_instance=context)
+
+
+#TODO move to another app
+def section(request, name):
+    return render(request, "section/%s.html" % name)

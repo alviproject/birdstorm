@@ -42,12 +42,14 @@
         <div class="media" id="top-menu">
                 <ul class="nav navbar-nav">
                 <li><a href="/forum" target="_blank">Forum</a></li>
+<!--
                     <li ng-if="account.is_superuser">
                         <form class="navbar-form navbar-right" role="form" action="/test/" method="post">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-success">Test</button>
                         </form>
                     </li>
+                    -->
                 </ul>
         </div>
     </div>
@@ -55,6 +57,7 @@
 
 <div class="clearfix"></div>
 
+{% block content %}
 {% verbatim %}
 <div ng-controller="MapController as map">
     <core-map map="map"></core-map>
@@ -79,6 +82,8 @@
 
 <chat></chat>
 {% endverbatim %}
+
+{% endblock %}
 
 <hr>
 
@@ -151,6 +156,7 @@
     Raven.config('https://a755e0f9523d4d429118a5db7d94c6ee@app.getsentry.com/29724').install();
 </script>
 
+{% block angular_js %}
 
 <script src="/static/js/connection.js"></script>
 <script src="/static/js/utils.js"></script>
@@ -166,6 +172,7 @@
 <script src="/static/angular/core/tasks_panel.js"></script>
 <script src="/static/angular/core/messages_panel.js"></script>
 
+{% endblock %}
 
 {% if UA %}
 <script>
