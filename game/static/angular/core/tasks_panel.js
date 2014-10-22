@@ -1,6 +1,8 @@
 (function() {
     var app = angular.module('game');
 
+    var tasksVersion = 0;
+
     var missions = {
         LearnTheInterface: {
             Panels: function(task, $rootScope, $state, $scope) {
@@ -37,22 +39,23 @@
                     });
                 }
 
-                function handle(task, state, elements, event) {
+                function handle(task, state, elements, event, version) {
                     var handler = function (){
-                        $scope.task_action('acknowledge');
-                        //TODO this turnoffs the event only if task was updated in this session
-                        //won't work if task will be updated externally
-                        elements.off(event, handler);
+                        if(tasksVersion === version) {
+                            console.log(task, event, elements);
+                            $scope.task_action('acknowledge');
+                        }
                     };
 
                     if(task.state === state) {
-                        elements.one(event, handler);
+                        $("body").on(event, elements, handler);
                     }
                 }
 
-                handle(task, "left_panels", left_panels, 'mouseenter');
-                handle(task, "close_details", $("a#details-panel-close"), 'click');
-                handle(task, "map", $("a#map-reset"), 'click');
+                handle(task, "left_panels", "#user-panel", 'mouseenter', tasksVersion);
+                handle(task, "left_panels", "#ship-panel", 'mouseenter', tasksVersion);
+                handle(task, "close_details", "a#details-panel-close", 'click', tasksVersion);
+                handle(task, "map", "a#map-reset", 'click', tasksVersion);
             }
         },
         UpgradeYourShip: {
@@ -86,6 +89,7 @@
                 $scope.currentShip = currentShip;
 
                 function activateTasks(tasks) {
+                    tasksVersion += 1;
                     $.each(tasks, function (index, task) {
                         if(missions[task.mission] !== undefined && missions[task.mission][task.type] !== undefined) {
                             missions[task.mission][task.type](task, $rootScope, $state, $scope ); //TODO to many parameters...

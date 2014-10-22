@@ -196,7 +196,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
             yield pow(settings.FACTOR, level*2)
 
             resources = results[level]
-            ship.add_resource(resource_type, resources[resource_type])
+            ship.add_resource(resource_type, resources[resource_type]*100)
             ship.save()
             messages.send(
                 self,
@@ -317,8 +317,7 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
 
         for delay in building.order(order, quantity, ship, user, request_id):
             yield delay
-            #TODO consider sending this signal after all units are produced
-            blinker.signal(game.apps.core.signals.order % user.id).send(ship=ship)
+        blinker.signal(game.apps.core.signals.order % user.id).send(ship=ship)
 
     #TODO this shall be Workshop method
     # alternatively this can be a separate resource aligned with ship like /core/own_ships/2/workshop_storage

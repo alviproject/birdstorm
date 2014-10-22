@@ -224,18 +224,6 @@ class Alloys(Task):
             self.state = "summary"
         self.save()
 
-    def action(self, data):
-        _type = data["type"]
-        if self.state == "started" and _type == 'acknowledge':
-            self.state = "scan"
-        if self.state == "summary" and _type == 'acknowledge':
-            self.archived = True
-            self.state = "finished"
-            Alloys.objects.create(user=self.user)
-        else:
-            raise ValidationError("Wrong state or type: %s, %s" % (self.state, _type))
-        self.save()
-
     def details(self):
         #TODO cache
         marked_buildings = [
