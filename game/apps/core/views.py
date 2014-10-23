@@ -196,7 +196,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
             yield pow(settings.FACTOR, level*2)
 
             resources = results[level]
-            ship.add_resource(resource_type, resources[resource_type]*100)
+            ship.add_resource(resource_type, resources[resource_type])
             ship.save()
             messages.send(
                 self,
