@@ -32,9 +32,13 @@
 
         this.zoomIn = function () {
             map.scale = map.scale * FACTOR;
+            map.x -= (screen_size_x() * (FACTOR-1)/2) * map.scale;
+            map.y -= (screen_size_y() * (FACTOR-1)/2) * map.scale;
         };
 
         this.zoomOut = function () {
+            map.x += (screen_size_x() * (FACTOR-1)/2) * map.scale;
+            map.y += (screen_size_y() * (FACTOR-1)/2) * map.scale;
             map.scale = map.scale / FACTOR;
         };
 
