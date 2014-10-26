@@ -57,7 +57,7 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.OwnShipSerializer
 
     def get_queryset(self, request):
-        if request.user.is_anonymous:
+        if request.user.is_anonymous():
             return models.Ship.objects.none()
         return models.Ship.objects.filter(owner=request.user)
 
