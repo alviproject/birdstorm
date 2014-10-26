@@ -150,6 +150,19 @@ SUBDOMAINS = {
     'www': 'x-default',
     'uk': 'en-GB',
     'in': 'en-IN',
+    'pk': 'en-PK',
+    'ng': 'en-NG',
+    'ph': 'en-PH',
+    'de': 'en-DE',
+    'bd': 'en-BD',
+    'eg': 'en-EG',
+    'ca': 'en-CA',
+    'fr': 'en-FR',
+    'it': 'en-IT',
+    'au': 'en-AU',
+    'th': 'en-TH',
+    'nl': 'en-NL',
+    'pl': 'en-PL',
 }
 
 DOMAIN_NAME = 'birdstorm.net'
