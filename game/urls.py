@@ -34,4 +34,5 @@ urlpatterns = patterns(
     url(r'^forum/', include('pybb.urls', namespace='pybb')),
     url(r'^section/about', 'game.apps.core.views.section', {'name': 'about'}),
     url(r'^map/*', 'game.apps.core.views.index'),
+    url(r'^account/signup', 'game.apps.core.views.index'),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

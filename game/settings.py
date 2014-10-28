@@ -58,7 +58,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'pybb.middleware.PybbMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware', #TODO this shall be before or after PybbMiddleware?
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',  # TODO this shall be before or after PybbMiddleware?
+    'game.utils.DomainMiddleware',
 )
 
 
@@ -146,6 +147,7 @@ RAVEN_CONFIG = {
 
 PYBB_AUTO_USER_PERMISSIONS = False
 
+#TODO consider using Django sites
 SUBDOMAINS = {
     'www': 'x-default',
     'uk': 'en-GB',
