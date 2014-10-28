@@ -15,7 +15,8 @@
         'ncy-angular-breadcrumb',
         'game.details_panel',
         'game.account',
-        'ErrorHandler'
+        'ErrorHandler',
+        'timer'
     ]);
 
     app.factory('request_id', [function() {
