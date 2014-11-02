@@ -48,6 +48,14 @@ a {
 }
 
 
+input#id_name {
+    color: #000;
+}
+
+.post-header {
+    background-color: #484e55;
+}
+
 /* template customisation */
 .logo {
     padding-left: 0;
