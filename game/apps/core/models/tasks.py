@@ -16,6 +16,9 @@ class Task(PolymorphicBase):
     archived = models.BooleanField(default=False)
     version = IntegerVersionField()
 
+    def __str__(self):
+        return "User: %s, task: %s, state: %s" % (self.user, self.type, self.state)
+
     def connect(self):
         if not self.signal_name():
             return
