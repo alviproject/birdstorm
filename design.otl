@@ -1,9 +1,26 @@
+design
+	notes
+		ship movement
+			pigeons move every turn to the planed where construction was started
+			other (transportes, military ships) move operated by channel, after disconnecting movement stops
+		base planet
+			terminal
+			warehouse
+		pigeon
+			responsible for constructing and upgrading buildings
+	buildings:
+		terminal
+			allows to order structures (buildings and ship)
+			tax (depending on number of possesed structures)
+	resources
+		building structures
+		ship structures
+
 planet, system, sector,  galaxy
 todo:
     django AbstractUser
     angular:
         $scope
-        ng-switch
         https://github.com/angular/angular-seed
         tagsinput
         restangular
