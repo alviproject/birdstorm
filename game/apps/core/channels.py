@@ -107,7 +107,10 @@ class Tasks(Channel):
         self.init_tasks()
         return dict(
             tasks=TaskSerializer(self.tasks(), many=True, context={'request': 0}).data,
-            updated=kwargs['task_id'],
+            updated_task=kwargs['task_id'],
+            archived=kwargs['archived'],
+            state=kwargs['state'],
+            type=kwargs['type'],
         )
 
     #FIXME permissions

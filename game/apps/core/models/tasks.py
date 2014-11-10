@@ -38,7 +38,7 @@ class Task(PolymorphicBase):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         signal = blinker.signal(game.apps.core.signals.task_updated % self.user_id)
-        signal.send(None, task_id=self.id)
+        signal.send(None, task_id=self.id, archived=self.archived, state=self.state, type=self.type)
 
     class Meta:
         ordering = ('-id',)

@@ -83,7 +83,7 @@
             templateUrl: '/static/angular/core/tasks_panel.html',
             scope: {
             },
-            controller: function($rootScope, $state, $scope, $http, account, currentShip) {
+            controller: function($rootScope, $state, $scope, $http, $window, account, currentShip) {
                 $scope.updatedTasks = {};
                 $scope.account = account;
                 $scope.currentShip = currentShip;
@@ -135,8 +135,11 @@
 
                 var subscription = connection.create_subscription('tasks', function (data) {
                     $scope.tasks = data.tasks;
-                    $scope.updatedTasks[data.updated] = true;
-                    $scope.updatedTasks[10] = true;
+                    $scope.updatedTasks[data.updated_task] = true;
+                    if(data.archived) {
+                        $window.ga('send', 'event', 'task', data.type, 'archived');
+                    }
+                    //$scope.updatedTasks[10] = true;//TODO
                     updateCurrentTask();
                     activateTasks($scope.tasks);
                     $scope.$digest();
