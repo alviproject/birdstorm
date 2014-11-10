@@ -137,7 +137,7 @@
                     $scope.tasks = data.tasks;
                     $scope.updatedTasks[data.updated_task] = true;
                     if(data.archived) {
-                        $window.ga('send', 'event', 'task', data.type, 'archived');
+                        $window.ga('send', 'event', 'task', 'archived', data.type);
                     }
                     //$scope.updatedTasks[10] = true;//TODO
                     updateCurrentTask();
