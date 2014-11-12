@@ -3,8 +3,23 @@ body {
     background: #000000;
 }
 
-.broadcast-connection {
-    display: none;
+body, a, input, .help-block {
+    color: #fff;
+    text-shadow: none;
+}
+
+.page-heading {
+    margin: 0;
+    background: rgb(0,2,6);
+    background: -moz-linear-gradient(-45deg,  rgba(0,2,6,1) 0%, rgba(0,55,105,1) 100%);
+    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(0,2,6,1)), color-stop(100%,rgba(0,55,105,1)));
+    background: -webkit-linear-gradient(-45deg,  rgba(0,2,6,1) 0%,rgba(0,55,105,1) 100%);
+    background: -o-linear-gradient(-45deg,  rgba(0,2,6,1) 0%,rgba(0,55,105,1) 100%);
+    background: -ms-linear-gradient(-45deg,  rgba(0,2,6,1) 0%,rgba(0,55,105,1) 100%);
+    background: linear-gradient(135deg,  rgba(0,2,6,1) 0%,rgba(0,55,105,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000206', endColorstr='#003769',GradientType=1 );
+    opacity: 0.6;
+    border: 1px solid rgba(255,255,255,0.15);
 }
 
 ul.list-sublist {
@@ -18,20 +33,68 @@ li.active, li.active a{
     color: #FFD600;
 }
 
-.side-panel {
-    max-width: 250px;
-}
-
 hr {
     border-color: rgba(255, 255, 255, 0.4);
 }
 
 a {
     cursor: pointer;
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.5);
+}
+
+a:hover, a:focus {
+    color: #ffffff;
+    opacity: 0.5;
+    text-decoration: none;
 }
 
 .strong {
     font-weight: bold;
+}
+
+.panel {
+    background: rgb(0,2,6);
+    background: -moz-linear-gradient(-45deg,  rgba(0,2,6,1) 0%, rgba(0,95,171,1) 100%);
+    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(0,2,6,1)), color-stop(100%,rgba(0,95,171,1)));
+    background: -webkit-linear-gradient(-45deg,  rgba(0,2,6,1) 0%,rgba(0,95,171,1) 100%);
+    background: -o-linear-gradient(-45deg,  rgba(0,2,6,1) 0%,rgba(0,95,171,1) 100%);
+    background: -ms-linear-gradient(-45deg,  rgba(0,2,6,1) 0%,rgba(0,95,171,1) 100%);
+    background: linear-gradient(135deg,  rgba(0,2,6,1) 0%,rgba(0,95,171,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000206', endColorstr='#005fab',GradientType=1 );
+    opacity: 0.6;
+    border: 1px solid rgba(255,255,255,0.25);
+}
+
+.panel-default .panel-heading {
+    background-color: rgba(2, 0, 47, 0.2);
+    color: white;
+    border-bottom: 1px solid rgba(255,255,255,0.25);
+}
+
+.panel-footer {
+    background-color: transparent;
+    border-top: 0;
+}
+
+.breadcrumb {
+    background-color: transparent;
+    margin-bottom: 0;
+    text-transform: capitalize;
+    float: none;
+    padding: 0;
+}
+
+.modal-title {
+    text-transform: none;
+    font-size: 18px;
+}
+
+.modal-body {
+    font-size: 14px;
+}
+
+.modal-footer .btn {
+    font-size: 14px;
 }
 
 /* PYBBM */
@@ -54,85 +117,4 @@ input#id_name {
 
 .post-header {
     background-color: #484e55;
-}
-
-/* template customisation */
-.logo {
-    padding-left: 0;
-}
-
-header {
-    background-image: url("/static/images/background.png");
-}
-
-.panel {
-    border: 1px solid rgba(255,255,255,0.15);
-    /*background-color: rgba(255,255,255,0.15);*/
-    background-image: url("/static/images/background.png");
-}
-
-.panel h2 {
-    background-image: url("/static/images/background.png");
-}
-
-.chat-footer {
-    height: 25px;
-}
-
-.chat-body {
-    height: 302px;
-}
-
-#chat-text {
-    width: 250px;
-    color: black;
-    text-shadow: 0 0 0 rgba(0, 0, 0, 0.5);
-}
-
-.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
-    border-color: transparent;
-    background: rgba(0,0,0,1);
-    color: #fff;
-}
-
-a {
-    border-bottom: 1px dotted rgba(255,255,255,0.15);
-}
-
-a:hover, a:focus {
-    color: #a7ffa2;
-    text-decoration: none;
-    border-bottom: 1px dotted rgba(167, 255, 162,0.15);
-}
-
-header {
-    background-color: rgba(255,255,255,0.15);
-}
-
-body, a, input, .help-block {
-    color: #fff;
-    text-shadow: none;
-}
-
-.breadcrumb {
-    float: none;
-    padding: 0;
-}
-
-.modal-title {
-    text-transform: none;
-    font-size: 18px;
-}
-
-.modal-body {
-    font-size: 14px;
-}
-
-.modal-footer .btn {
-    font-size: 14px;
-}
-
-.chat-body {
-    border: 1px solid rgba(255,255,255,0.15);
-    background-image: url("/static/images/background.png");
 }

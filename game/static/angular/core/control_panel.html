@@ -1,26 +1,28 @@
-<div class="panel side-panel" id="user-panel" style="margin-left: auto">
-    <h2 class="tile-title">Pilot: {{account.username}}</h2>
+<div class="panel panel-default" id="user-panel">
+    <div class="panel-heading">Pilot: {{account.username}}</div>
     <div class="panel-body">
         Credits: {{account.credits}}
     </div>
-    <div class="pull-right">
-        Map ({{ (map.scale * 100)|number:0 }}%)
-        <a href ng-click="map.zoomIn()">
-            <span class="fa fa-search-plus fa-fw"></span>
+    <div class="panel-footer">
+        <div class="pull-right">
+            Map ({{ (map.scale * 100)|number:0 }}%)
+            <a href ng-click="map.zoomIn()">
+                <span class="fa fa-search-plus fa-fw"></span>
 
-        </a>
-        <a href ng-click="map.zoomOut()">
-            <span class="fa fa-search-minus fa-fw"></span>
-        </a>
-        <a href ng-click="map.reset()" id="map-reset">
-            <span class="fa fa-refresh fa-fw"></span>
-        </a>
+            </a>
+            <a href ng-click="map.zoomOut()">
+                <span class="fa fa-search-minus fa-fw"></span>
+            </a>
+            <a href ng-click="map.reset()" id="map-reset">
+                <span class="fa fa-refresh fa-fw"></span>
+            </a>
+        </div>
+        <br class="clearfix" />
     </div>
-    <br class="clearfix" />
 </div>
 
-<div class="panel side-panel" id="ship-panel" style="margin-left: auto">
-    <h2 class="tile-title">
+<div class="panel panel-default" id="ship-panel">
+    <div class="panel-heading">
         <span class="dropdown" is-open="ship_menu_expanded">
             <a href class="dropdown-toggle">
                 {{currentShip.type}} Mk 1<span class="caret"></span>
@@ -34,7 +36,7 @@
         <span class="pull-right">
             ID: {{ currentShip.id }}
         </span>
-    </h2>
+    </div>
     <div class="panel-body">
         <ul class="list-unstyled">
             <li>
