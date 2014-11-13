@@ -18,15 +18,8 @@
 
     {% for subdomain, lang in SUBDOMAINS.items %}<link rel="alternate" hreflang="{{lang}}" href="http://{{subdomain}}.{{DOMAIN_NAME}}/" />
     {% endfor %}
-    <!-- template CSS -->
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/static/css/template/animate.min.css" rel="stylesheet">
-    <link href="/static/css/template/font-awesome.min.css" rel="stylesheet">
-    <link href="/static/css/template/form.css" rel="stylesheet">
-    <link href="/static/css/template/calendar.css" rel="stylesheet">
-    <link href="/static/css/template/style.css" rel="stylesheet">
-    <link href="/static/css/template/icons.css" rel="stylesheet">
-    <link href="/static/css/template/generics.css" rel="stylesheet">
+    <link href="/static/font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
     <!-- custom CSS -->
     <link rel="stylesheet" href="/static/css/main.css">
@@ -36,29 +29,28 @@
 <!--[if lt IE 7]>
 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 <![endif]-->
+<nav class="navbar" role="navigation">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <div class="page-header">
-                  <a href="/">BirdStorm.net <sup>Beta</sup></a>
-                    <ul class="nav navbar-nav">
-                        <li><a href="/forum" target="_blank">Forum</a></li>
-                        <li><a href="/section/about" target="_blank">About BirdStorm</a></li>
-                        <!--
-                                    <li ng-if="account.is_superuser">
-                                        <form class="navbar-form navbar-right" role="form" action="/test/" method="post">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-success">Test</button>
-                                        </form>
-                                    </li>
-                                    -->
-                    </ul>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <a class="navbar-brand" href="/">BirdStorm.net <sup>Beta</sup></a>
+                        <ul class="nav navbar-nav">
+                            <li>
+                                <a href="/forum" target="_blank">Forum</a>
+                            </li>
+                            <li>
+                                <a href="/section/about" target="_blank">About BirdStorm</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</nav>
 
-<div class="clearfix"></div>
 
 {% block content %}
 {% verbatim %}
@@ -115,45 +107,6 @@
 
 <script src="/static/js/plugins.js"></script>
 <script src="/static/js/vendor/d3.min.js"></script>
-
-<!-- template -->
-<!-- Javascript Libraries -->
-<!-- jQuery -->
-<script src="/static/js/template/jquery.min.js"></script> <!-- jQuery Library -->
-<script src="/static/js/template/jquery-ui.min.js"></script> <!-- jQuery UI -->
-<script src="/static/js/template/jquery.easing.1.3.js"></script> <!-- jQuery Easing - Requirred for Lightbox + Pie Charts-->
-
-<!-- Bootstrap -->
-<script src="/static/js/template/bootstrap.min.js"></script>
-
-<!-- Charts -->
-<script src="/static/js/template/charts/jquery.flot.js"></script> <!-- Flot Main -->
-<script src="/static/js/template/charts/jquery.flot.time.js"></script> <!-- Flot sub -->
-<script src="/static/js/template/charts/jquery.flot.animator.min.js"></script> <!-- Flot sub -->
-<script src="/static/js/template/charts/jquery.flot.resize.min.js"></script> <!-- Flot sub - for repaint when resizing the screen -->
-
-<script src="/static/js/template/sparkline.min.js"></script> <!-- Sparkline - Tiny charts -->
-<script src="/static/js/template/easypiechart.js"></script> <!-- EasyPieChart - Animated Pie Charts -->
-<script src="/static/js/template/charts.js"></script> <!-- All the above chart related functions -->
-
-<!-- Map -->
-<script src="/static/js/template/maps/jvectormap.min.js"></script> <!-- jVectorMap main library -->
-<script src="/static/js/template/maps/usa.js"></script> <!-- USA Map for jVectorMap -->
-
-<!--  Form Related -->
-<script src="/static/js/template/icheck.js"></script> <!-- Custom Checkbox + Radio -->
-
-<!-- UX -->
-<script src="/static/js/template/scroll.min.js"></script> <!-- Custom Scrollbar -->
-
-<!-- Other -->
-<script src="/static/js/template/calendar.min.js"></script> <!-- Calendar -->
-<script src="/static/js/template/feeds.min.js"></script> <!-- News Feeds -->
-
-
-<!-- All JS functions -->
-<script src="/static/js/template/functions.js"></script>
-
 
 <script src="/static/js/vendor/raven.min.js"></script>
 <!--<script src="//cdn.ravenjs.com/1.1.16/angular,jquery,native/raven.min.js"></script>-->
