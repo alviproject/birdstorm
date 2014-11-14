@@ -5,6 +5,7 @@ import logging
 import json
 import django.core.handlers.wsgi
 from django.conf import settings
+from tornado import ioloop
 import tornado.ioloop
 import tornado.web
 import tornado.wsgi
@@ -33,6 +34,8 @@ class BroadcastConnection(SockJSConnection):
 
     def on_open(self, info):
         self.clients.add(self)
+        self.timeout = ioloop.PeriodicCallback(self._ticker, 1000)
+        self.timeout.start()
 
         class DjangoRequest(object):
             def __init__(self, session):
@@ -84,6 +87,11 @@ class BroadcastConnection(SockJSConnection):
         self.clients.remove(self)
         #channel.remove_connections(self, channel_name)
         #TODO remove all channel connections
+
+        self.timeout.stop()
+
+    def _ticker(self):
+        self.send('pong')
 
 
 class NoCacheStaticFileHandler(tornado.web.StaticFileHandler):
