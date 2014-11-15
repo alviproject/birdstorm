@@ -17,7 +17,6 @@ from sockjs.tornado import SockJSConnection
 from sockjs.tornado import SockJSRouter
 
 import game.channels
-import game.tasks
 
 
 logger = logging.getLogger(__name__)

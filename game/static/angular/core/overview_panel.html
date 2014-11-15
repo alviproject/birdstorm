@@ -1,0 +1,23 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <span class="dropdown" is-open="menu_expanded">
+            <a href class="dropdown-toggle">
+                {{currentView}} <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a href ng-click="changeView('Buildings')">Buildings</a>
+                    <a href ng-click="changeView('Ships')">Ships</a>
+                    <a href ng-click="changeView('Resources')">Resources</a>
+                </li>
+            </ul>
+        </span>
+    </div>
+    <div class="panel-body">
+        <ul class="list-unstyled">
+            <li>Citadel</li>
+            <li>Terminal</li>
+            <li>Factory</li>
+        </ul>
+    </div>
+</div>

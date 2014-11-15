@@ -1,21 +1,101 @@
 design
+	todo
+		EnergyCeils:
+			to be considered
+			could be produced in power plants and stored in containers
+			fuel for ships and buildings
+			stored in citadel, max number depends on citadel level
 	notes
 		ship movement
 			pigeons move every turn to the planed where construction was started
 			other (transportes, military ships) move operated by channel, after disconnecting movement stops
-		base planet
-			terminal
-			warehouse
-		pigeon
-			responsible for constructing and upgrading buildings
+		sector size
+			number of possesed structures (all kinds, used and unused)
 	buildings:
-		terminal
-			allows to order structures (buildings and ship)
-			tax (depending on number of possesed structures)
-	resources
-		building structures
-		ship structures
-
+		notes:
+			on a single planet there can be only one building of given kind
+			max 3 buildings per planet
+		Terminal
+			allows to order structures (all kinds)
+				tax in Gold (depending on number of possesed structures)
+			allows to sell possesed resources
+		Citadel
+			grows up (does not require structures) according to sector size
+			on every turn provides small amount of basic materials:
+				Aluminium
+				Steel
+				Gold
+			decides how many planets and systems can be built:
+				level planets   systems
+				1 	  1         1
+				2     3         1 
+				3     5         2
+				4     7         2
+				n     (n-1)*2+1 ceil(n/2)
+			decides which buildings are available:
+				displays list of available buildings, together with descriptions and information where can be build
+				level new buildings
+				1     Terminal, Warehouse
+				2     
+		OilWell
+		Mine
+			owner has to choose which resource is mined at a given time
+			allows mine only resources available on particular planet
+			Coal
+			Gold
+			Bauite
+			Iron
+		Smelter
+			producess both resources in parrallel
+			particular production can be paused and restarted
+			Steel
+			Aluminium
+		Warehouse
+			storage for all resources
+		Shipyard
+			produces ships
+			level new ships
+			1     Sparrow, Pigeon
+			2     
+		Refinery
+			Polymer	
+	Planets:
+		TerrestrialPlanet
+			Terminal
+			Smelter
+			Warehouse
+		WaterPlanet
+			OilWell
+			Coal
+		RedPlaned
+			Gold
+			Bauxite
+			Iron
+	Resources
+		Gold
+		N-Structures
+			required for building buildings
+			Steel: 4
+		B-Structures
+			required for building ships
+			Steel: 2
+			Aluminium: 1
+		Oil
+		Coal
+		Aluminium
+			Bauxite: 2
+		Bauxite
+		Steel
+			Coal: 1
+			Iron: 1
+		Polymer
+			Oil: 2
+	Ships
+		Pigeon
+			responsible for constructing and upgrading buildings
+		Sparrow
+			responsible for mainanance of ships and buildings
+			need oxygen and hydrogen to operate
 planet, system, sector,  galaxy
 todo:
     django AbstractUser

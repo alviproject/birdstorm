@@ -1,6 +1,9 @@
 import blinker
 from concurrency.fields import IntegerVersionField
+from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch.dispatcher import receiver
 from game.apps.core.models import components
 from game.apps.core.models.planet.models import Planet
 from game.apps.core.models.ships import Ship
@@ -15,9 +18,15 @@ class Building(PolymorphicBase):
     data = JSONField()
     planet = models.ForeignKey(Planet, related_name="buildings")
     version = IntegerVersionField()
+    user = models.ForeignKey(User)
 
     class Meta:
         app_label = 'core'
+
+
+class Terminal(Building):
+    class Meta:
+        proxy = True
 
 
 class Provider(Building):
@@ -231,3 +240,9 @@ class Refinery(Plant):
 
     class Meta:
         proxy = True
+
+
+#TODO use Django ready()
+@receiver(post_save, sender=User, dispatch_uid="create_default_buildings")
+def create_default_buildings(sender, **kwargs):
+    Terminal.objects.create(user=kwargs['instance'], planet_id=1) #TODO don't hardcode planet id

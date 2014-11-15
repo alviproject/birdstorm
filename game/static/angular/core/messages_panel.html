@@ -1,6 +1,9 @@
-<div class="panel side-panel" id="context_menu" ng-if="messages.length">
-    <h2 class="tile-title">Messages</h2>
+<div class="panel panel-default" id="context_menu">
+    <div class="panel-heading">Messages</div>
     <div class="panel-body">
+        Turn: 12 / 24
+        <button type="button" class="btn btn-default" ng-click="showLoginForm=true">Next</button>
+        <hr />
         <ul class="list-unstyled">
             <li ng-repeat="message in messages track by $index"
                 ng-class="{info:'text-muted', error:'text-danger', success:'text-success'}[message.type]">
