@@ -63,4 +63,16 @@
             });
         }
     }]);
+
+    $(document).on("click", "#register_button", function() {
+        if(!window.ga) {
+            return;
+        }
+        window.ga('send', 'event', 'task', 'registered', {
+            'hitCallback': function() {
+                $("#register_button").parents("form").submit();
+            }
+        });
+        return false;
+    });
 })();
