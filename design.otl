@@ -1,6 +1,6 @@
 design
 	todo
-		EnergyCeils:
+		EnergyCells:
 			to be considered
 			could be produced in power plants and stored in containers
 			fuel for ships and buildings
@@ -15,10 +15,6 @@ design
 		notes:
 			on a single planet there can be only one building of given kind
 			max 3 buildings per planet
-		Terminal
-			allows to order structures (all kinds)
-				tax in Gold (depending on number of possesed structures)
-			allows to sell possesed resources
 		Citadel
 			grows up (does not require structures) according to sector size
 			on every turn provides small amount of basic materials:
@@ -35,9 +31,18 @@ design
 			decides which buildings are available:
 				displays list of available buildings, together with descriptions and information where can be build
 				level new buildings
-				1     Terminal, Warehouse
+				1     Terminal
 				2     
+			storage for all resources
+		Terminal
+			allows to order structures (all kinds)
+				tax in Gold (depending on number of possesed structures)
+			allows to sell possesed resources
+			requires:
+				Citadel
 		OilWell
+			requires:
+				Terminal
 		Mine
 			owner has to choose which resource is mined at a given time
 			allows mine only resources available on particular planet
@@ -45,32 +50,37 @@ design
 			Gold
 			Bauite
 			Iron
+			requires:
+				Terminal
 		Smelter
 			producess both resources in parrallel
 			particular production can be paused and restarted
 			Steel
 			Aluminium
-		Warehouse
-			storage for all resources
+			requires:
+				Mine
 		Shipyard
 			produces ships
 			level new ships
 			1     Sparrow, Pigeon
 			2     
+				Smelter
 		Refinery
 			Polymer	
+				OilWell
 	Planets:
 		TerrestrialPlanet
 			Terminal
+		RedPlaned
 			Smelter
-			Warehouse
+			Mine
+				Coal
+				Bauxite
+				Iron
 		WaterPlanet
 			OilWell
-			Coal
-		RedPlaned
-			Gold
-			Bauxite
-			Iron
+			Mine
+				Gold
 	Resources
 		Gold
 		N-Structures
@@ -80,11 +90,12 @@ design
 			required for building ships
 			Steel: 2
 			Aluminium: 1
+		Iron
 		Oil
 		Coal
+		Bauxite
 		Aluminium
 			Bauxite: 2
-		Bauxite
 		Steel
 			Coal: 1
 			Iron: 1
@@ -95,7 +106,7 @@ design
 			responsible for constructing and upgrading buildings
 		Sparrow
 			responsible for mainanance of ships and buildings
-			need oxygen and hydrogen to operate
+			needs EnergyCells to operate
 planet, system, sector,  galaxy
 todo:
     django AbstractUser
