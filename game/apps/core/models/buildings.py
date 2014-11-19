@@ -250,4 +250,5 @@ class Refinery(Plant):
 #TODO use Django ready()
 @receiver(post_save, sender=User, dispatch_uid="create_default_buildings")
 def create_default_buildings(sender, **kwargs):
-    Citadel.objects.create(user=kwargs['instance'], planet_id=1) #TODO don't hardcode planet id
+    if kwargs['created']:
+        Citadel.objects.create(user=kwargs['instance'], planet_id=1)  # TODO don't hard-code planet id
