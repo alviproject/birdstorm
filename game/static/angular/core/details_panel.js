@@ -317,6 +317,11 @@
                 templateFile: "Shipyard",
                 controller: providerController
             }))
+            .state(buildingState({
+                type: "Citadel",
+                templateFile: "Citadel",
+                controller: providerController
+            }))
             .state('map.ship', {
                 url: "/ship/:ship_id",
                 data: {

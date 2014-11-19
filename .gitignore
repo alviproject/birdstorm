@@ -5,3 +5,4 @@ env/
 game/static_generated/
 .env_local
 *.iml
+game/data/db.sqlite3

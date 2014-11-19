@@ -24,6 +24,11 @@ class Building(PolymorphicBase):
         app_label = 'core'
 
 
+class Citadel(Building):
+    class Meta:
+        proxy = True
+
+
 class Terminal(Building):
     class Meta:
         proxy = True
@@ -245,4 +250,4 @@ class Refinery(Plant):
 #TODO use Django ready()
 @receiver(post_save, sender=User, dispatch_uid="create_default_buildings")
 def create_default_buildings(sender, **kwargs):
-    Terminal.objects.create(user=kwargs['instance'], planet_id=1) #TODO don't hardcode planet id
+    Citadel.objects.create(user=kwargs['instance'], planet_id=1) #TODO don't hardcode planet id
