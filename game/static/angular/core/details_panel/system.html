@@ -1,13 +1,4 @@
 <div>
-    <div class="alert alert-warning" ng-show="wrong_system_alert()">
-        <a class="pull-right" ng-click="wrong_system_alert(false)" href>
-            <i class="fa-lg fa fa-times"></i>
-        </a>
-        Your planet is located in different star system
-        <a href title="Go" ng-click="move_ship()">
-            move to this one<span class="fa fa-plane fa-fw"></span>
-        </a>
-    </div>
     <svg height="100">
         <a  ng-click="goto('map.system', {system_id: system.id})">
             <image

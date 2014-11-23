@@ -13,12 +13,10 @@ admin.autodiscover()
 router = routers.DefaultRouter()
 router.register(r'users', game.apps.account.views.Users)
 router.register(r'accounts', game.apps.account.views.Users)
-router.register(r'core/ships', game.apps.core.views.Ships)
 router.register(r'core/buildings', game.apps.core.views.Buildings)
 router.register(r'core/systems', game.apps.core.views.Systems)
 router.register(r'core/planets', game.apps.core.views.Planets)
 router.register(r'core/tasks', game.apps.core.views.Tasks)
-router.register(r'core/own_ships', game.apps.core.views.OwnShips, base_name='own_ships')
 router.register(r'chat/messages', game.apps.chat.views.Messages)
 
 

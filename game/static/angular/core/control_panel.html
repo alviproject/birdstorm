@@ -1,8 +1,5 @@
 <div class="panel panel-default" id="user-panel">
     <div class="panel-heading">Pilot: {{account.username}}</div>
-    <div class="panel-body">
-        Credits: {{account.credits}}
-    </div>
     <div class="panel-footer">
         <div class="pull-right">
             Map ({{ (map.scale * 100)|number:0 }}%)
@@ -18,44 +15,5 @@
             </a>
         </div>
         <br class="clearfix" />
-    </div>
-</div>
-
-<div class="panel panel-default" id="ship-panel">
-    <div class="panel-heading">
-        <span class="dropdown" is-open="ship_menu_expanded">
-            <a href class="dropdown-toggle">
-                {{currentShip.type}} Mk 1<span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-                <li ng-repeat="ship in ships">
-                    <a href ng-click="changeShip(ship)">{{ship.type}} Mk 1</a>
-                </li>
-            </ul>
-        </span>
-        <span class="pull-right">
-            ID: {{ currentShip.id }}
-        </span>
-    </div>
-    <div class="panel-body">
-        <ul class="list-unstyled">
-            <li>
-                <strong>Action:</strong> None
-            </li>
-            <li ng-repeat="(component, details) in currentShip.components">
-                <b>{{details.type}} Mk {{details.mark}}</b>
-                <ul class="list-unstyled list-sublist">
-                    <li ng-repeat="(name, value) in details" ng-if="name != 'type' && name != 'mark'">{{name}}: {{ value | number}}</li>
-                </ul>
-            </li>
-            <li>
-                <b>Cargo:</b>
-                <ul class="list-unstyled list-sublist">
-                    <li ng-repeat="(type, quantity) in currentShip.resources">
-                        {{type}}: {{quantity}}
-                    </li>
-                </ul>
-            </li>
-        </ul>
     </div>
 </div>

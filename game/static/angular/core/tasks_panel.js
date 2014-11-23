@@ -6,6 +6,7 @@
     var missions = {
         LearnTheInterface: {
             Panels: function(task, $rootScope, $state, $scope) {
+                return;
                 var left_panels = $("#user-panel").add("#ship-panel");
                 var panels = this;
 

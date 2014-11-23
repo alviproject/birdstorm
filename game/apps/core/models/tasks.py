@@ -1,11 +1,10 @@
 import blinker
 from concurrency.fields import IntegerVersionField
-from django.contrib.auth.models import User, AbstractUser
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from django.core.validators import EmailValidator, validate_email, RegexValidator
+from django.core.validators import validate_email, RegexValidator
 from django.db import models
 from django.db.models.signals import post_save
-from game.apps.core.models.buildings import Building, Smelter
 from game.utils.polymorph import PolymorphicBase
 import game.apps.core.signals
 

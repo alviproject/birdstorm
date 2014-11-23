@@ -83,20 +83,6 @@
         });
     }
 
-    function prepare_ship(ship, map) {
-        var planet = map.planets[ship.planet_id];
-        ship.planet = function() {
-            return planet;
-        };
-        ship.set_planet = function(new_planet) {
-            planet = new_planet;
-        };
-        ship.display_x = ship.planet().display_x + ship.planet().system.display_x;
-        ship.display_y = ship.planet().display_y + ship.planet().system.display_y;
-
-        map.ships[ship.id] = ship;
-    }
-
     function retrieve_data($http, map) {
         $http.get("/api/core/systems").success(function(data, status, headers, config){
             var systems = data.results;
@@ -105,19 +91,6 @@
             for(var i in systems) {
                 prepare_system(systems[i], map);
             }
-
-            //TODO possibly could be done asynchronously and utilize AngularJS two-way binding
-            //that would require that ship coordinates (x, y) are dynamically calculated basing on ship.system
-            //coordinates
-            //it also requires a separate test case (systems are retrieved after ships)
-            $http.get("/api/core/ships").success(function(data, status, headers, config){
-                var ships = data.results;
-                map.ships = {};
-                for(var i in ships) {
-                    prepare_ship(ships[i], map);
-                }
-                map.new_ship_subscription.subscribe('main');
-            });
 
             $("#map-placeholder").css("height", $("svg#map").height());
         });
@@ -132,13 +105,6 @@
             },
             link: function (scope, element) {
                 var map = scope.map;
-
-                //
-                //receive new ship updates
-                //
-                map.new_ship_subscription = connection.create_subscription('newship', function(data) {
-                    prepare_ship(data.ship, map);
-                });
 
                 retrieve_data($http, map);
 
@@ -172,26 +138,9 @@
                 }
 
                 //
-                //connect to sector updates and add handler to animate ship movements
+                //connect to sector updates
                 //
                 this.subscription = connection.create_subscription('sector', function(data) {
-                    var ship = map.ships[data.ship];
-                    var time = data.time ? data.time : 1;
-                    var target_planet = map.planets[data.target_planet];
-                    ship.set_planet(target_planet);
-
-                    var element = d3.select("#ship_"+data.ship);
-                    element.transition()
-                        .duration(time*1000)
-                        .tween("position", function() {
-                            var x = d3.interpolateRound(ship.display_x, target_planet.display_x + target_planet.system.display_x);
-                            var y = d3.interpolateRound(ship.display_y, target_planet.display_y + target_planet.system.display_y);
-                            return function(t) {
-                                ship.display_x = x(t);
-                                ship.display_y = y(t);
-                                scope.$apply();
-                            };
-                        });
                 });
                 this.subscription.subscribe('main');
 
