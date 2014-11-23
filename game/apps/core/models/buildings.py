@@ -18,15 +18,26 @@ class Building(PolymorphicBase):
     data = JSONField()
     planet = models.ForeignKey(Planet, related_name="buildings")
     version = IntegerVersionField()
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, related_name="buildings")
+
+    def save(self, *args, **kwargs):
+        signal = blinker.signal(game.apps.core.signals.building % self.id)
+        signal.send(self, building=self)
+        super().save(*args, **kwargs)
 
     class Meta:
         app_label = 'core'
+        ordering = ('id', )
 
 
-class Citadel(Building):
+class Citadel(Building, ResourceContainer):
     class Meta:
         proxy = True
+
+    def process_turn(self):
+        self.add_resource("Aluminium", 10)
+        self.add_resource("Steel", 10)
+        self.save()
 
 
 class Terminal(Building):
@@ -252,3 +263,10 @@ class Refinery(Plant):
 def create_default_buildings(sender, **kwargs):
     if kwargs['created']:
         Citadel.objects.create(user=kwargs['instance'], planet_id=1)  # TODO don't hard-code planet id
+
+
+def get_base(self):
+    #TODO cache
+    return self.buildings.get(type="Base")
+
+User.base = property(get_base)

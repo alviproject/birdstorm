@@ -7,7 +7,7 @@ class PolymorphicMeta(ModelBase):
     """not to be used directly, inherit from PolymorphicBase instead"""
     def __call__(cls, *args, **kwargs):
         obj = super(PolymorphicMeta, cls).__call__(*args, **kwargs)
-        obj.change_real_class()
+        obj.change_real_class()  # TODO call to __init__ of real class is omitted
         return obj
 
 

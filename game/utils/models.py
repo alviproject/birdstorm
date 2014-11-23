@@ -1,10 +1,8 @@
 class ResourceContainer:
     """mixed in class"""
-    def __init__(self, *args, **kwargs):
-        self.resources = self.data.get('resources', {})
-
-    def save(self, *args, **kwargs):
-        self.data['resources'] = self.resources
+    @property
+    def resources(self):
+        return self.data.setdefault("resources", {})
 
     def add_resource(self, type, quantity):
         self.resources[type] = self.resources.get(type, 0) + quantity

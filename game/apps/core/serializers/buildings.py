@@ -39,6 +39,10 @@ class WarehouseSerializer(BuildingBaseSerializer):
         return obj.Container(user).resources
 
 
+class CitadelSerializer(BuildingBaseSerializer):
+    resources = serializers.Field('resources')
+
+
 class BuildingSerializer(serializers.HyperlinkedModelSerializer):
     def to_native(self, obj):
         #TODO use isinstance
@@ -48,6 +52,8 @@ class BuildingSerializer(serializers.HyperlinkedModelSerializer):
             serializer = ProviderSerializer
         elif obj.type == "Warehouse":
             serializer = WarehouseSerializer
+        elif obj.type == "Citadel":
+            serializer = CitadelSerializer
         else:
             serializer = BuildingBaseSerializer
 

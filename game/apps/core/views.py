@@ -3,14 +3,15 @@ from django.core.exceptions import ValidationError
 from django.http.response import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.template.context import RequestContext
+from rest_framework.views import APIView
 from game.apps.account.models import AccountSerializer
 from game.apps.core import models
 from game.apps.core import serializers
 from game.apps.core.models.planet.models import TerrestrialPlanet, GasGiant
 from game.apps.core.serializers.buildings import BuildingSerializer
 from game.apps.core.serializers.planet import PlanetDetailsSerializer
-from rest_framework import viewsets
-from rest_framework.decorators import action
+from rest_framework import viewsets, mixins
+from rest_framework.decorators import action, api_view, detail_route, list_route
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from game.utils.async_action import async_action
@@ -217,9 +218,18 @@ class OwnShips(viewsets.ReadOnlyModelViewSet):
             blinker.signal(game.apps.core.signals.planet_extract % user.id).send(ship=ship)
 
 
+#own building
 class Buildings(viewsets.ReadOnlyModelViewSet):
     model = models.Building
     serializer_class = serializers.BuildingSerializer
+
+    def get_queryset(self):
+        return self.request.user.buildings.all()
+
+    @list_route()
+    def citadel(self, request):
+        citadel = self.get_queryset().get()
+        return Response(self.serializer_class(citadel, context={'request': request}).data)
 
     #TODO this shall be Port method
     @action()
@@ -361,8 +371,7 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         user.save()
         user.profile.save()
 
-        signal_id = "%d_%d" % (warehouse.id, user.id)
-        signal = blinker.signal(game.apps.core.signals.building_user % signal_id)
+        signal = blinker.signal(game.apps.core.signals.building % warehouse.id)
         signal.send(self, building=BuildingSerializer(warehouse, context=dict(request=request)).data)
 
         return Response()
@@ -418,3 +427,10 @@ def index(request):
 #TODO move to another app
 def section(request, name):
     return render(request, "section/%s.html" % name)
+
+
+@api_view(('POST', ))
+def next_turn(request):
+    for building in request.user.buildings.all():
+        building.process_turn()
+    return Response()

@@ -1,4 +1,5 @@
 (function() {
+    //TODO rename this panel
     var app = angular.module('game');
 
     app.directive('coreMessagesPanel', function() {
@@ -7,7 +8,7 @@
             templateUrl: '/static/angular/core/messages_panel.html',
             scope: {
             },
-            controller: function($scope, account) {
+            controller: function($scope, $http, account) {
                 $scope.messages = [];
                 $scope.subscription_actions = connection.create_subscription('messages', function (data) {
                     $scope.messages.push(data.message);
@@ -24,6 +25,10 @@
                         $scope.subscription_actions.subscribe(account.id);
                     }
                 });
+                $scope.nextTurn = function() {
+                    $http.post("/api/core/base/next_turn/").success(function() {
+                    });
+                }
             }
         }
     });

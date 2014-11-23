@@ -29,6 +29,7 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include(router.urls)),
     url(r'^api/account$', game.apps.account.views.Account.as_view(model=User)),  # TODO not shown at /api
+    url(r'^api/core/base/next_turn/$', game.apps.core.views.next_turn),  # TODO not shown at /api
     url(r'^api/account/register', 'game.apps.account.views.register'),  # TODO
     url(r'^api/account/login', 'game.apps.account.views.login'),  # TODO
     url(r'^forum/', include('pybb.urls', namespace='pybb')),

@@ -1,7 +1,7 @@
 (function() {
     var app = angular.module('game');
 
-    app.directive('coreOverviewPanel', function ($http, currentShip, account) {
+    app.directive('coreOverviewPanel', function ($http, citadel, account) {
         return {
             restrict: 'E',
             templateUrl: '/static/angular/core/overview_panel.html',
@@ -13,6 +13,7 @@
                     $scope.currentView = view;
                 };
 
+                $scope.citadel = citadel;
                 $scope.menu_expanded = false;
                 $scope.currentView = "Buildings";
             }

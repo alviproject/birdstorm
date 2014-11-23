@@ -51,7 +51,7 @@ data_schema = {
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
-    data = JSONField(default={}, load_kwargs={'object_pairs_hook': OrderedDict})
+    data = JSONField(default={})
     credits = PositiveIntegerField(default=0)
     version = IntegerVersionField()
 

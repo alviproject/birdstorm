@@ -1,8 +1,9 @@
 import blinker
+from rest_framework.decorators import api_view
 from game.apps.chat import models
 import game.apps.chat.signals
 import logging
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from rest_framework.response import Response
 
 logger = logging.getLogger(__name__)

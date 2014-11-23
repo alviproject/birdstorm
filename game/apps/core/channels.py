@@ -1,5 +1,6 @@
 import logging
 from game.apps.core.models.tasks import Task
+from game.apps.core.serializers.buildings import BuildingSerializer
 from game.apps.core.serializers.ship import OwnShipSerializer
 from game.apps.core.serializers.tasks import TaskSerializer
 import game.apps.core.signals
@@ -75,11 +76,13 @@ class Account(Channel):
         return user.id == int(name)
 
 
-class BuildingUser(Channel):
-    """broadcasts building changes custom for particular user"""
-    @receiver(game.apps.core.signals.building_user)
-    def building_user(self, channel_instance, **kwargs):
-        return dict(**kwargs)
+class Building(Channel):
+    """broadcasts building changes"""
+    @receiver(game.apps.core.signals.building)
+    def building(self, channel_instance, building):
+        return dict(
+            building=BuildingSerializer(building, context=dict(request={})).data
+        )
 
     #FIXME permissions
 
