@@ -93,70 +93,9 @@
                 }
             })
             .state(buildingState({
-                type: "Port",
-                controller: function($stateParams, $scope, $http, planet, building) {
+                type: "Citadel",
+                controller: function($stateParams, $scope, $http, planet, account, building) {
                     $scope.building = building;
-                    $scope.quantities = {};
-                    $.each(building.prices, function(type, price) {
-                        $scope.quantities[type] = 1;
-                    });
-                    $scope.currentShipLoad = function(resource) {
-                        if(currentShip.resources && currentShip.resources[resource]) {
-                            return currentShip.resources[resource];
-                        }
-                        return 0;
-                    };
-                    $scope.sell = function (building_id, resource) {
-                        if(!check_planet(currentShip, planet, $scope)) {
-                            return
-                        }
-                        var quantity = $scope.quantities[resource];
-                        $scope.quantities[resource] = 0;
-                        var ship_id = currentShip.id;
-                        $http.post('/api/core/buildings/'+building_id+'/sell/', {
-                            ship_id: ship_id,
-                            resource: resource,
-                            quantity: quantity
-                        });
-                    };
-            }}))
-            .state(buildingState({
-                type: "Warehouse",
-                controller: function($stateParams, $scope, $http, planet, account, currentShip, building) {
-                    $scope.building = building;
-
-                    $scope.warehouseResources = {};
-                    function updateWarehouseResources() {
-                        $.each(building.resources, function(key, value) {
-                            $scope.warehouseResources[key] = {warehouse: value, ship: 0, quantity: 0};
-                        });
-                        if(currentShip.resources) {
-                            $.each(currentShip.resources, function(key, value) {
-                                if($scope.warehouseResources.hasOwnProperty(key)) {
-                                    $scope.warehouseResources[key].ship = value;
-                                }
-                                else {
-                                    $scope.warehouseResources[key] = {warehouse: 0, ship: value, quantity: 0};
-                                }
-                            });
-                        }
-                    }
-
-                    $scope.$on('currentShip:updated', function() {
-                        updateWarehouseResources();
-                    });
-
-                    $scope.store = function(resource, quantity, action) {
-                        if(!check_planet(currentShip, planet, $scope)) {
-                            return
-                        }
-                        $http.post('/api/core/buildings/'+building.id+'/store/', {
-                            ship_id: currentShip.id,
-                            resource: resource,
-                            quantity: quantity,
-                            action: action
-                        });
-                    };
 
                     var subscription_building = connection.create_subscription('buildinguser', function (data) {
                         building = data.building;
@@ -164,7 +103,6 @@
                     });
 
                     subscription_building.subscribe(building.id+"_"+account.id);
-                    updateWarehouseResources();
             }}))
     });
 })();
