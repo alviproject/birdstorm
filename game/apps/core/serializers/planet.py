@@ -15,7 +15,12 @@ class PlanetSerializer(serializers.HyperlinkedModelSerializer):
 
 class PlanetDetailsSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.IntegerField(read_only=True)
-    buildings = BuildingSerializer(many=True)
+    buildings = serializers.SerializerMethodField()
+
+    def get_buildings(self, obj):
+        request = self.context['request']
+        return BuildingSerializer(request.user.buildings.filter(planet=obj),
+                                  context={'request': request}, many=True).data
 
     class Meta:
         model = Planet

@@ -11,8 +11,18 @@ class PolymorphicMeta(ModelBase):
         return obj
 
 
+class PolymorphicManager(models.Manager):
+    def get_queryset(self):
+        query_set = super().get_queryset()
+        if self.model._meta.proxy:
+            #TODO shall include subclasses
+            return query_set.filter(type=self.model.__name__)
+        return query_set
+
+
 class PolymorphicBase(models.Model, metaclass=PolymorphicMeta):
     type = models.CharField(max_length=255, help_text=None)
+    objects = PolymorphicManager()
 
     class Meta:
         abstract = True

@@ -28,14 +28,20 @@ class Building(PolymorphicBase):
         ordering = ('id', )
 
 
-class Citadel(Building, ResourceContainer):
+class Citadel(Building):
     class Meta:
         proxy = True
 
     def process_turn(self):
-        self.add_resource("Aluminium", 10)
-        self.add_resource("Steel", 10)
-        self.save()
+        warehouse = self.owner.buildings.filter(type='Warehouse')
+        warehouse.add_resource("Aluminium", 10)
+        warehouse.add_resource("Steel", 10)
+        warehouse.save()
+
+
+class Warehouse(Building, ResourceContainer):
+    class Meta:
+        proxy = True
 
 
 class Terminal(Building):
@@ -53,6 +59,7 @@ class Mine(Building):
 def create_default_buildings(sender, **kwargs):
     if kwargs['created']:
         Citadel.objects.create(user=kwargs['instance'], planet_id=1)  # TODO don't hard-code planet id
+        Warehouse.objects.create(user=kwargs['instance'], planet_id=1)  # TODO don't hard-code planet id
 
 
 def get_base(self):

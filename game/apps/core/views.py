@@ -61,9 +61,14 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
         return self.request.user.buildings.all()
 
     @list_route()
-    def citadel(self, request):
-        citadel = self.get_queryset().get()
-        return Response(self.serializer_class(citadel, context={'request': request}).data)
+    def Citadel(self, request):
+        building = self.get_queryset().get(type='Citadel')
+        return Response(self.serializer_class(building, context={'request': request}).data)
+
+    @list_route()
+    def Warehouse(self, request):
+        building = self.get_queryset().get(type='Warehouse')
+        return Response(self.serializer_class(building, context={'request': request}).data)
 
 
 class Tasks(viewsets.ReadOnlyModelViewSet):
