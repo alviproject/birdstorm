@@ -13,8 +13,8 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 #own account
 #TODO move this class to core.profile
 class AccountSerializer(serializers.HyperlinkedModelSerializer):
-    email = serializers.SerializerMethodField('get_email')
-    is_authenticated = serializers.Field('is_authenticated')
+    email = serializers.SerializerMethodField()
+    is_authenticated = serializers.ReadOnlyField()
 
     def get_email(self, obj):
         if not obj.is_authenticated():

@@ -4,8 +4,8 @@ from game.apps.core.models.planet.models import Planet
 
 
 class PlanetSerializer(serializers.HyperlinkedModelSerializer):
-    id = serializers.IntegerField(source='id', read_only=True)
-    system_id = serializers.Field(source='system_id')
+    id = serializers.IntegerField(read_only=True)
+    system_id = serializers.ReadOnlyField()
 
     class Meta:
         model = Planet
@@ -14,7 +14,7 @@ class PlanetSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class PlanetDetailsSerializer(serializers.HyperlinkedModelSerializer):
-    id = serializers.IntegerField(source='id', read_only=True)
+    id = serializers.IntegerField(read_only=True)
     buildings = BuildingSerializer(many=True)
 
     class Meta:

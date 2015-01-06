@@ -5,7 +5,7 @@ from rest_framework import serializers
 
 #TODO both looks the same at the moment
 class SystemSerializer(serializers.HyperlinkedModelSerializer):
-    id = serializers.IntegerField(source='id', read_only=True)
+    id = serializers.IntegerField(read_only=True)
     planets = PlanetSerializer(many=True)
 
     class Meta:
@@ -13,7 +13,7 @@ class SystemSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class SystemDetailsSerializer(serializers.HyperlinkedModelSerializer):
-    id = serializers.IntegerField(source='id', read_only=True)
+    id = serializers.IntegerField(read_only=True)
     planets = PlanetSerializer(many=True)
 
     class Meta:

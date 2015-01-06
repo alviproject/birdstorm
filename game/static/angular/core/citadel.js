@@ -9,7 +9,7 @@
             $rootScope.$apply();
         });
 
-        $http.get("/api/core/buildings/citadel").success(function (data) {
+        $http.get("/api/core/buildings/Citadel").success(function (data) {
             that.updateData(data);
             subscription.subscribe(that.id);
         });

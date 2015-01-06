@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 
 class BuildingBaseSerializer(serializers.HyperlinkedModelSerializer):
-    id = serializers.IntegerField(source='id', read_only=True)
+    id = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Building
@@ -12,7 +12,7 @@ class BuildingBaseSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CitadelSerializer(BuildingBaseSerializer):
-    resources = serializers.Field('resources')
+    resources = serializers.ReadOnlyField()
 
 
 class BuildingSerializer(serializers.HyperlinkedModelSerializer):

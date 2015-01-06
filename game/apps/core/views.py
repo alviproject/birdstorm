@@ -10,7 +10,7 @@ from game.apps.core.models.planet.models import GasGiant
 from game.apps.core.serializers.buildings import BuildingSerializer
 from game.apps.core.serializers.planet import PlanetDetailsSerializer
 from rest_framework import viewsets
-from rest_framework.decorators import action, api_view, list_route
+from rest_framework.decorators import api_view, list_route, detail_route
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from game.utils.async_action import async_action
@@ -31,8 +31,10 @@ def check_planet(ship, planet_id):
 class Systems(viewsets.ReadOnlyModelViewSet):
     model = models.System
     serializer_class = serializers.SystemSerializer
+    queryset = models.System.objects.all()
 
-    def retrieve(self, request, pk=None, *args, **kwargs):
+
+def retrieve(self, request, pk=None, *args, **kwargs):
         system = get_object_or_404(self.get_queryset(), pk=pk)
         serializer = serializers.SystemDetailsSerializer(system, context=dict(request=request))
         return Response(serializer.data)
@@ -41,6 +43,7 @@ class Systems(viewsets.ReadOnlyModelViewSet):
 class Planets(viewsets.ReadOnlyModelViewSet):
     model = models.Planet
     serializer_class = serializers.PlanetSerializer
+    queryset = models.Planet.objects.all()
 
     def retrieve(self, request, pk=None, *args, **kwargs):
         planet = get_object_or_404(self.get_queryset(), pk=pk)
@@ -53,6 +56,8 @@ class Buildings(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.BuildingSerializer
 
     def get_queryset(self):
+        if self.request.user.is_anonymous():
+            return models.Building.objects.none()
         return self.request.user.buildings.all()
 
     @list_route()
@@ -83,7 +88,7 @@ class Tasks(viewsets.ReadOnlyModelViewSet):
         serializer = serializers.TaskSerializer(task, context=dict(request=request))
         return Response(serializer.data)
 
-    @action()
+    @detail_route(methods=['post'])
     def action(self, request, pk=None):
         task = models.Task.objects.get(pk=pk)
         try:

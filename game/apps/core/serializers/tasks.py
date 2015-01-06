@@ -3,9 +3,9 @@ from rest_framework import serializers
 
 
 class TaskSerializer(serializers.HyperlinkedModelSerializer):
-    id = serializers.Field(source='id')
-    mission = serializers.Field(source='mission')
-    details = serializers.Field(source='details')
+    id = serializers.ReadOnlyField()
+    mission = serializers.ReadOnlyField()
+    details = serializers.ReadOnlyField()
 
     class Meta:
         model = Task

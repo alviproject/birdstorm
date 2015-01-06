@@ -12,7 +12,7 @@ class Message(models.Model):
 
 
 class MessageSerializer(serializers.HyperlinkedModelSerializer):
-    author = serializers.RelatedField(many=False)
+    author = serializers.RelatedField(read_only=True)
 
     class Meta:
         model = Message

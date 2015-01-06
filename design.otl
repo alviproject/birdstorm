@@ -34,6 +34,7 @@ design
 				1     Terminal
 				2     
 			storage for all resources
+		Warehouse
 		Terminal
 			allows to order structures (all kinds)
 				tax in Gold (depending on number of possesed structures)

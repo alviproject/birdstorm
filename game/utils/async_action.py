@@ -1,5 +1,5 @@
 from datetime import timedelta
-from rest_framework.decorators import action
+from rest_framework.decorators import detail_route
 import tornado.ioloop
 from rest_framework.response import Response
 
@@ -18,4 +18,4 @@ def async_action(wrapped_action):
         step(it)
         return Response()
 
-    return action()(wrapper)
+    return detail_route(methods=['post'])(wrapper)
