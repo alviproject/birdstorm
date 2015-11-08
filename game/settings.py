@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 """
 # TODO https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
 from math import sqrt
-import dj_database_url
 
 import os
 import game
@@ -76,9 +75,16 @@ WSGI_APPLICATION = 'game.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
-if config.database_url:
+if config.db_name:
     DATABASES = {
-        'default': dj_database_url.config(),
+        'default': {
+                'ENGINE': 'django.db.backends.postgresql_psycopg2',
+                'NAME': config.db_name,
+                'USER': config.db_user,
+                'PASSWORD': config.db_password,
+                'HOST': config.db_host,
+                'PORT': config.db_port,
+        }
     }
 else:
     DATABASES = {

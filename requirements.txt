@@ -18,9 +18,9 @@ requests==2.3.0  # only for bots
 #sorl-thumbnail==11.12.1b
 pybbm==0.15.6
 Pillow==2.5.3
-dj-database-url==0.3.0
+#dj-database-url==0.3.0
 psycopg2==2.5.3
 raven==5.0.0
 #-e git://github.com/saxix/django-concurrency#egg=django-concurrency
 -e git://github.com/saxix/django-concurrency.git@0.8.1#egg=django-concurrency
--e git://github.com/nickstenning/honcho.git@00f91d8aa25d0eb47214bb06fe3366a87cff44cd#egg=honcho
+#-e git://github.com/nickstenning/honcho.git@00f91d8aa25d0eb47214bb06fe3366a87cff44cd#egg=honcho
