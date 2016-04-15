@@ -8,5 +8,5 @@ RUN apt-get update && \
     \
     pip3 install -r requirements.txt
 
-CMD export DB_PASSWORD=$DB_ENV_POSTGRES_PASSWORD && python3 run.py
+CMD export DB_PASSWORD=$DB_ENV_POSTGRES_PASSWORD && python3 run.py "birdstorm"
 
